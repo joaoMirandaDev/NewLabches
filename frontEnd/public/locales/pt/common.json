@@ -1,0 +1,226 @@
+{
+  "pages": {
+    "colaborador":{
+      "title": "Cadastro de colaboradores",
+      "titleEdit": "Edição de fornecedores",
+      "placeHoldeSearchBar": "Pesquise por nome,cpf e telefone",
+      "buttonSearchBar": "Pesquisar",
+      "buttonCadastro": "Cadastrar colaborador",
+      "table":{
+        "nome": "Nome",
+        "cpf":  "Cpf",
+        "telefone": "Telefone"
+      },
+      "editar": {
+        "sucesso": "Colaborador editado com sucesso!"
+      },
+      "tooltip": {
+        "visualizar": "Visualizar",
+        "editar": "Editar",
+        "excluir": "Excluir"
+      },
+      "modal": {
+        "title": "Exclusão de colaboradores",
+        "text": "Deseja excluir o seguinte colaborador:"
+      },      
+      "cadastro": {
+        "cpf": {
+          "title": {
+            "dadosPessoais": "Dados pessoais",
+            "dadosEmpresariais": "Dados empresariais",
+            "contato": "Contatos",
+            "endereco": "Endereço",
+            "usuario": "Usuário"
+          },
+          "inputName": "Nome",
+          "placeHoldInputNome": "Digite o nome",
+          "inputSobrenome": "Sobrenome",
+          "placeHoldInputSobrenome": "Digite o sobrenome",
+          "inputRazaoSocial": "Razão social",
+          "placeHoldInputRazaoSocial": "Digite a razão social",
+          "inputFantasia": "Nome fantasia",
+          "placeHoldInputFantasia": "Digite o nome fantasia",
+          "inputCpf": "Cpf",
+          "placeHoldInputCpf": "Digite o Cpf",
+          "inputCnpj": "Cnpj",
+          "placeHoldInputCnpj": "Digite o Cnpj",
+          "inputRg": "Rg",
+          "placeHoldInputRg": "Digite o Rg",
+          "inputEstado": "Estado",
+          "placeHoldInputEstado": "Digite a data de nascimento",
+          "inputData": "Data nascimento",
+          "placeHoldInputData": "Digite a data de nascimento",
+          "inputCep": "CEP",
+          "placeHoldInputCep": "Digite o cep",
+          "inputCidade": "Cidade",
+          "placeHoldInputCidade": "Digite o nome da cidade",
+          "inputBairro": "Bairro",
+          "placeHoldInputBairro": "Digite o nome do bairro",
+          "inputRua": "Rua",
+          "placeHoldInputRua": "Digite o nome da rua",
+          "inputNumero": "Número",
+          "placeHoldInputNumero": "Digite o número",
+          "inputTelefone": "Telefone",
+          "placeHoldInputTelefone": "Digite o telefone",
+          "inputEmail": "Email",
+          "placeHoldInputEmail": "Email",
+          "inputUsuario": "Senha usuário",
+          "placeHoldInputSenha": "Digite a senha para o usuário",
+          "inputPerfil": "Selecione o perfil",
+          "placeHoldInputPerfil": "Selecione o perfil desejado"
+        }
+      }
+    },
+    "fornecedor": {
+      "title": "Cadastro de fornecedores",
+      "titleEdit": "Edição de fornecedores",
+      "placeHoldeSearchBar": "Pesquise por nome, razão social,cpf/cnpj e telefone",
+      "buttonSearchBar": "Pesquisar",
+      "buttonCadastro": "Cadastrar fornecedor",
+      "table":{
+        "nomeRazaoSocial": "Nome/Razão social",
+        "cpfCnpj":  "Cpf/Cnpj",
+        "telefone": "Telefone"
+      },
+      "tooltip": {
+        "visualizar": "Visualizar",
+        "editar": "Editar",
+        "excluir": "Excluir"
+      },
+      "modal": {
+        "title": "Exclusão de fornecedores",
+        "text": "Deseja excluir o seguinte fornecedor:"
+      },
+      "editar": {
+        "sucesso": "Fornecedor editado com sucesso!"
+      },
+      "cadastro": {
+        "radioButton": {
+          "title": "Selecione o tipo de cadastro",
+          "description": "Por padrão o cpf virá selecionado."
+        },
+        "cpf": {
+          "title": {
+            "dadosPessoais": "Dados pessoais",
+            "dadosEmpresariais": "Dados empresariais",
+            "contato": "Contatos",
+            "endereco": "Endereço"
+          },
+          "inputName": "Nome",
+          "placeHoldInputNome": "Digite o nome",
+          "inputSobrenome": "Sobrenome",
+          "placeHoldInputSobrenome": "Digite o sobrenome",
+          "inputRazaoSocial": "Razão social",
+          "placeHoldInputRazaoSocial": "Digite a razão social",
+          "inputFantasia": "Nome fantasia",
+          "placeHoldInputFantasia": "Digite o nome fantasia",
+          "inputCpf": "Cpf",
+          "placeHoldInputCpf": "Digite o Cpf",
+          "inputCnpj": "Cnpj",
+          "placeHoldInputCnpj": "Digite o Cnpj",
+          "inputRg": "Rg",
+          "placeHoldInputRg": "Digite o Rg",
+          "inputEstado": "Estado",
+          "placeHoldInputEstado": "Digite a data de nascimento",
+          "inputData": "Data nascimento",
+          "placeHoldInputData": "Digite a data de nascimento",
+          "inputCep": "CEP",
+          "placeHoldInputCep": "Digite o cep",
+          "inputCidade": "Cidade",
+          "placeHoldInputCidade": "Digite o nome da cidade",
+          "inputBairro": "Bairro",
+          "placeHoldInputBairro": "Digite o nome do bairro",
+          "inputRua": "Rua",
+          "placeHoldInputRua": "Digite o nome da rua",
+          "inputNumero": "Número",
+          "placeHoldInputNumero": "Digite o número",
+          "inputTelefone": "Telefone",
+          "placeHoldInputTelefone": "Digite o telefone",
+          "inputEmail": "Email",
+          "placeHoldInputEmail": "Email"
+          
+        }
+      },
+      "visualizar": {
+        "title": "teste"
+      }
+    },
+    "produtos": {
+      "notification": {
+        "sucesso": "Produto cadastrado com sucesso!",
+        "sucessoEdit": "Produto editado com sucesso!",
+        "error": "Erro ao cadastrar produto!",
+        "errorEdit": "Erro ao editar produto!",
+        "errorDelete": "Erro ao deletar produto!",
+        "delete": "Produto deletado com sucesso!"
+      },
+      "title": "Cadastrar novo produto",
+      "titleEdit": "Editar produto",
+      "placeHoldeSearchBar": "Pesquise por nome,categoria, preço e data",
+      "buttonSearchBar": "Pesquisar",
+      "buttonCadastro": "Cadastrar produto",
+      "table":{
+        "nome": "Nome",
+        "categoria":  "Categoria",
+        "data": "Data",
+        "preco": "Preço"
+      },
+      "visualizar": {
+        "deleteText": "Deseja deletar este produto ?"
+      },
+      "cadastro": {
+        "nome": "Nome",
+        "placeHolder": "Digite o nome",
+        "ingrediente": "Ingredientes",
+        "placeHolderIngrediente": "Digite os ingredientes",
+        "price": "Preço",
+        "placeHolderPreco": "Digite preço",
+        "categoria": "Selecione a categoria"
+      }
+    },
+    "login": {
+      "title": "Seja bem-vindo",
+      "fields": {
+        "email": "Acesse com o seu CPF ou CNPJ",
+        "password": "Digite sua senha"
+      },
+      "button": "Logar"
+    }
+  },
+  "components": {
+    "general": {
+      "campoObrigatorio": "Campo obrigatório"
+    },
+    "button": {
+      "logout": "Sair",
+      "cancelar": "Cancelar",
+      "voltar": "Voltar",
+      "editar": "Editar",
+      "fechar": "fechar",
+      "confirmar": "Confirmar",
+      "salvar": "Salvar",
+      "deletar": "Deletar"
+    },
+    "table": {
+      "action": "Ações"
+    }
+  },
+  "documentTitle": {
+    "default": "X-LANCHES",
+    "suffix": " | X-LANCHES",
+    "fornecedor": {
+      "list": "Fornecedores | X-LANCHES",
+      "show": "#{{id}} Visualizar | X-LANCHES",
+      "edit": "#{{id}} Editar | X-LANCHES",
+      "create": "Novo fornecedor | X-LANCHES",
+      "clone": "#{{id}} Clone Category | X-LANCHES"
+    },
+    "colaborador": {
+      "list": "Colaboradores | X-LANCHES",
+      "show": "#{{id}} Visualizar | X-LANCHES",
+      "edit": "#{{id}} Editar | X-LANCHES",
+      "create": "Novo colaborador | X-LANCHES",
+      "clone": "#{{id}} Clone Category | X-LANCHES"
+    }
+  }
+}

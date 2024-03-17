@@ -1,0 +1,53 @@
+{
+  "pages": {
+    "clientes": {
+      "placeHoldeSearchBar": "Search by name, company name, cpf/cnpj and telephone number",
+      "buttonSearchBar": "Search",
+      "buttonCadastro": "Register customer",
+      "table":{
+        "nomeRazaoSocial": "Name/Business name",
+        "cpfCnpj":  "Cpf/Cnpj",
+        "telefone": "Telephone"
+      },
+      "tooltip": {
+        "visualizar": "View",
+        "editar": "Edit",
+        "excluir": "Delete"
+      },
+      "modal": {
+        "title": "Exclusion of customers",
+        "text": "Do you want to delete the following customer:"
+      }
+    },
+    "login": {
+      "title": "Welcome",
+      "fields": {
+        "email": "Access with your CPF or CNPJ",
+        "password": "Enter your password"
+      },
+      "button": "Login"
+    }
+  },
+  "components": {
+    "button": {
+      "logout": "Logout",
+      "cancelar": "Cancel",
+      "confirmar": "Confirm"
+    },
+    "table": {
+      "action": "Action"
+    }
+  },
+  "documentTitle": {
+    "default": "X-LANCHES",
+    "suffix": " | X-LANCHES",
+    "fornecedor": {
+      "list": "Fornecedores | X-LANCHES",
+      "show": "#{{id}} Visualizar | X-LANCHES",
+      "edit": "#{{id}} Edit Category | X-LANCHES",
+      "create": "Novo fornecedor | X-LANCHES",
+      "clone": "#{{id}} Clone Category | X-LANCHES"
+    }
+  }
+
+}
