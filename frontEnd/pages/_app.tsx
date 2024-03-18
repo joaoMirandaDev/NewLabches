@@ -33,7 +33,7 @@ import {
   verifyUserExpired,
 } from './../src/services/authetication/authentication'
 import { useRouter } from 'next/router'
-import { IconAffiliate, IconMeat, IconUsers } from '@tabler/icons'
+import { IconAffiliate, IconMeat, IconPizza, IconUsers } from '@tabler/icons'
 import { Menu } from '@components/common/side'
 import { useLoadingStore } from 'src/stores/LoadingStore'
 export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {
@@ -179,80 +179,6 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
               fontFamilyMonospace: 'Monaco, Courier, monospace',
               headings: { fontFamily: "'Plus Jakarta Sans', sans-serif" },
               primaryColor: 'brand',
-              components: {
-                Select: {
-                  defaultProps: {
-                    size: 'md',
-                  },
-                },
-                NumberInput: {
-                  defaultProps: {
-                    size: 'md',
-                  },
-                },
-                Text: {
-                  defaultProps: {
-                    size: 'md',
-                  },
-                },
-                Checkbox: {
-                  defaultProps: {
-                    size: 'md',
-                  },
-                },
-                CheckboxGroup: {
-                  defaultProps: {
-                    size: 'md',
-                  },
-                },
-                Radio: {
-                  defaultProps: {
-                    size: 'md',
-                  },
-                },
-                RadioGroup: {
-                  defaultProps: {
-                    size: 'md',
-                  },
-                },
-                Button: {
-                  defaultProps: {
-                    size: 'md',
-                  },
-                },
-                InputWrapper: {
-                  defaultProps: {
-                    size: 'md',
-                  },
-                },
-                InputLabel: {
-                  defaultProps: {
-                    size: 'md',
-                    fw: 'bold',
-                    style: {
-                      color: colorScheme === 'light' ? '#000' : '',
-                      marginBottom: '0.5rem',
-                    },
-                  },
-                },
-                Switch: {
-                  defaultProps: {
-                    size: 'md',
-                  },
-                },
-                ModalHeader: {
-                  defaultProps: {
-                    size: 'md',
-                  },
-                },
-              },
-              fontSizes: {
-                xl: '1.333rem',
-                lg: '1.16rem',
-                md: '1rem',
-                sm: '0.833rem',
-                xs: '0.666rem',
-              },
             }}
             withNormalizeCSS
             withGlobalStyles
@@ -306,6 +232,18 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
                       meta: {
                         canDelete: false,
                         label: 'Produtos',
+                        icon: <IconPizza />,
+                      },
+                    },
+                    {
+                      name: 'mercadoria',
+                      show: '/mercadoria/visualizar/:id',
+                      list: '/mercadoria',
+                      create: '/mercadoria/cadastro',
+                      edit: '/mercadoria/editar/:id',
+                      meta: {
+                        canDelete: false,
+                        label: 'Mercadorias',
                         icon: <IconMeat />,
                       },
                     },

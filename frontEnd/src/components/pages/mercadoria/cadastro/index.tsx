@@ -16,18 +16,18 @@ import api from 'src/utils/Api'
 import { useForm, zodResolver } from '@mantine/form'
 import { DrowerCadastroProdutos } from '../validation/schema'
 import { ErrorNotification, SuccessNotification } from '@components/common'
-interface DrawerCadastroProduto {
+interface DrawerCadastroMercadoria {
   openModal: boolean
   close: (value: boolean) => void
   refresh: (value: boolean) => void
 }
 
-interface Categoria {
+interface Mercadoria {
   id?: number
   nome?: string
 }
 
-const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
+const DrawerCadastroMercadoria: React.FC<DrawerCadastroMercadoria> = ({
   openModal,
   close,
   refresh,
@@ -37,25 +37,23 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
     id: number | null
     nome: string
     ativo: number
-    dataCadastro: Date
-    categoria: {
+    multiplicador: number
+    unidadeMedida: {
       id: number | null
       nome: string
     }
-    preco: number
-    ingrediente: string
+    valorVenda: number
   }>({
     initialValues: {
       id: null,
       ativo: 0,
-      dataCadastro: new Date(),
+      multiplicador: 0,
       nome: '',
-      categoria: {
+      unidadeMedida: {
         id: null,
         nome: '',
       },
-      preco: 0,
-      ingrediente: '',
+      valorVenda: 0,
     },
     validate: zodResolver(DrowerCadastroProdutos()),
   })
@@ -69,8 +67,8 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
   const [categoria, setCategoria] = useState<SelectItem[]>([])
   const [messageErro, setMessageErro] = useState<boolean>(false)
   const getAllCategoria = async () => {
-    const value = await api.get('api/categoria/findAll')
-    const data = value.data.map((data: Categoria) => ({
+    const value = await api.get('api/unidadeMedida/findAll')
+    const data = value.data.map((data: Mercadoria) => ({
       value: data.id,
       label: data.nome,
     }))
@@ -78,22 +76,22 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
   }
 
   const handleSubmit = async () => {
-    if (form.getInputProps('categoria.id').value == null) {
+    if (form.getInputProps('unidadeMedida.id').value == null) {
       setMessageErro(true)
       return false
     }
     if (form.isValid()) {
       await api
-        .post('api/produtos/adicionar', form.values)
+        .post('api/mercadoria/adicionar', form.values)
         .then(() => {
           SuccessNotification({
-            message: t('pages.produtos.sucesso'),
+            message: 'Mecadoria cadastrada com sucesso',
           })
           handleClose()
           refresh(true)
         })
         .catch(() => {
-          ErrorNotification({ message: t('pages.produtos.error') })
+          ErrorNotification({ message: 'Erro ao cadastrar mercadoria' })
         })
     }
   }
@@ -101,13 +99,14 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
   const resetForm = () => {
     const dados = {
       id: null,
+      ativo: 0,
+      multiplicador: 0,
       nome: '',
-      categoria: {
+      unidadeMedida: {
         id: null,
         nome: '',
       },
-      preco: 0,
-      ingrediente: '',
+      valorVenda: 0,
     }
     form.setValues(dados)
   }
@@ -117,9 +116,9 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
     close(false)
   }
 
-  const handleSelectCategoria = (value: string | number | null) => {
+  const handleSelect = (value: string | number | null) => {
     setMessageErro(false)
-    form.setFieldValue('categoria.id', value)
+    form.setFieldValue('unidadeMedida.id', value)
   }
 
   const renderButtons = () => (
@@ -146,18 +145,19 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
       position="right"
       withinPortal
       closeOnClickOutside={false}
-      withCloseButton={true}
+      withCloseButton={false}
       closeOnEscape={false}
-      trapFocus={true}
-      title={'Cadastro de Produtos'}
+      trapFocus={false}
+      title={'Cadastro de Mercadoria'}
     >
       <form onSubmit={form.onSubmit(handleSubmit)}>
+        <Divider />
         <TextInput
           mt={'1rem'}
           {...form.getInputProps('nome')}
           value={form.values.nome}
-          placeholder={t('pages.produtos.cadastro.placeHolder')}
-          label={t('pages.produtos.cadastro.nome')}
+          placeholder={t('Digite o nome da mercadoria')}
+          label={t('Nome')}
           onChange={values => form.setFieldValue('nome', values.target.value)}
           withAsterisk
         />
@@ -165,31 +165,47 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
         <Divider />
         <Select
           mt={'1rem'}
-          onChange={handleSelectCategoria}
+          onChange={handleSelect}
           clearButtonProps={{ 'aria-label': 'Clear selection' }}
-          nothingFound="Nenhuma categoria encontrada"
+          nothingFound="Nenhuma categoria unidade medida"
           withinPortal
           error={messageErro ? 'campo obrigatório' : ''}
           withAsterisk
           required
-          label={t('pages.produtos.cadastro.categoria')}
-          placeholder={t('pages.produtos.cadastro.categoria')}
+          label={t('Selecione um fator de medida')}
+          placeholder={t('Selecione um fator de medida')}
           data={categoria}
         />
         <Space h="xl" />
         <Divider />
         <NumberInput
-          {...form.getInputProps('preco')}
+          {...form.getInputProps('multiplicador')}
           mt={'1rem'}
           precision={2}
           decimalSeparator=","
           thousandsSeparator="."
-          defaultValue={form.values.preco}
+          defaultValue={form.values.multiplicador}
           placeholder={t('pages.produtos.cadastro.placeHolderPreco')}
-          label={t('pages.produtos.cadastro.price')}
+          label={'Multiplicador/Porção'}
           withAsterisk
           hideControls
-          onChange={value => form.setFieldValue('preco', Number(value))}
+          onChange={value => form.setFieldValue('multiplicador', Number(value))}
+          required
+        />
+        <Space h="xl" />
+        <Divider />
+        <NumberInput
+          {...form.getInputProps('valorVenda')}
+          mt={'1rem'}
+          precision={2}
+          decimalSeparator=","
+          thousandsSeparator="."
+          defaultValue={form.values.valorVenda}
+          placeholder={t('pages.produtos.cadastro.placeHolderPreco')}
+          label={t('Preço de venda')}
+          withAsterisk
+          hideControls
+          onChange={value => form.setFieldValue('valorVenda', Number(value))}
           required
         />
         <Space h="xl" />
@@ -199,4 +215,4 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
   )
 }
 
-export default DrawerCadastroProduto
+export default DrawerCadastroMercadoria

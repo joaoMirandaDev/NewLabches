@@ -15,7 +15,7 @@ public class ItemController {
     private final ItemService itemService;
 
     @PostMapping(value = "/adicionar", produces = "application/json")
-    public void salvarPessoa(@RequestBody ItemDTO ingrediente)  {
+    public void saveIngrediente(@RequestBody ItemDTO ingrediente)  {
         itemService.cadastroIngrediente(ingrediente);
     }
 }

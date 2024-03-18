@@ -178,6 +178,15 @@
         "categoria": "Selecione a categoria"
       }
     },
+    "mercadoria": {
+      "table": {
+        "nome": "Nome",
+        "saldoEstoque": "Saldo disponível",
+        "valorVenda": "Valor de venda",
+        "unidadeMedida": "Unidade de medida",
+        "dataCadastro": "Data de cadastro"
+      }
+    },
     "login": {
       "title": "Seja bem-vindo",
       "fields": {
