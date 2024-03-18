@@ -1,2 +1,3 @@
-ALTER TABLE lanchonete.ingredientes_compra ADD COLUMN valor_final_unitario DOUBLE;
-ALTER TABLE lanchonete.ingredientes_compra ADD COLUMN quantidade_final DOUBLE
+RENAME TABLE ingrediente TO item;
+RENAME TABLE ingredientes_compra TO item_compra;
+RENAME TABLE registro_compras TO compras;

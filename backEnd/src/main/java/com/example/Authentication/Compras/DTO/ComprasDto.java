@@ -1,5 +1,6 @@
 package com.example.Authentication.Compras.DTO;
 
+import com.example.Authentication.Compras.model.Compras;
 import com.example.Authentication.FormaPagamento.DTO.FormaPagamentoDTO;
 import com.example.Authentication.Fornecedores.DTO.FornecedorDto;
 import com.example.Authentication.ItensCompras.DTO.ItensComprasDTO;
@@ -17,7 +18,6 @@ import java.util.List;
 public class ComprasDto {
 
     private Short id;
-    private String nome;
     private FormaPagamentoDTO formaPagamento;
     private FornecedorDto fornecedor;
     private Date dataCompra;
@@ -27,4 +27,13 @@ public class ComprasDto {
     private Integer pago;
     private Integer ativo;
     private List<ItensComprasDTO> itensComprasDTOS;
+
+    public ComprasDto(Compras compras) {
+        this.id = compras.getId();
+        this.formaPagamento = new FormaPagamentoDTO(compras.getFormaPagamento());
+        this.fornecedor = new FornecedorDto(compras.getFornecedor());
+        this.dataCompra = compras.getDataCompra();
+        this.dataPagamento = compras.getDataPagamento();
+        this.valorTotalCompra = compras.getValorTotalCompra();
+    }
 }

@@ -1,9 +1,9 @@
 package com.example.Authentication.ItensCompras.service;
 
 import com.example.Authentication.Compras.model.Compras;
-import com.example.Authentication.Itens.model.Item;
-import com.example.Authentication.Itens.repository.ItemRepository;
-import com.example.Authentication.Itens.service.ItemService;
+import com.example.Authentication.mercadoria.model.Mercadoria;
+import com.example.Authentication.mercadoria.repository.MercadoriaRepository;
+import com.example.Authentication.mercadoria.service.MercadoriaService;
 import com.example.Authentication.ItensCompras.DTO.ItensComprasDTO;
 import com.example.Authentication.ItensCompras.model.ItensCompras;
 import com.example.Authentication.ItensCompras.repository.ItensCompraRepository;
@@ -23,35 +23,35 @@ public class ItensComprasService {
 
     private final MessageSource messageSource;
 
-    private final ItemRepository itemRepository;
-    private final ItemService itemService;
+    private final MercadoriaRepository mercadoriaRepository;
+    private final MercadoriaService mercadoriaService;
     private final ItensCompraRepository itensCompraRepository;
 
 
     public void saveListDto(List<ItensComprasDTO> itensComprasDTOS, Compras compras) {
         for (ItensComprasDTO itensComprasDTO : itensComprasDTOS) {
             ItensCompras itensCompras = new ItensCompras();
-            Item item = itemRepository.
-                    findById(itensComprasDTO.getItemDTO().getId()).orElseThrow(()
+            Mercadoria mercadoria = mercadoriaRepository.
+                    findById(itensComprasDTO.getMercadoriaDTO().getId()).orElseThrow(()
                             -> new NotFoundException(
                             messageSource.getMessage("error.isEmpty", null, LocaleInteface.BR)
                     ));
-            if (Objects.isNull(item.getSaldoEstoque())) {
-                item.setSaldoEstoque(0.0);
+            if (Objects.isNull(mercadoria.getSaldoEstoque())) {
+                mercadoria.setSaldoEstoque(0.0);
             }
-            item.setSaldoEstoque(item.getSaldoEstoque() + itemService.
-                    calculoQuantidade(item.getUnidadeMedida(),
-                    item.getMultiplicador(), itensComprasDTO.getQuantidade()));
-            itensCompras.setItem(item);
+            mercadoria.setSaldoEstoque(mercadoria.getSaldoEstoque() + mercadoriaService.
+                    calculoQuantidade(mercadoria.getUnidadeMedida(),
+                    mercadoria.getMultiplicador(), itensComprasDTO.getQuantidade()));
+            itensCompras.setMercadoria(mercadoria);
             itensCompras.setCompras(compras);
             itensCompras.setQuantidade(itensComprasDTO.getQuantidade());
-            itensCompras.setQuantidadeFinal(itemService.
-                    calculoQuantidade(item.getUnidadeMedida(),
-                            item.getMultiplicador(), itensComprasDTO.getQuantidade()));
+            itensCompras.setQuantidadeFinal(mercadoriaService.
+                    calculoQuantidade(mercadoria.getUnidadeMedida(),
+                            mercadoria.getMultiplicador(), itensComprasDTO.getQuantidade()));
             itensCompras.setValorCompra(itensComprasDTO.getValorCompra());
             itensCompras.setValorUnitario((itensCompras.getValorCompra() * itensCompras.getQuantidade()) / itensCompras.getQuantidadeFinal());
             itensCompras.setData(new Date());
-            itemRepository.save(item);
+            mercadoriaRepository.save(mercadoria);
             itensCompraRepository.save(itensCompras);
 
         }

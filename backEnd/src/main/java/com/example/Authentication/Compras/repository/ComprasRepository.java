@@ -10,9 +10,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ComprasRepository extends JpaRepository<Compras, Integer> {
 
-    @Query(nativeQuery = true, value = "SELECT * FROM colaborador p WHERE p.cpf != '13226726609' AND " +
-            "(:search IS NULL OR :search = '' OR " +
-            "p.nome LIKE :search OR p.cpf LIKE :search OR p.telefone LIKE :search)")
+    @Query(nativeQuery = true, value = "SELECT * FROM compras c INNER JOIN fornecedor f ON c.id_fornecedor = f.id " +
+            "INNER JOIN forma_pagamentp fp ON c.id_forma_pagamento = fp.id  WHERE " +
+            "(:search IS NULL OR :search = '' OR c.valor_total_compra LIKE %:search% OR fp.nome LIKE %:search% OR f.nome_razao_social " +
+            "LIKE %:search% OR f.nome_fantasia LIKE %:search% OR DATE_FORMAT(c.data_compra, '%d/%m/%Y') LIKE %:search%)")
     Page<Compras> findAll(Pageable pageable, String search);
 
 }

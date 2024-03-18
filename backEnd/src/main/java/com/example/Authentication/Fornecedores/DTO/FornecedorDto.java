@@ -1,5 +1,6 @@
 package com.example.Authentication.Fornecedores.DTO;
 
+import com.example.Authentication.Fornecedores.model.Fornecedor;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,9 +16,9 @@ public class FornecedorDto {
 
     private Short id;
 
-    private String sobrenome;
-
     private String nomeRazaoSocial;
+
+    private String sobrenome;
 
     private String nomeFantasia;
 
@@ -48,4 +49,9 @@ public class FornecedorDto {
     private String email;
 
 
+    public FornecedorDto(Fornecedor fornecedor) {
+        this.id = fornecedor.getId();
+        this.nomeFantasia = fornecedor.getNomeFantasia();
+        this.nomeRazaoSocial = fornecedor.getNomeRazaoSocial();
+    }
 }

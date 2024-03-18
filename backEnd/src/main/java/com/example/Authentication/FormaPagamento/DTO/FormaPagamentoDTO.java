@@ -1,5 +1,6 @@
 package com.example.Authentication.FormaPagamento.DTO;
 
+import com.example.Authentication.FormaPagamento.model.FormaPagamento;
 import com.example.Authentication.Fornecedores.model.Fornecedor;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,12 +13,15 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-
 public class FormaPagamentoDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Short id;
     private String nome;
     private Integer ativo;
+
+    public FormaPagamentoDTO(FormaPagamento formaPagamento) {
+        this.id = formaPagamento.getId();
+        this.nome = formaPagamento.getNome();
+        this.ativo = formaPagamento.getAtivo();
+    }
 }

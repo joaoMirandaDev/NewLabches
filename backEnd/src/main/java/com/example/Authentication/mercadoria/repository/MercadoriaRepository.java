@@ -1,14 +1,21 @@
-package com.example.Authentication.Itens.repository;
+package com.example.Authentication.mercadoria.repository;
 
-import com.example.Authentication.Itens.model.Item;
+import com.example.Authentication.mercadoria.model.Mercadoria;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ItemRepository extends JpaRepository<Item, Integer> {
+public interface MercadoriaRepository extends JpaRepository<Mercadoria, Integer> {
 
-    @Query(nativeQuery = true, value = "select * from ingrediente rc where UPPER(TRIM(rc.nome)) = UPPER(TRIM(:nome)) " +
+    @Query(nativeQuery = true, value = "select * from mercadoria rc where UPPER(TRIM(rc.nome)) = UPPER(TRIM(:nome)) " +
             "and LOWER(TRIM(rc.nome)) = LOWER(TRIM(:nome))")
-    Item findByNome(String nome);
+    Mercadoria findByNome(String nome);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM mercadoria m INNER JOIN unidade_medida um ON m.id_unidade_medida = um.id WHERE " +
+            "(:search IS NULL OR :search = '' OR m.nome LIKE %:search% OR um.nome " +
+            "LIKE %:search% OR m.saldo_estoque = CAST(:search AS DECIMAL) OR m.valor_venda = CAST(:search AS DECIMAL) OR DATE_FORMAT(m.data_cadastro, '%d/%m/%Y') LIKE %:search%)")
+    Page<Mercadoria> findAll(Pageable pageable, String search);
 }

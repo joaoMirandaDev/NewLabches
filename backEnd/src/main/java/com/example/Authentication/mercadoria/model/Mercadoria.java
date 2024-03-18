@@ -1,6 +1,7 @@
-package com.example.Authentication.Itens.model;
+package com.example.Authentication.mercadoria.model;
 
 import com.example.Authentication.UnidadeMedida.model.UnidadeMedida;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,8 +14,8 @@ import java.util.Date;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "item")
-public class Item {
+@Table(name = "mercadoria")
+public class Mercadoria {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +29,7 @@ public class Item {
     @Column(name = "porcao")
     private Double multiplicador;
     @Column(name = "data_cadastro")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone="GMT-3")
     private Date dataCadastro;
     private Integer ativo;
 

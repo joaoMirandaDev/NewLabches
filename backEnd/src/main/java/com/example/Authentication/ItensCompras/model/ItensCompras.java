@@ -1,7 +1,7 @@
 package com.example.Authentication.ItensCompras.model;
 
 import com.example.Authentication.Compras.model.Compras;
-import com.example.Authentication.Itens.model.Item;
+import com.example.Authentication.mercadoria.model.Mercadoria;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,14 +14,14 @@ import java.util.Date;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "ingredientes_compra")
+@Table(name = "item_compra")
 public class ItensCompras {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @OneToOne
     @JoinColumn(name = "id_ingrediente", referencedColumnName = "id")
-    private Item item;
+    private Mercadoria mercadoria;
     @ManyToOne
     @JsonIgnoreProperties(value = {"listLancheIngrediente", "hibernateLazyInitializer"})
     @JoinColumn(name = "id_registro_compra", referencedColumnName = "id")
