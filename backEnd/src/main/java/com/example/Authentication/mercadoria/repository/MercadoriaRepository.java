@@ -16,6 +16,6 @@ public interface MercadoriaRepository extends JpaRepository<Mercadoria, Integer>
 
     @Query(nativeQuery = true, value = "SELECT * FROM mercadoria m INNER JOIN unidade_medida um ON m.id_unidade_medida = um.id WHERE " +
             "(:search IS NULL OR :search = '' OR m.nome LIKE %:search% OR um.nome " +
-            "LIKE %:search% OR m.saldo_estoque = CAST(:search AS DECIMAL) OR m.valor_venda = CAST(:search AS DECIMAL) OR DATE_FORMAT(m.data_cadastro, '%d/%m/%Y') LIKE %:search%)")
+            "LIKE %:search% OR m.saldo_estoque LIKE CONCAT('%', :search, '%') OR m.valor_venda LIKE CONCAT('%', :search, '%') OR DATE_FORMAT(m.data_cadastro, '%d/%m/%Y') LIKE %:search%)")
     Page<Mercadoria> findAll(Pageable pageable, String search);
 }

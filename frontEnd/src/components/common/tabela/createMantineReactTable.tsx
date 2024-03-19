@@ -1,10 +1,10 @@
 import { Text } from '@mantine/core'
-import { useTranslate } from '@refinedev/core'
 import {
   MRT_TableOptions,
   MRT_TableState,
   useMantineReactTable,
 } from 'mantine-react-table'
+import { MRT_Localization_PT_BR } from 'mantine-react-table/locales/pt-BR'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 interface Props<T extends Record<string, any>> {
@@ -23,13 +23,10 @@ const CreateMantineReactTable = <
   initialState = {},
   state,
 }: Props<T>) => {
-  const t = useTranslate()
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
   const mantineReactTableProps: MRT_TableOptions<T> = {
-    localization: {
-      actions: t('components.table.action'),
-    },
+    localization: MRT_Localization_PT_BR,
     enableColumnActions: false,
     enableFilters: false,
     enableHiding: false,

@@ -23,6 +23,21 @@ public class MercadoriaController {
         mercadoriaService.cadastro(ingrediente);
     }
 
+    @PutMapping(value = "/editar", produces = "application/json")
+    public void editIngrediente(@RequestBody MercadoriaDTO ingrediente)  {
+        mercadoriaService.editar(ingrediente);
+    }
+
+    @GetMapping(value = "/findById/{id}", produces = "application/json")
+    public Mercadoria saveIngrediente(@PathVariable Integer id)  {
+        return mercadoriaService.findById(id);
+    }
+
+    @DeleteMapping(value = "/deleteById/{id}", produces = "application/json")
+    public void deleteById(@PathVariable Integer id)  {
+        mercadoriaService.deleteById(id);
+    }
+
     @PostMapping(value = "/list", produces = "application/json")
     public Page<Mercadoria> findAllPessoa(@RequestBody Filtro filtro) {
         return mercadoriaService.findAllByPage(filtro);

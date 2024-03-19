@@ -14,17 +14,17 @@ import {
 
 import { useEffect, useState } from 'react'
 import { useTranslate } from '@refinedev/core'
-import IProduto from 'src/interfaces/produto'
 import api from 'src/utils/Api'
 import { IconExclamationCircle, IconTrash } from '@tabler/icons'
 import { IconDatabaseEdit } from '@tabler/icons-react'
 import { ErrorNotification, SuccessNotification } from '@components/common'
 import { useForm, zodResolver } from '@mantine/form'
-import { DrowerCadastroProdutos } from '../validation/schema'
+import IMercadoria from 'src/interfaces/mercadoria'
+import { DrowerEditarMercadoria } from '../validation/editarValidation'
 
-interface DrawerProduto {
+interface DrawerMercadoria {
   openModal: boolean
-  dataProduto: IProduto | null
+  dataMercadoria: IMercadoria | null
   refresDrawerVisualizar: (value: boolean) => void
   close: (value: boolean) => void
 }
@@ -34,9 +34,9 @@ interface Categoria {
   nome?: string
 }
 
-const DrawerProduto: React.FC<DrawerProduto> = ({
+const DrawerMercadoria: React.FC<DrawerMercadoria> = ({
   openModal,
-  dataProduto,
+  dataMercadoria,
   close,
   refresDrawerVisualizar,
 }) => {
@@ -49,39 +49,39 @@ const DrawerProduto: React.FC<DrawerProduto> = ({
     id: number | null
     nome: string
     ativo: number
-    dataCadastro: Date
-    categoria: {
+    saldoEstoque: number
+    multiplicador: number
+    unidadeMedida: {
       id: number | null
-      nome: string | null
+      nome: string
     }
-    preco: number
-    ingrediente: string
+    valorVenda: number
   }>({
     initialValues: {
       id: null,
       ativo: 0,
-      dataCadastro: new Date(),
+      multiplicador: 0,
       nome: '',
-      categoria: {
+      saldoEstoque: 0,
+      unidadeMedida: {
         id: null,
         nome: '',
       },
-      preco: 0,
-      ingrediente: '',
+      valorVenda: 0,
     },
-    validate: zodResolver(DrowerCadastroProdutos()),
+    validate: zodResolver(DrowerEditarMercadoria()),
   })
   useEffect(() => {
-    if (openModal && dataProduto != null) {
+    if (openModal && dataMercadoria != null) {
       setOnEdit(false)
-      form.setValues(dataProduto)
-      getAllCategoria()
+      form.setValues(dataMercadoria)
+      getAllUnidadeMedida()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openModal])
 
-  const getAllCategoria = async () => {
-    const value = await api.get('api/categoria/findAll')
+  const getAllUnidadeMedida = async () => {
+    const value = await api.get('api/unidadeMedida/findAll')
     const data = value.data.map((data: Categoria) => ({
       value: data.id,
       label: data.nome,
@@ -91,10 +91,10 @@ const DrawerProduto: React.FC<DrawerProduto> = ({
 
   const handleDelete = () => {
     api
-      .delete(`/api/produtos/delete/${form.values.id}`)
+      .delete(`/api/mercadoria/deleteById/${form.values.id}`)
       .then(() => {
         SuccessNotification({
-          message: t('pages.produtos.notification.delete'),
+          message: 'Mercadoria deletada com sucesso!',
         })
         close(false)
         setOnEdit(false)
@@ -102,7 +102,7 @@ const DrawerProduto: React.FC<DrawerProduto> = ({
       })
       .catch(() => {
         ErrorNotification({
-          message: t('pages.produtos.notification.errorDelete'),
+          message: 'Erro ao deletar!',
         })
       })
   }
@@ -116,30 +116,32 @@ const DrawerProduto: React.FC<DrawerProduto> = ({
     if (value) {
       const pessoa = categoria.find(item => item.label === value)
       setMessageErro(false)
-      form.setFieldValue('categoria.id', pessoa?.value)
-      form.setFieldValue('categoria.nome', pessoa?.label)
+      form.setFieldValue('unidadeMedida.id', pessoa?.value)
+      form.setFieldValue('unidadeMedida.nome', pessoa?.label)
     }
   }
 
   const handleSubmit = async () => {
-    if (form.getInputProps('categoria.id').value == null) {
+    if (form.getInputProps('unidadeMedida.id').value == null) {
       setMessageErro(true)
       return false
     }
     if (form.isValid()) {
       await api
-        .put('api/produtos/editar', form.values)
+        .put('api/mercadoria/editar', form.values)
         .then(() => {
           SuccessNotification({
-            message: t('pages.produtos.notification.sucessoEdit'),
+            message: form.values.nome + ' editado com sucesso!',
           })
           setOnEdit(false)
           close(false)
           refresDrawerVisualizar(true)
         })
-        .catch(() => {
+        .catch(response => {
+          console.log(response)
           ErrorNotification({
-            message: t('pages.produtos.notification.errorEdit'),
+            title: 'Erro ao editar ' + form.values.nome,
+            message: response.message,
           })
         })
     }
@@ -152,7 +154,7 @@ const DrawerProduto: React.FC<DrawerProduto> = ({
   const renderButtons = () => (
     <>
       <Flex mt={'1rem'} justify={'space-between'}>
-        <Popover width={200} position="bottom" withArrow shadow="md">
+        <Popover width={250} position="bottom" withArrow shadow="md">
           <Popover.Target>
             <Button color="red" leftIcon={<IconTrash />}>
               {t('components.button.deletar')}
@@ -162,7 +164,7 @@ const DrawerProduto: React.FC<DrawerProduto> = ({
             <Flex align={'center'}>
               <IconExclamationCircle color="orange" />
               <Text size="sm" ml={'0.5rem'}>
-                {t('pages.produtos.visualizar.deleteText')}
+                Deseja deletar este item ?
               </Text>
             </Flex>
             <Flex>
@@ -212,7 +214,7 @@ const DrawerProduto: React.FC<DrawerProduto> = ({
       withCloseButton={true}
       closeOnEscape={false}
       trapFocus={false}
-      title={form.values.nome}
+      title={'Visualizar Produto'}
     >
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <TextInput
@@ -229,34 +231,68 @@ const DrawerProduto: React.FC<DrawerProduto> = ({
         <Divider />
         <Select
           mt={'1rem'}
-          searchValue={form.getInputProps('categoria.nome').value}
+          searchValue={form.getInputProps('unidadeMedida.nome').value}
           onSearchChange={handleSelectCategoria}
           disabled={!onEdit}
           clearButtonProps={{ 'aria-label': 'Clear selection' }}
-          nothingFound="Nenhuma categoria encontrada"
+          nothingFound="Nenhuma unidade de medida encontrada"
           withinPortal
           error={messageErro ? 'campo obrigatório' : ''}
           withAsterisk
           required
-          label={t('pages.produtos.cadastro.categoria')}
-          placeholder={t('pages.produtos.cadastro.categoria')}
+          label={'Selecione a unidade de medida'}
+          placeholder={'Selecione uma das opções'}
           data={categoria}
         />
         <Space h="xl" />
         <Divider />
         <NumberInput
-          {...form.getInputProps('preco')}
+          {...form.getInputProps('saldoEstoque')}
           mt={'1rem'}
           precision={2}
           disabled={!onEdit}
           decimalSeparator=","
           thousandsSeparator="."
-          defaultValue={form.values.preco}
-          placeholder={t('pages.produtos.cadastro.placeHolderPreco')}
-          label={t('pages.produtos.cadastro.price')}
+          defaultValue={form.values.saldoEstoque}
+          placeholder={'Saldo'}
+          label={'Saldo em estoque'}
           withAsterisk
           hideControls
-          onChange={value => form.setFieldValue('preco', Number(value))}
+          onChange={value => form.setFieldValue('saldoEstoque', Number(value))}
+          required
+        />
+        <Space h="xl" />
+        <Divider />
+        <NumberInput
+          {...form.getInputProps('multiplicador')}
+          mt={'1rem'}
+          precision={2}
+          disabled={!onEdit}
+          decimalSeparator=","
+          thousandsSeparator="."
+          defaultValue={form.values.multiplicador}
+          placeholder={'multiplicador'}
+          label={'Multiplicador/Porção'}
+          withAsterisk
+          hideControls
+          onChange={value => form.setFieldValue('multiplicador', Number(value))}
+          required
+        />
+        <Space h="xl" />
+        <Divider />
+        <NumberInput
+          {...form.getInputProps('valorVenda')}
+          mt={'1rem'}
+          precision={2}
+          disabled={!onEdit}
+          decimalSeparator=","
+          thousandsSeparator="."
+          defaultValue={form.values.valorVenda}
+          placeholder={'Preço de venda'}
+          label={'Preço de venda'}
+          withAsterisk
+          hideControls
+          onChange={value => form.setFieldValue('valorVenda', Number(value))}
           required
         />
         <Space h="xl" />
@@ -266,4 +302,4 @@ const DrawerProduto: React.FC<DrawerProduto> = ({
   )
 }
 
-export default DrawerProduto
+export default DrawerMercadoria

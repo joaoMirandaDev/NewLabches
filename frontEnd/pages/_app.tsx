@@ -36,6 +36,7 @@ import { useRouter } from 'next/router'
 import { IconAffiliate, IconMeat, IconPizza, IconUsers } from '@tabler/icons'
 import { Menu } from '@components/common/side'
 import { useLoadingStore } from 'src/stores/LoadingStore'
+
 export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {
   noLayout?: boolean
 }
@@ -80,13 +81,20 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
     },
     onError: async () => ({}),
     check: async () => {
-      const check: boolean = await verifyUserExpired()
-      if (check) {
-        return {
-          success: true,
-          authenticated: true,
+      try {
+        const check: boolean = await verifyUserExpired()
+        if (check) {
+          return {
+            success: true,
+            authenticated: true,
+          }
+        } else {
+          return {
+            authenticated: false,
+            redirectTo: '/login',
+          }
         }
-      } else {
+      } catch (error) {
         return {
           authenticated: false,
           redirectTo: '/login',
@@ -187,7 +195,11 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
               visible={isLoading}
               overlayOpacity={0.6}
               zIndex={100000}
-              style={{ overflow: 'hidden' }}
+              style={{
+                width: '100vw',
+                height: '100vh',
+                overflow: 'hidden',
+              }}
             />
             <Global styles={{ body: { WebkitFontSmoothing: 'auto' } }} />
             <NotificationsProvider position="top-right">

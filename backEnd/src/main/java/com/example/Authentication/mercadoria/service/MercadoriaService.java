@@ -1,6 +1,7 @@
 package com.example.Authentication.mercadoria.service;
 
 import com.example.Authentication.Utils.filtro.Filtro;
+import com.example.Authentication.Utils.pagination.PaginationSimple;
 import com.example.Authentication.mercadoria.DTO.MercadoriaDTO;
 import com.example.Authentication.mercadoria.Interface.UnidadeMedidaInterface;
 import com.example.Authentication.mercadoria.model.Mercadoria;
@@ -17,9 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +26,8 @@ public class MercadoriaService {
 
     private final MercadoriaRepository mercadoriaRepository;
     private final UnidadeMedidaRepository unidadeMedidaRepository;
+    private final PaginationSimple paginationSimple;
+    private static final Map<String, String> CAMPO_ORDENACAO = new HashMap<>();
     private final MessageSource messageSource;
     Locale locale = new Locale("pt", "BR");
 
@@ -42,7 +43,6 @@ public class MercadoriaService {
             throw new DuplicateKeyException(messageSource.getMessage("error.object.exist", null, locale));
         }
         Mercadoria mercadoria = new Mercadoria();
-
         mercadoria.setNome(mercadoriaDTO.getNome());
         mercadoria.setUnidadeMedida(unidadeMedida);
         mercadoria.setSaldoEstoque(0.0);
@@ -50,29 +50,30 @@ public class MercadoriaService {
         mercadoria.setAtivo(0);
         mercadoria.setDataCadastro(new Date());
         mercadoria.setMultiplicador(mercadoriaDTO.getMultiplicador());
+        mercadoriaRepository.save(mercadoria);
+    }
 
+    public void editar(MercadoriaDTO mercadoriaDTO) {
+        Mercadoria mercadoriaRepositoryByNome = mercadoriaRepository.findByNome(mercadoriaDTO.getNome());
+        if (Objects.nonNull(mercadoriaRepositoryByNome) && !mercadoriaDTO.getId().equals(mercadoriaRepositoryByNome.getId())) {
+            throw new DuplicateKeyException(messageSource.getMessage("error.object.exist", null, locale));
+        }
+        Mercadoria mercadoria = mercadoriaRepository.findById(mercadoriaDTO.getId()).orElseThrow(() ->
+                new NotFoundException(messageSource.getMessage("error.isEmpty", null, locale)));
+        UnidadeMedida unidadeMedida = unidadeMedidaRepository.findById(mercadoriaDTO.getUnidadeMedida().getId()).orElseThrow(() ->
+                new NotFoundException(messageSource.getMessage("error.isEmpty", null, locale)));
+        mercadoria.setUnidadeMedida(unidadeMedida);
+        mercadoria.setNome(mercadoriaDTO.getNome());
+        mercadoria.setValorVenda(mercadoriaDTO.getValorVenda());
+        mercadoria.setSaldoEstoque(mercadoriaDTO.getSaldoEstoque());
+        mercadoria.setMultiplicador(mercadoriaDTO.getMultiplicador());
+        mercadoria.setAtivo(mercadoriaDTO.getAtivo());
         mercadoriaRepository.save(mercadoria);
 
     }
 
-    public void editar(MercadoriaDTO mercadoriaDTO) {
-        Mercadoria mercadoria = mercadoriaRepository.findById(mercadoriaDTO.getId()).orElseThrow(() ->
-                new NotFoundException(messageSource.getMessage("error.isEmpty", null, locale)));
-        if (Objects.nonNull(mercadoria)) {
-            UnidadeMedida unidadeMedida = unidadeMedidaRepository.findById(mercadoriaDTO.getUnidadeMedida().getId()).orElseThrow(() ->
-                    new NotFoundException(messageSource.getMessage("error.isEmpty", null, locale)));
-            mercadoria.setUnidadeMedida(unidadeMedida);
-            mercadoria.setNome(mercadoriaDTO.getNome());
-            mercadoria.setValorVenda(mercadoriaDTO.getValorVenda());
-            mercadoria.setSaldoEstoque(mercadoriaDTO.getSaldoEstoque());
-            mercadoria.setMultiplicador(mercadoriaDTO.getMultiplicador());
-            mercadoria.setAtivo(mercadoriaDTO.getAtivo());
-            mercadoriaRepository.save(mercadoria);
-        }
-    }
-
-    private void deleteById(MercadoriaDTO mercadoriaDTO) {
-        Mercadoria mercadoria = mercadoriaRepository.findById(mercadoriaDTO.getId()).orElseThrow(() ->
+    public void deleteById(Integer id) {
+        Mercadoria mercadoria = mercadoriaRepository.findById(id).orElseThrow(() ->
                 new NotFoundException(messageSource.getMessage("error.isEmpty", null, locale)));
         if (Objects.nonNull(mercadoria)) {
             mercadoriaRepository.delete(mercadoria);
@@ -93,36 +94,22 @@ public class MercadoriaService {
         return valorQuantidade;
     }
 
+
+   static {
+        CAMPO_ORDENACAO.put("nome", "nome");
+        CAMPO_ORDENACAO.put("unidadeMedida.nome", "um.nome");
+        CAMPO_ORDENACAO.put("saldoEstoque", "saldo_estoque");
+        CAMPO_ORDENACAO.put("valorVenda", "valor_venda");
+        CAMPO_ORDENACAO.put("dataCadastro", "data_cadastro");
+    }
     public Page<Mercadoria> findAllByPage(Filtro filtro) {
-        Pageable pageable = createPageableFromFiltro(filtro);
+        Pageable pageable = paginationSimple.createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "nome");
         return mercadoriaRepository.findAll(pageable, filtro.getSearch());
     }
 
-    private Pageable createPageableFromFiltro(Filtro filtro) {
-        if (Objects.isNull(filtro.getId())) {
-            filtro.setId("nome");
-            filtro.setDesc(true);
-        }
-        if (Objects.nonNull(filtro.getId())) {
-            switch (filtro.getId()) {
-                case "nome":
-                    filtro.setId("nome");
-                    break;
-                case "unidadeMedida.nome":
-                    filtro.setId("um.nome");
-                    break;
-                case "saldoEstoque":
-                    filtro.setId("saldo_estoque");
-                    break;
-                case "valorVenda":
-                    filtro.setId("valor_venda");
-                    break;
-                case "dataCadastro":
-                    filtro.setId("data_cadastro");
-                    break;
-            }
-        }
-        Sort sort = filtro.isDesc() ? Sort.by(filtro.getId()).descending() : Sort.by(filtro.getId()).ascending();
-        return PageRequest.of(filtro.getPagina(), filtro.getTamanhoPagina(), sort);
+
+    public Mercadoria findById(Integer id) {
+        return mercadoriaRepository.findById(id).orElseThrow(() -> new
+                NotFoundException(messageSource.getMessage("error.isEmpty", null, locale)));
     }
 }

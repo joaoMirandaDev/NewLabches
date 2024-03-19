@@ -1,7 +1,7 @@
 import SearchBar from '@components/common/filtro/filtro-sem-remocao-caracter'
 import PaginationTable from '@components/common/tabela/paginationTable'
 import DrawerCadastroMercadoria from '@components/pages/mercadoria/cadastro'
-import DrawerProduto from '@components/pages/mercadoria/editar/drawer'
+import DrawerMercadoria from '@components/pages/mercadoria/editar/drawer'
 import { ActionIcon, Button, Flex, Tooltip } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { useTranslate } from '@refinedev/core'
@@ -17,7 +17,6 @@ import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useEffect, useMemo, useState } from 'react'
 import IMercadoria from 'src/interfaces/mercadoria'
-import IProduto from 'src/interfaces/produto'
 import ISearch from 'src/interfaces/search'
 import api from 'src/utils/Api'
 import { PAGE_INDEX, PAGE_SIZE } from 'src/utils/Constants'
@@ -27,8 +26,8 @@ export default function FornecedorList() {
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [opened, { open, close }] = useDisclosure(false)
   const [sorting, setSorting] = useState<MRT_SortingState>([])
-  const [produto, setProduto] = useState<IProduto | null>(null)
-  const [dataMercadoria, setDataMercadoria] = useState<IProduto[]>([])
+  const [produto, setProduto] = useState<IMercadoria | null>(null)
+  const [dataMercadoria, setDataMercadoria] = useState<IMercadoria[]>([])
   const [resetPesquisa, setResetPesquisa] = useState<boolean>(false)
   const [totalElements, setTotalElements] = useState<number>(0)
   const [pagination, setPagination] = useState<MRT_PaginationState>({
@@ -181,7 +180,7 @@ export default function FornecedorList() {
   )
 
   const visualizar = (id: number) => {
-    api.get(`api/produtos/findById/${id}`).then(response => {
+    api.get(`api/mercadoria/findById/${id}`).then(response => {
       setProduto(response.data)
       setOpenModal(true)
     })
@@ -224,7 +223,9 @@ export default function FornecedorList() {
   return (
     <>
       <SearchBar
-        placeholder={t('pages.produtos.placeHoldeSearchBar')}
+        placeholder={t(
+          'Pesquise por nome, saldo disponível, valor de venda, unidade de medida e data de cadastro'
+        )}
         clearSearch={resetPesquisa}
         textSearch={t('pages.produtos.buttonSearchBar')}
         icone={true}
@@ -258,7 +259,7 @@ export default function FornecedorList() {
         }}
         rowCount={totalElements}
       />
-      <DrawerProduto
+      <DrawerMercadoria
         close={closeDrawerVisual}
         refresDrawerVisualizar={refresDrawerVisualizar}
         openModal={openModal}

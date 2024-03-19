@@ -1,11 +1,11 @@
 interface unidadeMedida {
-  id?: number
-  nome?: string
+  id: number | null
+  nome: string
 }
 export default interface IMercadoria {
-  id?: number
+  id: number | null
   nome?: string
-  unidadeMedida?: unidadeMedida
+  unidadeMedida: unidadeMedida
   valorVenda?: number
   saldoEstoque?: number
   dataCadastro?: Date
