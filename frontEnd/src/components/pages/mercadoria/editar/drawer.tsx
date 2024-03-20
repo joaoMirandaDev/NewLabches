@@ -3,6 +3,7 @@ import {
   Divider,
   Drawer,
   Flex,
+  Group,
   NumberInput,
   Popover,
   Select,
@@ -15,7 +16,11 @@ import {
 import { useEffect, useState } from 'react'
 import { useTranslate } from '@refinedev/core'
 import api from 'src/utils/Api'
-import { IconExclamationCircle, IconTrash } from '@tabler/icons'
+import {
+  IconArrowBarLeft,
+  IconExclamationCircle,
+  IconTrash,
+} from '@tabler/icons'
 import { IconDatabaseEdit } from '@tabler/icons-react'
 import { ErrorNotification, SuccessNotification } from '@components/common'
 import { useForm, zodResolver } from '@mantine/form'
@@ -94,7 +99,7 @@ const DrawerMercadoria: React.FC<DrawerMercadoria> = ({
       .delete(`/api/mercadoria/deleteById/${form.values.id}`)
       .then(() => {
         SuccessNotification({
-          message: 'Mercadoria deletada com sucesso!',
+          message: form.values.nome + ' deletado(a) com sucesso!',
         })
         close(false)
         setOnEdit(false)
@@ -105,11 +110,6 @@ const DrawerMercadoria: React.FC<DrawerMercadoria> = ({
           message: 'Erro ao deletar!',
         })
       })
-  }
-
-  const handleCancelar = () => {
-    close(false)
-    setOnEdit(false)
   }
 
   const handleSelectCategoria = (value: string | number | null) => {
@@ -131,7 +131,7 @@ const DrawerMercadoria: React.FC<DrawerMercadoria> = ({
         .put('api/mercadoria/editar', form.values)
         .then(() => {
           SuccessNotification({
-            message: form.values.nome + ' editado com sucesso!',
+            message: form.values.nome + ' editado(a) com sucesso!',
           })
           setOnEdit(false)
           close(false)
@@ -154,34 +154,39 @@ const DrawerMercadoria: React.FC<DrawerMercadoria> = ({
   const renderButtons = () => (
     <>
       <Flex mt={'1rem'} justify={'space-between'}>
-        <Popover width={250} position="bottom" withArrow shadow="md">
-          <Popover.Target>
-            <Button color="red" leftIcon={<IconTrash />}>
-              {t('components.button.deletar')}
-            </Button>
-          </Popover.Target>
-          <Popover.Dropdown ml={'0.5rem'}>
-            <Flex align={'center'}>
-              <IconExclamationCircle color="orange" />
-              <Text size="sm" ml={'0.5rem'}>
-                Deseja deletar este item ?
-              </Text>
-            </Flex>
-            <Flex>
-              <Button
-                onClick={() => handleDelete()}
-                compact
-                variant="subtle"
-                color="red"
-              >
-                {t('components.button.confirmar')}
+        <Group>
+          <Button leftIcon={<IconArrowBarLeft />} onClick={() => close(false)}>
+            {t('components.button.voltar')}
+          </Button>
+          <Popover width={200} position="bottom" withArrow shadow="md">
+            <Popover.Target>
+              <Button color="red" leftIcon={<IconTrash />}>
+                {t('components.button.deletar')}
               </Button>
-              <Button onClick={() => handleCancelar()} compact variant="subtle">
-                {t('components.button.cancelar')}
-              </Button>
-            </Flex>
-          </Popover.Dropdown>
-        </Popover>
+            </Popover.Target>
+            <Popover.Dropdown ml={'0.5rem'}>
+              <Flex align={'center'}>
+                <IconExclamationCircle color="orange" />
+                <Text size="sm" ml={'0.5rem'}>
+                  {t('pages.produtos.visualizar.deleteText')}
+                </Text>
+              </Flex>
+              <Flex>
+                <Button
+                  onClick={() => handleDelete()}
+                  compact
+                  variant="subtle"
+                  color="red"
+                >
+                  {t('components.button.confirmar')}
+                </Button>
+                <Button onClick={() => close(false)} compact variant="subtle">
+                  {t('components.button.cancelar')}
+                </Button>
+              </Flex>
+            </Popover.Dropdown>
+          </Popover>
+        </Group>
         {!onEdit && (
           <Button
             leftIcon={<IconDatabaseEdit />}
@@ -211,10 +216,13 @@ const DrawerMercadoria: React.FC<DrawerMercadoria> = ({
       opened={openModal}
       onClose={() => close(false)}
       position="right"
-      withCloseButton={true}
+      withinPortal={true}
+      size={'lg'}
+      closeOnClickOutside={false}
+      withCloseButton={false}
       closeOnEscape={false}
       trapFocus={false}
-      title={'Visualizar Produto'}
+      title={'Visualizar Mercadoria'}
     >
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <TextInput

@@ -3,7 +3,7 @@ package com.example.Authentication.Compras.DTO;
 import com.example.Authentication.Compras.model.Compras;
 import com.example.Authentication.FormaPagamento.DTO.FormaPagamentoDTO;
 import com.example.Authentication.Fornecedores.DTO.FornecedorDto;
-import com.example.Authentication.ItensCompras.DTO.ItensComprasDTO;
+import com.example.Authentication.MercadoriasCompras.DTO.ItensComprasDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

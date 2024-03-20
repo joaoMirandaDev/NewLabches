@@ -1,7 +1,7 @@
-package com.example.Authentication.ItensCompras.model;
+package com.example.Authentication.MercadoriasCompras.model;
 
 import com.example.Authentication.Compras.model.Compras;
-import com.example.Authentication.mercadoria.model.Mercadoria;
+import com.example.Authentication.Mercadoria.model.Mercadoria;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;

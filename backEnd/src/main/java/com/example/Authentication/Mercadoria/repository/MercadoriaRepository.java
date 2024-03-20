@@ -1,6 +1,6 @@
-package com.example.Authentication.mercadoria.repository;
+package com.example.Authentication.Mercadoria.repository;
 
-import com.example.Authentication.mercadoria.model.Mercadoria;
+import com.example.Authentication.Mercadoria.model.Mercadoria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

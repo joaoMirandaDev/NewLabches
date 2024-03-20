@@ -1,14 +1,16 @@
-package com.example.Authentication.mercadoria.controller;
+package com.example.Authentication.Mercadoria.controller;
 
-import com.example.Authentication.Colaborador.model.Colaborador;
 import com.example.Authentication.Utils.filtro.Filtro;
-import com.example.Authentication.mercadoria.DTO.MercadoriaDTO;
-import com.example.Authentication.mercadoria.model.Mercadoria;
-import com.example.Authentication.mercadoria.service.MercadoriaService;
+import com.example.Authentication.Mercadoria.DTO.MercadoriaDTO;
+import com.example.Authentication.Mercadoria.DTO.MercadoriaGripDTO;
+import com.example.Authentication.Mercadoria.model.Mercadoria;
+import com.example.Authentication.Mercadoria.service.MercadoriaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,6 +33,11 @@ public class MercadoriaController {
     @GetMapping(value = "/findById/{id}", produces = "application/json")
     public Mercadoria saveIngrediente(@PathVariable Integer id)  {
         return mercadoriaService.findById(id);
+    }
+
+    @GetMapping(value = "/findAllGrip", produces = "application/json")
+    public List<MercadoriaGripDTO> findAllGrip()  {
+        return mercadoriaService.findAll();
     }
 
     @DeleteMapping(value = "/deleteById/{id}", produces = "application/json")

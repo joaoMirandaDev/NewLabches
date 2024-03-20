@@ -2,7 +2,7 @@ package com.example.Authentication.Compras.model;
 
 import com.example.Authentication.FormaPagamento.model.FormaPagamento;
 import com.example.Authentication.Fornecedores.model.Fornecedor;
-import com.example.Authentication.ItensCompras.model.ItensCompras;
+import com.example.Authentication.MercadoriasCompras.model.ItensCompras;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

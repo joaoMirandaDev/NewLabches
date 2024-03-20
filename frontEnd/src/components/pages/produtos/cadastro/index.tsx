@@ -1,12 +1,16 @@
 import {
   Button,
+  Card,
+  Chip,
   Divider,
   Drawer,
   Flex,
+  Group,
   NumberInput,
   Select,
   SelectItem,
   Space,
+  Text,
   TextInput,
 } from '@mantine/core'
 import { useEffect, useState } from 'react'
@@ -16,6 +20,7 @@ import api from 'src/utils/Api'
 import { useForm, zodResolver } from '@mantine/form'
 import { DrowerCadastroProdutos } from '../validation/schema'
 import { ErrorNotification, SuccessNotification } from '@components/common'
+import IMercadoria from 'src/interfaces/mercadoria'
 interface DrawerCadastroProduto {
   openModal: boolean
   close: (value: boolean) => void
@@ -63,11 +68,17 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
   useEffect(() => {
     if (openModal) {
       getAllCategoria()
+      getAllMercadoriaGrip()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openModal])
   const [categoria, setCategoria] = useState<SelectItem[]>([])
+  const [mercadoria, setMercadoria] = useState<IMercadoria[]>([])
   const [messageErro, setMessageErro] = useState<boolean>(false)
+  const getAllMercadoriaGrip = async () => {
+    const value = await api.get('api/mercadoria/findAllGrip')
+    setMercadoria(value.data)
+  }
   const getAllCategoria = async () => {
     const value = await api.get('api/categoria/findAll')
     const data = value.data.map((data: Categoria) => ({
@@ -143,6 +154,7 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
     <Drawer
       opened={openModal}
       onClose={() => close(false)}
+      size={'lg'}
       position="right"
       withinPortal
       closeOnClickOutside={false}
@@ -192,6 +204,24 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
           onChange={value => form.setFieldValue('preco', Number(value))}
           required
         />
+        <Space h="xl" />
+        <Card shadow="sm" padding="lg" radius="md" withBorder>
+          <Card.Section withBorder inheritPadding py="xs">
+            <Text weight={700}>
+              Selecione as mercadorias que compõe o lanche
+            </Text>
+          </Card.Section>
+          <Space h="xl" />
+          <Chip.Group>
+            <Group position="center">
+              {mercadoria.map(merc => (
+                <Chip key={merc.id} value={merc.id!}>
+                  {merc.nome!}
+                </Chip>
+              ))}
+            </Group>
+          </Chip.Group>
+        </Card>
         <Space h="xl" />
         {renderButtons()}
       </form>

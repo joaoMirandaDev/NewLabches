@@ -1,4 +1,4 @@
-package com.example.Authentication.mercadoria.model;
+package com.example.Authentication.Mercadoria.model;
 
 import com.example.Authentication.UnidadeMedida.model.UnidadeMedida;
 import com.fasterxml.jackson.annotation.JsonFormat;

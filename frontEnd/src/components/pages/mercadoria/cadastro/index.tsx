@@ -3,6 +3,7 @@ import {
   Divider,
   Drawer,
   Flex,
+  Group,
   NumberInput,
   Select,
   SelectItem,
@@ -16,6 +17,7 @@ import api from 'src/utils/Api'
 import { useForm, zodResolver } from '@mantine/form'
 import { DrowerCadastroProdutos } from '../validation/schema'
 import { ErrorNotification, SuccessNotification } from '@components/common'
+import { IconArrowBarLeft } from '@tabler/icons'
 interface DrawerCadastroMercadoria {
   openModal: boolean
   close: (value: boolean) => void
@@ -124,13 +126,18 @@ const DrawerCadastroMercadoria: React.FC<DrawerCadastroMercadoria> = ({
   const renderButtons = () => (
     <>
       <Flex mt={'1rem'} justify={'space-between'}>
-        <Button
-          color="red"
-          leftIcon={<IconCircleXFilled />}
-          onClick={() => handleClose()}
-        >
-          {t('components.button.cancelar')}
-        </Button>
+        <Group>
+          <Button leftIcon={<IconArrowBarLeft />} onClick={() => close(false)}>
+            {t('components.button.voltar')}
+          </Button>
+          <Button
+            color="red"
+            leftIcon={<IconCircleXFilled />}
+            onClick={() => handleClose()}
+          >
+            {t('components.button.cancelar')}
+          </Button>
+        </Group>
         <Button leftIcon={<IconDatabasePlus />} type="submit" color="green">
           {t('components.button.salvar')}
         </Button>
@@ -143,6 +150,7 @@ const DrawerCadastroMercadoria: React.FC<DrawerCadastroMercadoria> = ({
       opened={openModal}
       onClose={() => close(false)}
       position="right"
+      size={'lg'}
       withinPortal
       closeOnClickOutside={false}
       withCloseButton={false}

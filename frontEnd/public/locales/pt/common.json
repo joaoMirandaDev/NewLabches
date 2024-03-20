@@ -181,7 +181,7 @@
     "mercadoria": {
       "table": {
         "nome": "Nome",
-        "saldoEstoque": "Saldo disponível",
+        "saldoEstoque": "Quantidade disponível",
         "valorVenda": "Valor de venda",
         "unidadeMedida": "Unidade de medida",
         "dataCadastro": "Data de cadastro"
@@ -211,7 +211,7 @@
       "deletar": "Deletar"
     },
     "table": {
-      "action": "Ações"
+      "action": "Ação"
     }
   },
   "documentTitle": {

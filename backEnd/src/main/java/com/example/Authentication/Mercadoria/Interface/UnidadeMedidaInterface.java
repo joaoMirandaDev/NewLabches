@@ -1,4 +1,4 @@
-package com.example.Authentication.mercadoria.Interface;
+package com.example.Authentication.Mercadoria.Interface;
 
 public interface UnidadeMedidaInterface {
     String KG = "KG";

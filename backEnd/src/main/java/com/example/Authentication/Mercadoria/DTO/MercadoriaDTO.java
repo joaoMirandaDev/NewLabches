@@ -1,5 +1,6 @@
-package com.example.Authentication.mercadoria.DTO;
+package com.example.Authentication.Mercadoria.DTO;
 
+import com.example.Authentication.Mercadoria.model.Mercadoria;
 import com.example.Authentication.UnidadeMedida.model.UnidadeMedida;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -26,4 +27,8 @@ public class MercadoriaDTO {
     private Date dataCadastro;
     private Integer ativo;
 
+    public MercadoriaDTO(Mercadoria mercadoria) {
+        this.id = mercadoria.getId();
+        this.nome = mercadoria.getNome();
+    }
 }

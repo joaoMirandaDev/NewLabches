@@ -30,11 +30,11 @@ import {
   Flex,
   Button,
   Divider,
+  Image,
 } from '@mantine/core'
 import { IconList, IconMenu2, IconPower, IconDashboard } from '@tabler/icons'
 import { RefineLayoutSiderProps } from '@refinedev/mantine'
 import { useRouter } from 'next/router'
-import ImageDelivery from 'src/assets'
 const defaultNavIcon = <IconList size={18} />
 
 export const Menu: React.FC<RefineLayoutSiderProps> = ({ render, meta }) => {
@@ -292,7 +292,7 @@ export const Menu: React.FC<RefineLayoutSiderProps> = ({ render, meta }) => {
           </Navbar.Section>
           <Divider />
           <Navbar.Section>
-            <ImageDelivery />
+            <Image src={'/images/logo.png'} alt={'Logo'} />
           </Navbar.Section>
         </Navbar>
       </MediaQuery>

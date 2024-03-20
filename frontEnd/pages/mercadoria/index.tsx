@@ -2,10 +2,19 @@ import SearchBar from '@components/common/filtro/filtro-sem-remocao-caracter'
 import PaginationTable from '@components/common/tabela/paginationTable'
 import DrawerCadastroMercadoria from '@components/pages/mercadoria/cadastro'
 import DrawerMercadoria from '@components/pages/mercadoria/editar/drawer'
-import { ActionIcon, Button, Flex, Tooltip } from '@mantine/core'
+import {
+  ActionIcon,
+  Box,
+  Button,
+  Flex,
+  Group,
+  Text,
+  Tooltip,
+} from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { useTranslate } from '@refinedev/core'
-import { IconEye, IconMeat } from '@tabler/icons'
+import { IconCirclePlus, IconEye, IconFileSearch } from '@tabler/icons'
+import { IconCircleFilled } from '@tabler/icons-react'
 import Cookies from 'js-cookie'
 import {
   MRT_ColumnDef,
@@ -120,15 +129,33 @@ export default function FornecedorList() {
         header: t('pages.mercadoria.table.saldoEstoque'),
         enableSorting: true,
         enableColumnFilter: true,
-        size: 15,
+        size: 25,
         minSize: 10,
-        maxSize: 30,
+        maxSize: 40,
         mantineTableBodyCellProps: {
           align: 'center',
         },
         mantineTableHeadCellProps: {
           align: 'center',
         },
+        Cell: ({ cell }) => (
+          <Box
+            sx={theme => ({
+              backgroundColor:
+                cell.getValue<number>() <= 10
+                  ? theme.colors.red[9]
+                  : cell.getValue<number>() <= 20
+                  ? theme.colors.yellow[9]
+                  : theme.colors.green[9],
+              borderRadius: '4px',
+              color: '#fff',
+              maxWidth: '9ch',
+              padding: '5px',
+            })}
+          >
+            {cell.getValue<number>()?.toFixed(2)}
+          </Box>
+        ),
       },
       {
         accessorKey: 'valorVenda',
@@ -144,6 +171,10 @@ export default function FornecedorList() {
         mantineTableHeadCellProps: {
           align: 'center',
         },
+        Cell: ({ cell }) =>
+          cell
+            .getValue<number>()
+            .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
       },
       {
         accessorKey: 'unidadeMedida.nome',
@@ -217,6 +248,17 @@ export default function FornecedorList() {
           <IconEye style={{ cursor: 'pointer' }} />
         </ActionIcon>
       </Tooltip>
+      <Tooltip label={'Histórico'}>
+        <ActionIcon
+          size="sm"
+          disabled={validatePermissionRole()}
+          variant="transparent"
+          aria-label="Settings"
+          onClick={() => visualizar(row.original.id!)}
+        >
+          <IconFileSearch style={{ cursor: 'pointer' }} />
+        </ActionIcon>
+      </Tooltip>
     </Flex>
   )
 
@@ -233,11 +275,11 @@ export default function FornecedorList() {
       />
       <Flex justify={'flex-end'} m={10}>
         <Button
-          leftIcon={<IconMeat size={16} />}
+          leftIcon={<IconCirclePlus size={16} />}
           disabled={validatePermissionRole()}
           onClick={() => open()}
         >
-          {t('pages.produtos.buttonCadastro')}
+          Casdastrar Mercadoria
         </Button>
       </Flex>
       <PaginationTable
@@ -259,6 +301,20 @@ export default function FornecedorList() {
         }}
         rowCount={totalElements}
       />
+      <Group>
+        <Group position="left" align="center" mt={20} spacing={10}>
+          <IconCircleFilled style={{ color: 'red' }} />
+          <Text size={'sm'}>Saldo menor que 10.00 |</Text>
+        </Group>
+        <Group position="left" align="center" mt={20} spacing={10}>
+          <IconCircleFilled style={{ color: 'orange' }} />
+          <Text size={'sm'}>Saldo maior que 10.00 e menor que 20.00 |</Text>
+        </Group>
+        <Group position="left" align="center" mt={20} spacing={10}>
+          <IconCircleFilled style={{ color: 'green' }} />
+          <Text size={'sm'}>Saldo maior que 20.00</Text>
+        </Group>
+      </Group>
       <DrawerMercadoria
         close={closeDrawerVisual}
         refresDrawerVisualizar={refresDrawerVisualizar}

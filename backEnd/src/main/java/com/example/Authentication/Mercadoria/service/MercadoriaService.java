@@ -1,13 +1,13 @@
-package com.example.Authentication.mercadoria.service;
+package com.example.Authentication.Mercadoria.service;
 
 import com.example.Authentication.Utils.filtro.Filtro;
 import com.example.Authentication.Utils.pagination.PaginationSimple;
-import com.example.Authentication.mercadoria.DTO.MercadoriaDTO;
-import com.example.Authentication.mercadoria.Interface.UnidadeMedidaInterface;
-import com.example.Authentication.mercadoria.model.Mercadoria;
-import org.springframework.data.domain.PageRequest;
+import com.example.Authentication.Mercadoria.DTO.MercadoriaDTO;
+import com.example.Authentication.Mercadoria.DTO.MercadoriaGripDTO;
+import com.example.Authentication.Mercadoria.Interface.UnidadeMedidaInterface;
+import com.example.Authentication.Mercadoria.model.Mercadoria;
 import org.springframework.data.domain.Pageable;
-import com.example.Authentication.mercadoria.repository.MercadoriaRepository;
+import com.example.Authentication.Mercadoria.repository.MercadoriaRepository;
 import com.example.Authentication.UnidadeMedida.model.UnidadeMedida;
 import com.example.Authentication.UnidadeMedida.repository.UnidadeMedidaRepository;
 import com.example.Authentication.Utils.exceptions.NotFoundException;
@@ -15,10 +15,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -111,5 +111,9 @@ public class MercadoriaService {
     public Mercadoria findById(Integer id) {
         return mercadoriaRepository.findById(id).orElseThrow(() -> new
                 NotFoundException(messageSource.getMessage("error.isEmpty", null, locale)));
+    }
+
+    public List<MercadoriaGripDTO> findAll() {
+        return  mercadoriaRepository.findAll().stream().map(MercadoriaGripDTO::new).collect(Collectors.toList());
     }
 }

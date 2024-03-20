@@ -42,7 +42,6 @@ public class ProdutoController {
         return ResponseEntity.ok(produtoService.findById(id));
     }
 
-
     @DeleteMapping(value = "delete/{id}")
     public void deleteProdutoById(@PathVariable Integer id)  {
         produtoService.deleteById(id);
