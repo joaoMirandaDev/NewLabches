@@ -1,90 +1,196 @@
-import { Box, Button, Flex, Modal, Text } from '@mantine/core'
+import { Button, Flex, Modal } from '@mantine/core'
 
 import { useDisclosure } from '@mantine/hooks'
 import api from 'src/utils/Api'
-import { useEffect, useState } from 'react'
-import ICliente from 'src/interfaces/fornecedor'
-import { formatarCPFCNPJ } from 'src/utils/FormatterUtils'
-import { useTranslate } from '@refinedev/core'
-import { IconCircleXFilled } from '@tabler/icons-react'
-import { IconTrash } from '@tabler/icons'
-interface ModalFornecedor {
+import { useEffect, useMemo, useState } from 'react'
+import ISearch from 'src/interfaces/search'
+import IMercadoriaCompra from 'src/interfaces/MercadoriaCompras'
+import PaginationTable from '@components/common/tabela/paginationTable'
+import {
+  MRT_ColumnDef,
+  MRT_PaginationState,
+  MRT_SortingState,
+} from 'mantine-react-table'
+import { PAGE_INDEX, PAGE_SIZE } from 'src/utils/Constants'
+import { IconArrowBarLeft } from '@tabler/icons'
+interface ModalHistoricoMercadoria {
   openModal: boolean
-  idCliente: number
-  title: string
-  textExclusao: string
-  confirmaExclusao: (value: boolean) => void
+  id: number
+  closeHistorico: (value: boolean) => void
 }
 
-const ModalFornecedor: React.FC<ModalFornecedor> = ({
+const ModalHistoricoMercadoria: React.FC<ModalHistoricoMercadoria> = ({
   openModal,
-  idCliente,
-  title,
-  textExclusao,
-  confirmaExclusao,
+  id,
+  closeHistorico,
 }) => {
-  const t = useTranslate()
   const [opened, { open, close }] = useDisclosure(false)
-  const [data, setData] = useState<ICliente>()
+  const [sorting, setSorting] = useState<MRT_SortingState>([])
+  const [totalElements, setTotalElements] = useState<number>(0)
+  const [pagination, setPagination] = useState<MRT_PaginationState>({
+    pageIndex: PAGE_INDEX,
+    pageSize: PAGE_SIZE,
+  })
+  const [filtro, setFiltro] = useState<ISearch>({
+    search: '',
+    pagina: 0,
+    tamanhoPagina: 10,
+    id: 'data',
+    desc: false,
+  })
+
+  const [data, setData] = useState<IMercadoriaCompra[]>([])
   useEffect(() => {
     if (openModal) {
       open()
-      getCliente()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, openModal])
 
-  const getCliente = async () => {
-    const dados = await api.get(`api/fornecedor/findById/${idCliente}`)
-    setData(dados.data)
+  useEffect(() => {
+    if (
+      pagination.pageIndex !== filtro.pagina ||
+      pagination.pageSize !== filtro.tamanhoPagina
+    ) {
+      const localFiltro = {
+        ...filtro,
+        tamanhoPagina: pagination.pageSize,
+        pagina: pagination.pageIndex,
+      }
+      setFiltro(localFiltro)
+    }
+    getMerdoriasCompra()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pagination, filtro])
+
+  const getMerdoriasCompra = async () => {
+    const dados = await api.post(`api/merdoriasCompra/list/${id}`, filtro)
+    console.log(dados)
+    setTotalElements(dados.data.totalElements)
+    setData(dados.data.content)
   }
 
-  const setConfirmacao = () => {
-    confirmaExclusao(true)
+  const fecharModal = () => {
     close()
+    closeHistorico(false)
   }
 
-  const cancelaExclusao = () => {
-    confirmaExclusao(false)
-    close()
-  }
+  const columns = useMemo<MRT_ColumnDef<IMercadoriaCompra>[]>(
+    () => [
+      {
+        accessorFn: row =>
+          `${row.quantidade?.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })} ${row.unidadeMedida?.nome}`,
+        accessorKey: 'quantidade',
+        header: 'Quantidade',
+        enableSorting: true,
+        enableColumnFilter: true,
+        size: 10,
+        minSize: 10,
+        maxSize: 30,
+        mantineTableBodyCellProps: {
+          align: 'center',
+        },
+        mantineTableHeadCellProps: {
+          align: 'center',
+        },
+      },
+      {
+        accessorKey: 'valorFinalUnitario',
+        header: 'Valor unitário',
+        enableSorting: true,
+        enableColumnFilter: true,
+        size: 15,
+        minSize: 10,
+        maxSize: 30,
+        mantineTableBodyCellProps: {
+          align: 'center',
+        },
+        mantineTableHeadCellProps: {
+          align: 'center',
+        },
+        Cell: ({ cell }) =>
+          cell
+            .getValue<number>()
+            .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+      },
+      {
+        accessorKey: 'valorCompra',
+        header: 'Valor de compra',
+        enableSorting: true,
+        enableColumnFilter: true,
+        size: 15,
+        minSize: 10,
+        maxSize: 30,
+        mantineTableBodyCellProps: {
+          align: 'center',
+        },
+        mantineTableHeadCellProps: {
+          align: 'center',
+        },
+        Cell: ({ cell }) =>
+          cell
+            .getValue<number>()
+            .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+      },
+      {
+        accessorKey: 'data',
+        header: 'Data de compra',
+        enableSorting: true,
+        enableColumnFilter: true,
+        size: 15,
+        minSize: 10,
+        maxSize: 30,
+        mantineTableBodyCellProps: {
+          align: 'center',
+        },
+        mantineTableHeadCellProps: {
+          align: 'center',
+        },
+      },
+    ],
+    []
+  )
 
   return (
     <Modal
       opened={opened}
       onClose={close}
       centered
-      size={620}
+      size={800}
       closeOnClickOutside={false}
       withCloseButton={false}
       radius={'md'}
       closeOnEscape={false}
       trapFocus={false}
-      title={title}
+      title={'Histórico'}
     >
-      <Box>
-        <Flex>
-          <Text fw={700}>{textExclusao}</Text>
-          <Text ml={10} fw={500}>
-            {data?.nomeRazaoSocial + ' -'}
-          </Text>
-          <Text fw={500}>{formatarCPFCNPJ(data?.cpfCnpj || '')}</Text>
-        </Flex>
-      </Box>
-      <Flex mt={20} justify={'space-between'}>
-        <Button
-          leftIcon={<IconCircleXFilled />}
-          color="red"
-          onClick={cancelaExclusao}
-        >
-          {t('components.button.cancelar')}
-        </Button>
-        <Button leftIcon={<IconTrash />} color="green" onClick={setConfirmacao}>
-          {t('components.button.confirmar')}
+      <PaginationTable
+        setSorting={setSorting}
+        columns={columns}
+        setPagination={setPagination}
+        enableSorting
+        enableClickToCopy
+        positionActionsColumn="last"
+        data={data}
+        state={{
+          sorting,
+          pagination: {
+            pageIndex: filtro.pagina,
+            pageSize: filtro.tamanhoPagina,
+          },
+        }}
+        rowCount={totalElements}
+      />
+      <Flex mt={20} justify={'flex-start'}>
+        <Button leftIcon={<IconArrowBarLeft />} onClick={() => fecharModal()}>
+          Voltar
         </Button>
       </Flex>
     </Modal>
   )
 }
 
-export default ModalFornecedor
+export default ModalHistoricoMercadoria

@@ -1,5 +1,6 @@
-package com.example.Authentication.UnidadeMedida.model;
+package com.example.Authentication.UnidadeMedida.DTO;
 
+import com.example.Authentication.UnidadeMedida.model.UnidadeMedida;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,18 +10,16 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity
-@Table(name = "unidade_medida")
-public class UnidadeMedida {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+public class UnidadeMedidaDTO {
+
     private Integer id;
 
     private String nome;
 
     private Integer ativo;
 
-    public UnidadeMedida(UnidadeMedida unidadeMedida) {
+    public UnidadeMedidaDTO(UnidadeMedida unidadeMedida) {
         this.id = unidadeMedida.getId();
         this.nome = unidadeMedida.getNome();
     }

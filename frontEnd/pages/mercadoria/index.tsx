@@ -2,6 +2,7 @@ import SearchBar from '@components/common/filtro/filtro-sem-remocao-caracter'
 import PaginationTable from '@components/common/tabela/paginationTable'
 import DrawerCadastroMercadoria from '@components/pages/mercadoria/cadastro'
 import DrawerMercadoria from '@components/pages/mercadoria/editar/drawer'
+import ModalHistoricoMercadoria from '@components/pages/mercadoria/modalHistorico/modal'
 import {
   ActionIcon,
   Box,
@@ -33,6 +34,8 @@ import { PAGE_INDEX, PAGE_SIZE } from 'src/utils/Constants'
 export default function FornecedorList() {
   const t = useTranslate()
   const [openModal, setOpenModal] = useState<boolean>(false)
+  const [openModalHistorico, setOpenModalHistorico] = useState<boolean>(false)
+  const [idHistorio, setIdHistorio] = useState<number | null>(null)
   const [opened, { open, close }] = useDisclosure(false)
   const [sorting, setSorting] = useState<MRT_SortingState>([])
   const [produto, setProduto] = useState<IMercadoria | null>(null)
@@ -217,6 +220,11 @@ export default function FornecedorList() {
     })
   }
 
+  const closeModalHistorico = (value: boolean) => {
+    setOpenModalHistorico(value)
+    setIdHistorio(null)
+  }
+
   const closeDrawerVisual = (condicao: boolean) => {
     if (!condicao) {
       setOpenModal(condicao)
@@ -233,6 +241,11 @@ export default function FornecedorList() {
     if (Cookies.get('role') == 'CAIXA') {
       return true
     }
+  }
+
+  const getHisotico = (id: number) => {
+    setIdHistorio(id)
+    setOpenModalHistorico(true)
   }
 
   const rowActions = ({ row }: { row: MRT_Row<IMercadoria> }) => (
@@ -254,7 +267,7 @@ export default function FornecedorList() {
           disabled={validatePermissionRole()}
           variant="transparent"
           aria-label="Settings"
-          onClick={() => visualizar(row.original.id!)}
+          onClick={() => getHisotico(row.original.id!)}
         >
           <IconFileSearch style={{ cursor: 'pointer' }} />
         </ActionIcon>
@@ -326,6 +339,13 @@ export default function FornecedorList() {
         openModal={opened}
         close={closeDrawer}
       />
+      {idHistorio && (
+        <ModalHistoricoMercadoria
+          closeHistorico={closeModalHistorico}
+          openModal={openModalHistorico}
+          id={idHistorio!}
+        />
+      )}
     </>
   )
 }

@@ -2,6 +2,7 @@ package com.example.Authentication.MercadoriasCompras.model;
 
 import com.example.Authentication.Compras.model.Compras;
 import com.example.Authentication.Mercadoria.model.Mercadoria;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,6 +28,7 @@ public class ItensCompras {
     @JoinColumn(name = "id_registro_compra", referencedColumnName = "id")
     private Compras compras;
     private Double quantidade;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone="GMT-3")
     private Date data;
     @Column(name = "valor_compra")
     private Double valorCompra;
