@@ -1,0 +1,1 @@
+ALTER TABLE lanchonete.mercadoria ADD COLUMN limite_minimo DOUBLE;

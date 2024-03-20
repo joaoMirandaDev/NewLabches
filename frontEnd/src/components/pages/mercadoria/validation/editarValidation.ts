@@ -8,6 +8,7 @@ const DrowerEditarMercadoria = () => {
     nome: z.string().nonempty({ message: requiredField }),
     valorVenda: z.number().positive({ message: requiredField }),
     multiplicador: z.number().positive({ message: requiredField }),
+    limiteMinimo: z.number().positive({ message: requiredField }),
     saldoEstoque: z.number().nonnegative({ message: requiredField }),
   })
 }

@@ -31,6 +31,8 @@ public class Mercadoria {
     @Column(name = "data_cadastro")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone="GMT-3")
     private Date dataCadastro;
+    @Column(name = "limite_minimo")
+    private Double limiteMinimo;
     private Integer ativo;
 
 }

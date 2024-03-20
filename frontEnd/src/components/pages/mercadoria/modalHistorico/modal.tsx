@@ -65,7 +65,6 @@ const ModalHistoricoMercadoria: React.FC<ModalHistoricoMercadoria> = ({
 
   const getMerdoriasCompra = async () => {
     const dados = await api.post(`api/merdoriasCompra/list/${id}`, filtro)
-    console.log(dados)
     setTotalElements(dados.data.totalElements)
     setData(dados.data.content)
   }

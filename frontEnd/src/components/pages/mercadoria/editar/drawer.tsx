@@ -56,6 +56,7 @@ const DrawerMercadoria: React.FC<DrawerMercadoria> = ({
     ativo: number
     saldoEstoque: number
     multiplicador: number
+    limiteMinimo: number
     unidadeMedida: {
       id: number | null
       nome: string
@@ -67,6 +68,7 @@ const DrawerMercadoria: React.FC<DrawerMercadoria> = ({
       ativo: 0,
       multiplicador: 0,
       nome: '',
+      limiteMinimo: 0,
       saldoEstoque: 0,
       unidadeMedida: {
         id: null,
@@ -138,7 +140,6 @@ const DrawerMercadoria: React.FC<DrawerMercadoria> = ({
           refresDrawerVisualizar(true)
         })
         .catch(response => {
-          console.log(response)
           ErrorNotification({
             title: 'Erro ao editar ' + form.values.nome,
             message: response.message,
@@ -301,6 +302,23 @@ const DrawerMercadoria: React.FC<DrawerMercadoria> = ({
           withAsterisk
           hideControls
           onChange={value => form.setFieldValue('valorVenda', Number(value))}
+          required
+        />
+        <Space h="xl" />
+        <Divider />
+        <NumberInput
+          {...form.getInputProps('limiteMinimo')}
+          mt={'1rem'}
+          precision={2}
+          disabled={!onEdit}
+          decimalSeparator=","
+          thousandsSeparator="."
+          defaultValue={form.values.limiteMinimo}
+          placeholder={'Limite minimo'}
+          label={'Limite mínimo'}
+          withAsterisk
+          hideControls
+          onChange={value => form.setFieldValue('limiteMinimo', Number(value))}
           required
         />
         <Space h="xl" />

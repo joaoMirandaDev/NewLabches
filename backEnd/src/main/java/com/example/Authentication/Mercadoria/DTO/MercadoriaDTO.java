@@ -19,6 +19,7 @@ public class MercadoriaDTO {
     private Integer id;
     private String nome;
     private UnidadeMedidaDTO unidadeMedida;
+    private Double limiteMinimo;
     private Double valorCompra;
     private Double quantidade;
     private Double valorVenda;

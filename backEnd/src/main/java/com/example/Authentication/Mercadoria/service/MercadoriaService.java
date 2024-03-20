@@ -63,6 +63,7 @@ public class MercadoriaService {
         UnidadeMedida unidadeMedida = unidadeMedidaRepository.findById(mercadoriaDTO.getUnidadeMedida().getId()).orElseThrow(() ->
                 new NotFoundException(messageSource.getMessage("error.isEmpty", null, locale)));
         mercadoria.setUnidadeMedida(unidadeMedida);
+        mercadoria.setLimiteMinimo(mercadoriaDTO.getLimiteMinimo());
         mercadoria.setNome(mercadoriaDTO.getNome());
         mercadoria.setValorVenda(mercadoriaDTO.getValorVenda());
         mercadoria.setSaldoEstoque(mercadoriaDTO.getSaldoEstoque());

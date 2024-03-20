@@ -141,13 +141,13 @@ export default function FornecedorList() {
         mantineTableHeadCellProps: {
           align: 'center',
         },
-        Cell: ({ cell }) => (
+        Cell: ({ cell, row }) => (
           <Box
             sx={theme => ({
               backgroundColor:
-                cell.getValue<number>() <= 10
+                cell.getValue<number>() <= row.original.limiteMinimo!
                   ? theme.colors.red[9]
-                  : cell.getValue<number>() <= 20
+                  : cell.getValue<number>() <= row.original.limiteMinimo! * 1.5
                   ? theme.colors.yellow[9]
                   : theme.colors.green[9],
               borderRadius: '4px',
@@ -317,15 +317,15 @@ export default function FornecedorList() {
       <Group>
         <Group position="left" align="center" mt={20} spacing={10}>
           <IconCircleFilled style={{ color: 'red' }} />
-          <Text size={'sm'}>Saldo menor que 10.00 |</Text>
+          <Text size={'sm'}>Estoque baixo |</Text>
         </Group>
         <Group position="left" align="center" mt={20} spacing={10}>
           <IconCircleFilled style={{ color: 'orange' }} />
-          <Text size={'sm'}>Saldo maior que 10.00 e menor que 20.00 |</Text>
+          <Text size={'sm'}>Estoque proximo do minímo |</Text>
         </Group>
         <Group position="left" align="center" mt={20} spacing={10}>
           <IconCircleFilled style={{ color: 'green' }} />
-          <Text size={'sm'}>Saldo maior que 20.00</Text>
+          <Text size={'sm'}>Estoque alto</Text>
         </Group>
       </Group>
       <DrawerMercadoria
