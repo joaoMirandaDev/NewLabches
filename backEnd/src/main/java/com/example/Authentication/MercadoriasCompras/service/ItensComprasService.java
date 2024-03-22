@@ -34,10 +34,10 @@ public class ItensComprasService {
     private static final Map<String, String> CAMPO_ORDENACAO = new HashMap<>();
 
     static {
-        CAMPO_ORDENACAO.put("nome", "nome");
-        CAMPO_ORDENACAO.put("unidadeMedida.nome", "um.nome");
-        CAMPO_ORDENACAO.put("saldoEstoque", "saldo_estoque");
-        CAMPO_ORDENACAO.put("valorVenda", "valor_venda");
+        CAMPO_ORDENACAO.put("quantidade", "quantidade");
+        CAMPO_ORDENACAO.put("valorFinalUnitario", "valor_final_unitario");
+        CAMPO_ORDENACAO.put("valorCompra", "valor_compra");
+        CAMPO_ORDENACAO.put("quantidadeFinal", "quantidade_final");
         CAMPO_ORDENACAO.put("dataCadastro", "data_cadastro");
     }
 

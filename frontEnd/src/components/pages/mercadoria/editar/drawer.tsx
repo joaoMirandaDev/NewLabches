@@ -34,8 +34,13 @@ interface DrawerMercadoria {
   close: (value: boolean) => void
 }
 
-interface Categoria {
+interface UnidadeMedida {
   id?: number | null
+  nome?: string
+}
+
+interface Tipo {
+  id?: number
   nome?: string
 }
 
@@ -46,8 +51,8 @@ const DrawerMercadoria: React.FC<DrawerMercadoria> = ({
   refresDrawerVisualizar,
 }) => {
   const t = useTranslate()
+  const [tipo, setTipo] = useState<SelectItem[]>([])
   const [categoria, setCategoria] = useState<SelectItem[]>([])
-  const [messageErro, setMessageErro] = useState<boolean>(false)
   const [onEdit, setOnEdit] = useState<boolean>(false)
 
   const form = useForm<{
@@ -61,6 +66,10 @@ const DrawerMercadoria: React.FC<DrawerMercadoria> = ({
       id: number | null
       nome: string
     }
+    tipo: {
+      id: number | null
+      nome: string
+    }
     valorVenda: number
   }>({
     initialValues: {
@@ -70,8 +79,12 @@ const DrawerMercadoria: React.FC<DrawerMercadoria> = ({
       nome: '',
       limiteMinimo: 0,
       saldoEstoque: 0,
+      tipo: {
+        id: 0,
+        nome: '',
+      },
       unidadeMedida: {
-        id: null,
+        id: 0,
         nome: '',
       },
       valorVenda: 0,
@@ -82,18 +95,24 @@ const DrawerMercadoria: React.FC<DrawerMercadoria> = ({
     if (openModal && dataMercadoria != null) {
       setOnEdit(false)
       form.setValues(dataMercadoria)
-      getAllUnidadeMedida()
+      getAllUnidadeMeidaAndTipo()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openModal])
 
-  const getAllUnidadeMedida = async () => {
-    const value = await api.get('api/unidadeMedida/findAll')
-    const data = value.data.map((data: Categoria) => ({
+  const getAllUnidadeMeidaAndTipo = async () => {
+    const unidadeMedida = await api.get('api/unidadeMedida/findAll')
+    const value = await api.get('api/tipo')
+    const dataMedida = unidadeMedida.data.map((data: UnidadeMedida) => ({
       value: data.id,
       label: data.nome,
     }))
-    setCategoria(data)
+    setCategoria(dataMedida)
+    const data = value.data.map((data: Tipo) => ({
+      value: data.id,
+      label: data.nome,
+    }))
+    setTipo(data)
   }
 
   const handleDelete = () => {
@@ -114,20 +133,7 @@ const DrawerMercadoria: React.FC<DrawerMercadoria> = ({
       })
   }
 
-  const handleSelectCategoria = (value: string | number | null) => {
-    if (value) {
-      const pessoa = categoria.find(item => item.label === value)
-      setMessageErro(false)
-      form.setFieldValue('unidadeMedida.id', pessoa?.value)
-      form.setFieldValue('unidadeMedida.nome', pessoa?.label)
-    }
-  }
-
   const handleSubmit = async () => {
-    if (form.getInputProps('unidadeMedida.id').value == null) {
-      setMessageErro(true)
-      return false
-    }
     if (form.isValid()) {
       await api
         .put('api/mercadoria/editar', form.values)
@@ -240,18 +246,35 @@ const DrawerMercadoria: React.FC<DrawerMercadoria> = ({
         <Divider />
         <Select
           mt={'1rem'}
-          searchValue={form.getInputProps('unidadeMedida.nome').value}
-          onSearchChange={handleSelectCategoria}
+          {...form.getInputProps('unidadeMedida.id')}
+          onChange={event =>
+            form.setFieldValue('unidadeMedida.id', Number(event))
+          }
           disabled={!onEdit}
           clearButtonProps={{ 'aria-label': 'Clear selection' }}
           nothingFound="Nenhuma unidade de medida encontrada"
           withinPortal
-          error={messageErro ? 'campo obrigatório' : ''}
           withAsterisk
           required
-          label={'Selecione a unidade de medida'}
+          label={'Selecione um fator de medida '}
           placeholder={'Selecione uma das opções'}
           data={categoria}
+        />
+        <Space h="xl" />
+        <Divider />
+        <Select
+          {...form.getInputProps('tipo.id')}
+          mt={'1rem'}
+          disabled={!onEdit}
+          onChange={event => form.setFieldValue('tipo.id', Number(event))}
+          clearButtonProps={{ 'aria-label': 'Clear selection' }}
+          nothingFound="Nenhuma tipo encontrado"
+          withinPortal
+          withAsterisk
+          required
+          label={t('Selecione um tipo')}
+          placeholder={t('Selecione um tipo')}
+          data={tipo}
         />
         <Space h="xl" />
         <Divider />
@@ -314,8 +337,8 @@ const DrawerMercadoria: React.FC<DrawerMercadoria> = ({
           decimalSeparator=","
           thousandsSeparator="."
           defaultValue={form.values.limiteMinimo}
-          placeholder={'Limite minimo'}
-          label={'Limite mínimo'}
+          placeholder={'Estoque minimo'}
+          label={'Estoque mínimo'}
           withAsterisk
           hideControls
           onChange={value => form.setFieldValue('limiteMinimo', Number(value))}

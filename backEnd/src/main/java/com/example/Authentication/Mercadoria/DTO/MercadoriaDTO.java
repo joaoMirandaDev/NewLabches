@@ -1,6 +1,7 @@
 package com.example.Authentication.Mercadoria.DTO;
 
 import com.example.Authentication.Mercadoria.model.Mercadoria;
+import com.example.Authentication.Tipo.DTO.TipoDTO;
 import com.example.Authentication.UnidadeMedida.DTO.UnidadeMedidaDTO;
 import com.example.Authentication.UnidadeMedida.model.UnidadeMedida;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -22,6 +23,7 @@ public class MercadoriaDTO {
     private Double limiteMinimo;
     private Double valorCompra;
     private Double quantidade;
+    private TipoDTO tipo;
     private Double valorVenda;
     private Double saldoEstoque;
     private Double multiplicador;

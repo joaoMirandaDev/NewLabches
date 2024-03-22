@@ -47,49 +47,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    protected void configure( HttpSecurity http ) throws Exception {
+    protected void configure(HttpSecurity http) throws Exception {
         http
                 .cors().and().csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/merdoriasCompra/list/**")
-                .hasAnyRole("ADMIN", "PROPRIETARIO", "CAIXA")
-                .antMatchers("/api/endereco/**")
-                .permitAll()
-                .antMatchers("/api/role/**")
-                .permitAll()
-                .antMatchers("/api/arquivos/**")
-                .permitAll()
-                .antMatchers("/api/mercadoria/list")
-                .hasAnyRole("ADMIN", "PROPRIETARIO", "CAIXA")
-                .antMatchers("/api/mercadoria/**")
-                .hasAnyRole("ADMIN", "PROPRIETARIO")
-                .antMatchers("/api/unidadeMedida/**")
-                .hasAnyRole("ADMIN", "PROPRIETARIO", "CAIXA")
-                .antMatchers("/api/compras/**")
-                .hasAnyRole("ADMIN", "PROPRIETARIO")
-                .antMatchers("/api/compras/list")
-                .hasAnyRole("ADMIN", "PROPRIETARIO", "CAIXA")
-                .antMatchers("/api/fornecedor/list")
-                .hasAnyRole("ADMIN", "PROPRIETARIO", "CAIXA")
-                .antMatchers("/api/categoria/**")
-                .hasAnyRole("ADMIN", "PROPRIETARIO", "CAIXA")
-                .antMatchers("/api/fornecedor/**")
-                .hasAnyRole("ADMIN", "PROPRIETARIO")
-                .antMatchers("/api/colaborador/list")
-                .hasAnyRole("ADMIN", "PROPRIETARIO", "CAIXA")
-                .antMatchers("/api/colaborador/**")
-                .hasAnyRole("ADMIN", "PROPRIETARIO")
-                .antMatchers("/api/produtos/**")
-                .hasAnyRole("ADMIN", "PROPRIETARIO", "CAIXA")
-                .antMatchers("/api/usuarios/**")
-                .permitAll()
+                .antMatchers("/api/usuarios/**").permitAll()
+                .antMatchers("/api/**/list", "/api/**/list/**").hasAnyRole("ADMIN", "PROPRIETARIO","CAIXA")
+                .antMatchers("/api/**").hasAnyRole("ADMIN", "PROPRIETARIO")
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilterBefore( jwtFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
     }
+
 
     //Libera o cors para as rotas
     @Bean

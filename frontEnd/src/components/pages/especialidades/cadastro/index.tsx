@@ -1,26 +1,28 @@
 import {
   Button,
-  Card,
-  Chip,
   Divider,
   Drawer,
   Flex,
   Group,
+  MultiSelect,
   NumberInput,
   Select,
   SelectItem,
   Space,
-  Text,
   TextInput,
 } from '@mantine/core'
 import { useEffect, useState } from 'react'
 import { useTranslate } from '@refinedev/core'
-import { IconCircleXFilled, IconDatabasePlus } from '@tabler/icons-react'
+import {
+  IconArrowBarLeft,
+  IconCircleXFilled,
+  IconDatabasePlus,
+} from '@tabler/icons-react'
 import api from 'src/utils/Api'
 import { useForm, zodResolver } from '@mantine/form'
 import { DrowerCadastroProdutos } from '../validation/schema'
 import { ErrorNotification, SuccessNotification } from '@components/common'
-import IMercadoria from 'src/interfaces/mercadoria'
+import ISelect from 'src/interfaces/select'
 interface DrawerCadastroProduto {
   openModal: boolean
   close: (value: boolean) => void
@@ -38,11 +40,15 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
   refresh,
 }) => {
   const t = useTranslate()
+  const [categoria, setCategoria] = useState<SelectItem[]>([])
+  const [mercadoria, setMercadoria] = useState<SelectItem[]>([])
+  const [especialidade, setMercadoriaByEspecialidade] = useState<string[]>([])
   const form = useForm<{
     id: number | null
     nome: string
     ativo: number
     dataCadastro: Date
+    idMercadoria: number[] | string[]
     categoria: {
       id: number | null
       nome: string
@@ -53,6 +59,7 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
     initialValues: {
       id: null,
       ativo: 0,
+      idMercadoria: [],
       dataCadastro: new Date(),
       nome: '',
       categoria: {
@@ -68,17 +75,18 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
   useEffect(() => {
     if (openModal) {
       getAllCategoria()
-      getAllMercadoriaGrip()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openModal])
-  const [categoria, setCategoria] = useState<SelectItem[]>([])
-  const [mercadoria, setMercadoria] = useState<IMercadoria[]>([])
-  const [messageErro, setMessageErro] = useState<boolean>(false)
-  const getAllMercadoriaGrip = async () => {
-    const value = await api.get('api/mercadoria/findAllGrip')
-    setMercadoria(value.data)
-  }
+
+  useEffect(() => {
+    form.setFieldValue(
+      'idMercadoria',
+      especialidade.map(val => Number(val))
+    )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [especialidade])
+
   const getAllCategoria = async () => {
     const value = await api.get('api/categoria/findAll')
     const data = value.data.map((data: Categoria) => ({
@@ -86,11 +94,16 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
       label: data.nome,
     }))
     setCategoria(data)
+    const grip = await api.get('api/mercadoria/findAllGrip')
+    const dataGrip = grip.data.map((data: ISelect) => ({
+      value: data.id,
+      label: data.nome,
+    }))
+    setMercadoria(dataGrip)
   }
 
   const handleSubmit = async () => {
     if (form.getInputProps('categoria.id').value == null) {
-      setMessageErro(true)
       return false
     }
     if (form.isValid()) {
@@ -98,13 +111,13 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
         .post('api/produtos/adicionar', form.values)
         .then(() => {
           SuccessNotification({
-            message: t('pages.produtos.sucesso'),
+            message: 'Especialidade cadastrada com sucesso!',
           })
           handleClose()
           refresh(true)
         })
         .catch(() => {
-          ErrorNotification({ message: t('pages.produtos.error') })
+          ErrorNotification({ message: 'Erro ao cadastrar!' })
         })
     }
   }
@@ -125,24 +138,25 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
 
   const handleClose = () => {
     resetForm()
+    setMercadoriaByEspecialidade([])
     close(false)
-  }
-
-  const handleSelectCategoria = (value: string | number | null) => {
-    setMessageErro(false)
-    form.setFieldValue('categoria.id', value)
   }
 
   const renderButtons = () => (
     <>
       <Flex mt={'1rem'} justify={'space-between'}>
-        <Button
-          color="red"
-          leftIcon={<IconCircleXFilled />}
-          onClick={() => handleClose()}
-        >
-          {t('components.button.cancelar')}
-        </Button>
+        <Group>
+          <Button leftIcon={<IconArrowBarLeft />} onClick={() => handleClose()}>
+            {t('components.button.voltar')}
+          </Button>
+          <Button
+            color="red"
+            leftIcon={<IconCircleXFilled />}
+            onClick={() => handleClose()}
+          >
+            {t('components.button.cancelar')}
+          </Button>
+        </Group>
         <Button leftIcon={<IconDatabasePlus />} type="submit" color="green">
           {t('components.button.salvar')}
         </Button>
@@ -158,10 +172,10 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
       position="right"
       withinPortal
       closeOnClickOutside={false}
-      withCloseButton={true}
+      withCloseButton={false}
       closeOnEscape={false}
       trapFocus={true}
-      title={'Cadastro de Produtos'}
+      title={'Cadastro de especialidades'}
     >
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <TextInput
@@ -177,11 +191,10 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
         <Divider />
         <Select
           mt={'1rem'}
-          onChange={handleSelectCategoria}
+          {...form.getInputProps('categoria.id')}
           clearButtonProps={{ 'aria-label': 'Clear selection' }}
           nothingFound="Nenhuma categoria encontrada"
           withinPortal
-          error={messageErro ? 'campo obrigatório' : ''}
           withAsterisk
           required
           label={t('pages.produtos.cadastro.categoria')}
@@ -205,23 +218,15 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
           required
         />
         <Space h="xl" />
-        <Card shadow="sm" padding="lg" radius="md" withBorder>
-          <Card.Section withBorder inheritPadding py="xs">
-            <Text weight={700}>
-              Selecione as mercadorias que compõe o lanche
-            </Text>
-          </Card.Section>
-          <Space h="xl" />
-          <Chip.Group>
-            <Group position="center">
-              {mercadoria.map(merc => (
-                <Chip key={merc.id} value={merc.id!}>
-                  {merc.nome!}
-                </Chip>
-              ))}
-            </Group>
-          </Chip.Group>
-        </Card>
+        <MultiSelect
+          {...form.getInputProps('idMercadoria')}
+          onChange={value => form.setFieldValue('idMercadoria', value)}
+          data={mercadoria}
+          withinPortal
+          withAsterisk
+          label="Selecione os itens da especialidade"
+          placeholder="Selecione os itens da especialidade"
+        />
         <Space h="xl" />
         {renderButtons()}
       </form>

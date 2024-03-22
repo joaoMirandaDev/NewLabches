@@ -1,5 +1,6 @@
 package com.example.Authentication.Mercadoria.model;
 
+import com.example.Authentication.Tipo.model.Tipo;
 import com.example.Authentication.UnidadeMedida.model.UnidadeMedida;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -34,5 +35,8 @@ public class Mercadoria {
     @Column(name = "limite_minimo")
     private Double limiteMinimo;
     private Integer ativo;
+    @OneToOne
+    @JoinColumn(name = "id_tipo", referencedColumnName = "id")
+    private Tipo tipo;
 
 }

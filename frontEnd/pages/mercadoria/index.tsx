@@ -302,7 +302,7 @@ export default function FornecedorList() {
         setPagination={setPagination}
         enableRowActions
         enableSorting
-        enableClickToCopy
+        enableClickToCopy={true}
         positionActionsColumn="last"
         data={dataMercadoria}
         state={{
@@ -320,8 +320,8 @@ export default function FornecedorList() {
           <Text size={'sm'}>Estoque baixo |</Text>
         </Group>
         <Group position="left" align="center" mt={20} spacing={10}>
-          <IconCircleFilled style={{ color: 'orange' }} />
-          <Text size={'sm'}>Estoque proximo do minímo |</Text>
+          <IconCircleFilled style={{ color: '#e67700' }} />
+          <Text size={'sm'}>Estoque médio |</Text>
         </Group>
         <Group position="left" align="center" mt={20} spacing={10}>
           <IconCircleFilled style={{ color: 'green' }} />

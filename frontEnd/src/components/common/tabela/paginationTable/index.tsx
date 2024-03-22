@@ -17,11 +17,6 @@ type Tabela<T extends Record<string, any>> = {
   rowCount: number
   setPagination: React.Dispatch<React.SetStateAction<MRT_PaginationState>>
   enablePinning?: boolean
-  enableColumnFilterModes?: boolean
-  enableColumnOrdering?: boolean
-  enableFacetedValues?: boolean
-  enableGrouping?: boolean
-  enableRowSelection?: boolean
   enableClickToCopy?: boolean
   initialState?: Partial<MRT_TableState<T>>
   enableRowActions?: boolean
@@ -41,13 +36,9 @@ const PaginationTable = <T extends Record<string, any>>({
   data,
   rowCount,
   setPagination,
-  enableColumnFilterModes = false,
-  enableColumnOrdering = false,
-  enableFacetedValues = true,
-  enableGrouping = false,
   initialState,
-  enableClickToCopy = false,
-  enablePinning = true,
+  enableClickToCopy,
+  enablePinning = false,
   state,
   enableRowActions = false,
   positionActionsColumn = 'last',
@@ -60,16 +51,12 @@ const PaginationTable = <T extends Record<string, any>>({
       columns,
       data,
       enablePinning: enablePinning,
+      enableTopToolbar: false,
       enableBottomToolbar: true,
-      manualPagination: true,
-      enableTopToolbar: true,
-      enablePagination: true,
-      enableColumnFilterModes: enableColumnFilterModes,
-      enableColumnOrdering: enableColumnOrdering,
-      enableFacetedValues: enableFacetedValues,
-      enableGrouping: enableGrouping,
-      enableDensityToggle: enableFacetedValues,
       enableClickToCopy: enableClickToCopy,
+      manualPagination: true,
+      enablePagination: true,
+      enableDensityToggle: false,
       enableFullScreenToggle: false,
       enableRowActions: enableRowActions,
       positionActionsColumn: positionActionsColumn,
@@ -79,12 +66,8 @@ const PaginationTable = <T extends Record<string, any>>({
       renderRowActions: rowActions,
       onPaginationChange: setPagination,
       rowCount: rowCount,
-      paginationDisplayMode: 'pages',
       mantinePaginationProps: {
-        withEdges: true,
         rowsPerPageOptions: ['10', '25', '50', '100'],
-        shape: 'rounded',
-        variant: 'outlined',
       },
       mantineTableProps: {
         sx: {

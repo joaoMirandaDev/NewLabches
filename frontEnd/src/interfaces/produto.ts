@@ -2,6 +2,7 @@ export default interface IProduto {
   id?: number
   nome?: string
   preco?: number
+  idMercadoria?: number[]
   categoria: {
     id: number | null
     nome: string | null

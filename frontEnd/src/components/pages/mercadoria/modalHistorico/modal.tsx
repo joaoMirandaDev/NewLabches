@@ -36,7 +36,7 @@ const ModalHistoricoMercadoria: React.FC<ModalHistoricoMercadoria> = ({
     pagina: 0,
     tamanhoPagina: 10,
     id: 'data',
-    desc: false,
+    desc: true,
   })
 
   const [data, setData] = useState<IMercadoriaCompra[]>([])
@@ -46,6 +46,16 @@ const ModalHistoricoMercadoria: React.FC<ModalHistoricoMercadoria> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, openModal])
+
+  useEffect(() => {
+    if (sorting.length == 0) {
+      setSorting([{ id: 'data', desc: true }])
+    }
+    sorting.map(value => {
+      setFiltro(prevData => ({ ...prevData, id: value.id, desc: value.desc }))
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sorting])
 
   useEffect(() => {
     if (
@@ -77,6 +87,21 @@ const ModalHistoricoMercadoria: React.FC<ModalHistoricoMercadoria> = ({
   const columns = useMemo<MRT_ColumnDef<IMercadoriaCompra>[]>(
     () => [
       {
+        accessorKey: 'data',
+        header: 'Data de compra',
+        enableSorting: true,
+        enableColumnFilter: true,
+        size: 15,
+        minSize: 10,
+        maxSize: 30,
+        mantineTableBodyCellProps: {
+          align: 'center',
+        },
+        mantineTableHeadCellProps: {
+          align: 'center',
+        },
+      },
+      {
         accessorFn: row =>
           `${row.quantidade?.toLocaleString('pt-BR', {
             minimumFractionDigits: 2,
@@ -95,25 +120,6 @@ const ModalHistoricoMercadoria: React.FC<ModalHistoricoMercadoria> = ({
         mantineTableHeadCellProps: {
           align: 'center',
         },
-      },
-      {
-        accessorKey: 'valorFinalUnitario',
-        header: 'Valor unitário',
-        enableSorting: true,
-        enableColumnFilter: true,
-        size: 15,
-        minSize: 10,
-        maxSize: 30,
-        mantineTableBodyCellProps: {
-          align: 'center',
-        },
-        mantineTableHeadCellProps: {
-          align: 'center',
-        },
-        Cell: ({ cell }) =>
-          cell
-            .getValue<number>()
-            .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
       },
       {
         accessorKey: 'valorCompra',
@@ -135,8 +141,8 @@ const ModalHistoricoMercadoria: React.FC<ModalHistoricoMercadoria> = ({
             .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
       },
       {
-        accessorKey: 'data',
-        header: 'Data de compra',
+        accessorKey: 'quantidadeFinal',
+        header: 'Quantidade final',
         enableSorting: true,
         enableColumnFilter: true,
         size: 15,
@@ -148,6 +154,26 @@ const ModalHistoricoMercadoria: React.FC<ModalHistoricoMercadoria> = ({
         mantineTableHeadCellProps: {
           align: 'center',
         },
+        Cell: ({ cell }) => cell.getValue<number>().toFixed(2),
+      },
+      {
+        accessorKey: 'valorFinalUnitario',
+        header: 'Valor unitário',
+        enableSorting: true,
+        enableColumnFilter: true,
+        size: 15,
+        minSize: 10,
+        maxSize: 30,
+        mantineTableBodyCellProps: {
+          align: 'center',
+        },
+        mantineTableHeadCellProps: {
+          align: 'center',
+        },
+        Cell: ({ cell }) =>
+          cell
+            .getValue<number>()
+            .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
       },
     ],
     []
@@ -164,14 +190,13 @@ const ModalHistoricoMercadoria: React.FC<ModalHistoricoMercadoria> = ({
       radius={'md'}
       closeOnEscape={false}
       trapFocus={false}
-      title={'Histórico'}
+      title={'Histórico de compra'}
     >
       <PaginationTable
         setSorting={setSorting}
         columns={columns}
         setPagination={setPagination}
         enableSorting
-        enableClickToCopy
         positionActionsColumn="last"
         data={data}
         state={{

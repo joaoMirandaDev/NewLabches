@@ -147,18 +147,18 @@
     },
     "produtos": {
       "notification": {
-        "sucesso": "Produto cadastrado com sucesso!",
-        "sucessoEdit": "Produto editado com sucesso!",
-        "error": "Erro ao cadastrar produto!",
-        "errorEdit": "Erro ao editar produto!",
-        "errorDelete": "Erro ao deletar produto!",
-        "delete": "Produto deletado com sucesso!"
+        "sucesso": "Especialidade cadastrada com sucesso!",
+        "sucessoEdit": "Especialidade editada com sucesso!",
+        "error": "Erro ao cadastrar especialidade!",
+        "errorEdit": "Erro ao editar especialidades da casa!",
+        "errorDelete": "Erro ao deletar especialidades da casa!",
+        "delete": "Especialidade deletada com sucesso!"
       },
-      "title": "Cadastrar novo produto",
-      "titleEdit": "Editar produto",
+      "title": "Cadastrar nova especialidade",
+      "titleEdit": "Editar especialidade",
       "placeHoldeSearchBar": "Pesquise por nome,categoria, preço e data",
       "buttonSearchBar": "Pesquisar",
-      "buttonCadastro": "Cadastrar produto",
+      "buttonCadastro": "Cadastrar nova especialidade",
       "table":{
         "nome": "Nome",
         "categoria":  "Categoria",
@@ -166,7 +166,7 @@
         "preco": "Preço"
       },
       "visualizar": {
-        "deleteText": "Deseja deletar este produto ?"
+        "deleteText": "Deseja deletar este item ?"
       },
       "cadastro": {
         "nome": "Nome",

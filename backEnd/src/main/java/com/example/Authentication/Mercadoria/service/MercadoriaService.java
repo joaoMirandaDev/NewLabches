@@ -1,5 +1,6 @@
 package com.example.Authentication.Mercadoria.service;
 
+import com.example.Authentication.Tipo.repository.TipoRepository;
 import com.example.Authentication.Utils.filtro.Filtro;
 import com.example.Authentication.Utils.pagination.PaginationSimple;
 import com.example.Authentication.Mercadoria.DTO.MercadoriaDTO;
@@ -26,6 +27,7 @@ public class MercadoriaService {
 
     private final MercadoriaRepository mercadoriaRepository;
     private final UnidadeMedidaRepository unidadeMedidaRepository;
+    private final TipoRepository tipoRepository;
     private final PaginationSimple paginationSimple;
     private static final Map<String, String> CAMPO_ORDENACAO = new HashMap<>();
     private final MessageSource messageSource;
@@ -45,6 +47,9 @@ public class MercadoriaService {
         Mercadoria mercadoria = new Mercadoria();
         mercadoria.setNome(mercadoriaDTO.getNome());
         mercadoria.setUnidadeMedida(unidadeMedida);
+        mercadoria.setLimiteMinimo(mercadoriaDTO.getLimiteMinimo());
+        mercadoria.setTipo(tipoRepository.findById(mercadoriaDTO.getTipo().getId()).orElseThrow(() ->
+                new NotFoundException(messageSource.getMessage("error.isEmpty", null, locale))));
         mercadoria.setSaldoEstoque(0.0);
         mercadoria.setValorVenda(mercadoriaDTO.getValorVenda());
         mercadoria.setAtivo(0);
@@ -66,6 +71,8 @@ public class MercadoriaService {
         mercadoria.setLimiteMinimo(mercadoriaDTO.getLimiteMinimo());
         mercadoria.setNome(mercadoriaDTO.getNome());
         mercadoria.setValorVenda(mercadoriaDTO.getValorVenda());
+        mercadoria.setTipo(tipoRepository.findById(mercadoriaDTO.getTipo().getId()).orElseThrow(() ->
+                new NotFoundException(messageSource.getMessage("error.isEmpty", null, locale))));
         mercadoria.setSaldoEstoque(mercadoriaDTO.getSaldoEstoque());
         mercadoria.setMultiplicador(mercadoriaDTO.getMultiplicador());
         mercadoria.setAtivo(mercadoriaDTO.getAtivo());

@@ -7,6 +7,14 @@ const DrowerCadastroProdutos = () => {
   return z.object({
     nome: z.string().nonempty({ message: requiredField }),
     preco: z.number().positive({ message: requiredField }),
+    categoria: z
+      .object({
+        id: z.number().positive({ message: requiredField }),
+      })
+      .required(),
+    idMercadoria: z
+      .array(z.number().positive({ message: requiredField }))
+      .nonempty({ message: requiredField }),
   })
 }
 
