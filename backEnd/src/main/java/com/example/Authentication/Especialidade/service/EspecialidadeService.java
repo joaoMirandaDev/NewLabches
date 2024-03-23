@@ -3,6 +3,9 @@ package com.example.Authentication.Especialidade.service;
 import com.example.Authentication.Categoria.model.Categoria;
 import com.example.Authentication.Categoria.repository.CategoriaRepository;
 import com.example.Authentication.Especialidade.DTO.EspecialidadeDTO;
+import com.example.Authentication.Especialidade.Rel.model.RelEspecialidadeMercadoria;
+import com.example.Authentication.Especialidade.Rel.repository.RelEspecialidadeMercadoriaRepository;
+import com.example.Authentication.Especialidade.Rel.service.RelEspecialidadeMercadoriaService;
 import com.example.Authentication.Especialidade.model.Especialidade;
 import com.example.Authentication.Especialidade.repository.EspecialidadeRepository;
 import com.example.Authentication.Mercadoria.model.Mercadoria;
@@ -30,6 +33,7 @@ public class EspecialidadeService {
     private final EspecialidadeRepository especialidadeRepository;
     private final MercadoriaRepository mercadoriaRepository;
     private final CategoriaRepository categoriaRepository;
+    private final RelEspecialidadeMercadoriaService relEspecialidadeMercadoriaService;
 
     @Transactional(rollbackFor = Exception.class)
     public void create(EspecialidadeDTO especialidadeDTO)  {
@@ -112,7 +116,7 @@ public class EspecialidadeService {
         especialidade.setNome(especialidadeDTO.getNome());
         especialidade.setCategoria(categoria);
         especialidade.setPreco(especialidadeDTO.getPreco());
-//        produtos.setIngrediente(produtosDTO.getIngrediente());
+        relEspecialidadeMercadoriaService.deleteAndCreateByEspecialidadeMercadoria(especialidade, especialidadeDTO.getIdMercadoria());
         especialidade.setData_cadastro(especialidadeDTO.getData_cadastro());
         especialidade.setAtivo(especialidadeDTO.getAtivo());
         especialidadeRepository.save(especialidade);
