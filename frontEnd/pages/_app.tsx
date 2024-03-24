@@ -36,6 +36,7 @@ import { useRouter } from 'next/router'
 import { IconAffiliate, IconMeat, IconPizza, IconUsers } from '@tabler/icons'
 import { Menu } from '@components/common/side'
 import { useLoadingStore } from 'src/stores/LoadingStore'
+import { API_URL } from 'src/utils/Api'
 
 export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {
   noLayout?: boolean
@@ -45,7 +46,6 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout
 }
 function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
-  const API_URL = 'http://localhost:1080/api'
   const isLoading = useLoadingStore(state => state.isLoading)
   const authProvider: AuthBindings = {
     login: async ({ username, password }) => {
@@ -71,15 +71,6 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
         },
       }
     },
-    logout: async () => {
-      clearDados()
-      return {
-        success: true,
-        authenticated: false,
-        redirectTo: '/login',
-      }
-    },
-    onError: async () => ({}),
     check: async () => {
       try {
         const check: boolean = await verifyUserExpired()
@@ -101,6 +92,15 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
         }
       }
     },
+    logout: async () => {
+      clearDados()
+      return {
+        success: true,
+        authenticated: false,
+        redirectTo: '/login',
+      }
+    },
+    onError: async () => ({}),
   }
   const router = useRouter()
   const renderComponent = () => {
@@ -121,7 +121,10 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
           <ThemedTitleV2 collapsed={collapsed} text="X-LANCHES" />
         )}
       >
-        <Authenticated key="authenticated-layout">
+        <Authenticated
+          key="authenticated-layout"
+          appendCurrentPathToQuery={false}
+        >
           <Component {...pageProps} />
         </Authenticated>
       </ThemedLayoutV2>
@@ -202,13 +205,13 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
               }}
             />
             <Global styles={{ body: { WebkitFontSmoothing: 'auto' } }} />
-            <NotificationsProvider position="top-right">
+            <NotificationsProvider position="top-center">
               <DevtoolsProvider>
                 <Refine
+                  authProvider={authProvider}
                   routerProvider={routerProvider}
                   dataProvider={dataProvider(API_URL)}
                   notificationProvider={notificationProvider}
-                  authProvider={authProvider}
                   i18nProvider={i18nProvider}
                   resources={[
                     {
@@ -263,7 +266,6 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
                   options={{
                     syncWithLocation: true,
                     warnWhenUnsavedChanges: true,
-                    useNewQueryKeys: true,
                   }}
                 >
                   {renderComponent()}

@@ -235,7 +235,7 @@ const DrawerProduto: React.FC<DrawerProduto> = ({
       closeOnEscape={false}
       trapFocus={true}
       size={'lg'}
-      title={form.values.nome}
+      title={'Visualizar Especialidades'}
     >
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <TextInput
