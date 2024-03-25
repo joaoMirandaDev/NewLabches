@@ -2,6 +2,7 @@ package com.example.Authentication.Fornecedores.controller;
 
 import com.example.Authentication.Fornecedores.DTO.FornecedorDto;
 import com.example.Authentication.Fornecedores.DTO.FornecedorListagemDto;
+import com.example.Authentication.Fornecedores.DTO.FornecedorSelectDto;
 import com.example.Authentication.Utils.filtro.Filtro;
 import com.example.Authentication.Fornecedores.model.Fornecedor;
 import com.example.Authentication.Fornecedores.service.FornecedorService;
@@ -10,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,6 +45,11 @@ public class FornecedorController {
     @PutMapping(value = "/editar", produces = "application/json")
     public void editar(@RequestBody FornecedorDto fornecedorDto) throws Exception {
         fornecedorService.editarFornecedor(fornecedorDto);
+    }
+
+    @GetMapping(value = "/findAll", produces = "application/json")
+    public List<FornecedorSelectDto> findAll() {
+        return fornecedorService.findAll();
     }
 }
 

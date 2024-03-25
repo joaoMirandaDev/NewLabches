@@ -9,6 +9,7 @@ import com.example.Authentication.Colaborador.repository.ColaboradorRepository;
 import com.example.Authentication.Usuario.model.Usuario;
 import com.example.Authentication.Role.repository.RoleRepository;
 import com.example.Authentication.Usuario.repository.UsuarioRepository;
+import com.example.Authentication.Utils.pagination.PaginationSimple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DataAccessException;
@@ -21,11 +22,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 
 @Service
-public class ColaboradorService {
+public class ColaboradorService extends PaginationSimple {
 
 
     private final UsuarioRepository usuarioRepository;
@@ -34,6 +37,12 @@ public class ColaboradorService {
     private final RoleRepository roleRepository;
     Locale locale = new Locale("pt", "BR");
     private final ColaboradorRepository colaboradorRepository;
+    private static final Map<String, String> CAMPO_ORDENACAO = new HashMap<>();
+    static {
+        CAMPO_ORDENACAO.put("nome", "nome");
+        CAMPO_ORDENACAO.put("cpf", "cpf");
+        CAMPO_ORDENACAO.put("telefone", "telefone");
+    }
 
     @Autowired
     public ColaboradorService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder, MessageSource messageSource, RoleRepository roleRepository, ColaboradorRepository colaboradorRepository) {
@@ -89,26 +98,8 @@ public class ColaboradorService {
     }
 
     public Page<Colaborador> findAllPessoa(Filtro filtro) {
-        Pageable pageable = createPageableFromFiltro(filtro);
+        Pageable pageable = createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "nome");
         return colaboradorRepository.findAll(pageable, filtro.getSearch());
-    }
-    private Pageable createPageableFromFiltro(Filtro filtro) {
-        if (Objects.isNull(filtro.getId())) {
-            filtro.setId("nome");
-            filtro.setDesc(true);
-        }
-        if (Objects.nonNull(filtro.getId())) {
-            switch (filtro.getId()) {
-                case "nome":
-                    filtro.setId("nome");
-                    break;
-                case "cpf":
-                    filtro.setId("cpf");
-                    break;
-            }
-        }
-        Sort sort = filtro.isDesc() ? Sort.by(filtro.getId()).descending() : Sort.by(filtro.getId()).ascending();
-        return PageRequest.of(filtro.getPagina(), filtro.getTamanhoPagina(), sort);
     }
 
     public void editar(ColaboradorDto colaboradorDto) throws Exception {

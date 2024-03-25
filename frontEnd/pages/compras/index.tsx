@@ -1,21 +1,10 @@
 import SearchBar from '@components/common/filtro/filtro-sem-remocao-caracter'
 import PaginationTable from '@components/common/tabela/paginationTable'
-import DrawerCadastroMercadoria from '@components/pages/mercadoria/cadastro'
-import DrawerMercadoria from '@components/pages/mercadoria/editar/drawer'
-import ModalHistoricoMercadoria from '@components/pages/mercadoria/modalHistorico/modal'
-import {
-  ActionIcon,
-  Box,
-  Button,
-  Flex,
-  Group,
-  Text,
-  Tooltip,
-} from '@mantine/core'
+import DrawerCadastroCompras from '@components/pages/compras/cadastro'
+import { ActionIcon, Button, Flex, Tooltip } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { useTranslate } from '@refinedev/core'
 import { IconCirclePlus, IconEye, IconFileSearch } from '@tabler/icons'
-import { IconCircleFilled } from '@tabler/icons-react'
 import Cookies from 'js-cookie'
 import {
   MRT_ColumnDef,
@@ -26,20 +15,17 @@ import {
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useEffect, useMemo, useState } from 'react'
-import IMercadoria from 'src/interfaces/mercadoria'
+import ICompra from 'src/interfaces/compras'
 import ISearch from 'src/interfaces/search'
 import api from 'src/utils/Api'
 import { PAGE_INDEX, PAGE_SIZE } from 'src/utils/Constants'
 
 export default function FornecedorList() {
   const t = useTranslate()
-  const [openModal, setOpenModal] = useState<boolean>(false)
-  const [openModalHistorico, setOpenModalHistorico] = useState<boolean>(false)
-  const [idHistorio, setIdHistorio] = useState<number | null>(null)
+  // const [openModalHistorico, setOpenModalHistorico] = useState<boolean>(false)
   const [opened, { open, close }] = useDisclosure(false)
   const [sorting, setSorting] = useState<MRT_SortingState>([])
-  const [produto, setProduto] = useState<IMercadoria | null>(null)
-  const [dataMercadoria, setDataMercadoria] = useState<IMercadoria[]>([])
+  const [dataCompra, setDataCompra] = useState<ICompra[]>([])
   const [resetPesquisa, setResetPesquisa] = useState<boolean>(false)
   const [totalElements, setTotalElements] = useState<number>(0)
   const [pagination, setPagination] = useState<MRT_PaginationState>({
@@ -50,7 +36,7 @@ export default function FornecedorList() {
     search: '',
     pagina: 0,
     tamanhoPagina: 10,
-    id: 'nome',
+    id: 'data_compra',
     desc: false,
   })
   useEffect(() => {
@@ -92,12 +78,6 @@ export default function FornecedorList() {
     }))
   }
 
-  const refresDrawerVisualizar = (condicao: boolean) => {
-    if (condicao) {
-      findAllProdutos()
-    }
-  }
-
   const refreshList = (condicao: boolean) => {
     if (condicao) {
       findAllProdutos()
@@ -105,16 +85,16 @@ export default function FornecedorList() {
   }
 
   const findAllProdutos = async () => {
-    const value = await api.post('/api/mercadoria/list', filtro)
-    setDataMercadoria(value.data.content)
+    const value = await api.post('/api/compras/list', filtro)
+    setDataCompra(value.data.content)
     setTotalElements(value.data.totalElements)
   }
 
-  const columns = useMemo<MRT_ColumnDef<IMercadoria>[]>(
+  const columns = useMemo<MRT_ColumnDef<ICompra>[]>(
     () => [
       {
-        accessorKey: 'nome',
-        header: t('pages.mercadoria.table.nome'),
+        accessorKey: 'dataCompra',
+        header: 'Data da compra',
         enableSorting: true,
         enableColumnFilter: true,
         size: 15,
@@ -128,44 +108,38 @@ export default function FornecedorList() {
         },
       },
       {
-        accessorKey: 'saldoEstoque',
-        header: t('pages.mercadoria.table.saldoEstoque'),
+        accessorKey: 'formaPagamento.nome',
+        header: 'Forma de pagamento',
         enableSorting: true,
         enableColumnFilter: true,
-        size: 25,
+        size: 10,
         minSize: 10,
-        maxSize: 40,
         mantineTableBodyCellProps: {
           align: 'center',
         },
         mantineTableHeadCellProps: {
           align: 'center',
         },
-        Cell: ({ cell, row }) => (
-          <Box
-            sx={theme => ({
-              backgroundColor:
-                cell.getValue<number>() <= row.original.limiteMinimo!
-                  ? theme.colors.red[9]
-                  : cell.getValue<number>() <= row.original.limiteMinimo! * 1.5
-                  ? theme.colors.yellow[9]
-                  : theme.colors.green[9],
-              borderRadius: '4px',
-              color: '#fff',
-              maxWidth: '9ch',
-              padding: '5px',
-            })}
-          >
-            {cell.getValue<number>()?.toFixed(2)}
-          </Box>
-        ),
       },
       {
-        accessorKey: 'valorVenda',
-        header: t('pages.mercadoria.table.valorVenda'),
+        accessorKey: 'fornecedor.nomeRazaoSocial',
+        header: 'Fornecedor',
         enableSorting: true,
         enableColumnFilter: true,
         size: 15,
+        mantineTableBodyCellProps: {
+          align: 'center',
+        },
+        mantineTableHeadCellProps: {
+          align: 'center',
+        },
+      },
+      {
+        accessorKey: 'valorTotalCompra',
+        header: 'Valor total da compra',
+        enableSorting: true,
+        enableColumnFilter: true,
+        size: 25,
         minSize: 10,
         maxSize: 30,
         mantineTableBodyCellProps: {
@@ -179,57 +153,21 @@ export default function FornecedorList() {
             .getValue<number>()
             .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
       },
-      {
-        accessorKey: 'unidadeMedida.nome',
-        header: t('pages.mercadoria.table.unidadeMedida'),
-        enableSorting: true,
-        enableColumnFilter: true,
-        size: 15,
-        minSize: 10,
-        maxSize: 30,
-        mantineTableBodyCellProps: {
-          align: 'center',
-        },
-        mantineTableHeadCellProps: {
-          align: 'center',
-        },
-      },
-      {
-        accessorKey: 'dataCadastro',
-        header: t('pages.mercadoria.table.dataCadastro'),
-        enableSorting: true,
-        enableColumnFilter: true,
-        size: 15,
-        minSize: 10,
-        maxSize: 30,
-        mantineTableBodyCellProps: {
-          align: 'center',
-        },
-        mantineTableHeadCellProps: {
-          align: 'center',
-        },
-      },
     ],
-    [t]
+    []
   )
 
-  const visualizar = (id: number) => {
-    api.get(`api/mercadoria/findById/${id}`).then(response => {
-      setProduto(response.data)
-      setOpenModal(true)
-    })
-  }
+  // const visualizar = (id: number) => {
+  //   api.get(`api/mercadoria/findById/${id}`).then(response => {
+  //     setProduto(response.data)
+  //     setOpenModal(true)
+  //   })
+  // }
 
-  const closeModalHistorico = (value: boolean) => {
-    setOpenModalHistorico(value)
-    setIdHistorio(null)
-  }
-
-  const closeDrawerVisual = (condicao: boolean) => {
-    if (!condicao) {
-      setOpenModal(condicao)
-    }
-  }
+  // const closeModalHistorico = (value: boolean) => {
+  //   setOpenModalHistorico(value)
+  //   setIdHistorio(null)
+  // }
 
   const closeDrawer = (condicao: boolean) => {
     if (!condicao) {
@@ -243,12 +181,7 @@ export default function FornecedorList() {
     }
   }
 
-  const getHisotico = (id: number) => {
-    setIdHistorio(id)
-    setOpenModalHistorico(true)
-  }
-
-  const rowActions = ({ row }: { row: MRT_Row<IMercadoria> }) => (
+  const rowActions = ({ row }: { row: MRT_Row<ICompra> }) => (
     <Flex>
       <Tooltip label={t('pages.fornecedor.tooltip.visualizar')}>
         <ActionIcon
@@ -256,7 +189,7 @@ export default function FornecedorList() {
           disabled={validatePermissionRole()}
           variant="transparent"
           aria-label="Settings"
-          onClick={() => visualizar(row.original.id!)}
+          // onClick={() => visualizar(row.original.id!)}
         >
           <IconEye style={{ cursor: 'pointer' }} />
         </ActionIcon>
@@ -267,7 +200,7 @@ export default function FornecedorList() {
           disabled={validatePermissionRole()}
           variant="transparent"
           aria-label="Settings"
-          onClick={() => getHisotico(row.original.id!)}
+          onClick={() => console.log(row)}
         >
           <IconFileSearch style={{ cursor: 'pointer' }} />
         </ActionIcon>
@@ -279,7 +212,7 @@ export default function FornecedorList() {
     <>
       <SearchBar
         placeholder={t(
-          'Pesquise por nome, saldo disponível, valor de venda, unidade de medida e data de cadastro'
+          'Pesquise por data da compra, forma de pagamento, fornecedor e valor total da compra'
         )}
         clearSearch={resetPesquisa}
         textSearch={t('pages.produtos.buttonSearchBar')}
@@ -292,7 +225,7 @@ export default function FornecedorList() {
           disabled={validatePermissionRole()}
           onClick={() => open()}
         >
-          Cadastrar Mercadoria
+          Cadastrar compra
         </Button>
       </Flex>
       <PaginationTable
@@ -304,7 +237,7 @@ export default function FornecedorList() {
         enableSorting
         enableClickToCopy={true}
         positionActionsColumn="last"
-        data={dataMercadoria}
+        data={dataCompra}
         state={{
           sorting,
           pagination: {
@@ -314,38 +247,11 @@ export default function FornecedorList() {
         }}
         rowCount={totalElements}
       />
-      <Group>
-        <Group position="left" align="center" mt={20} spacing={10}>
-          <IconCircleFilled style={{ color: 'red' }} />
-          <Text size={'sm'}>Estoque baixo |</Text>
-        </Group>
-        <Group position="left" align="center" mt={20} spacing={10}>
-          <IconCircleFilled style={{ color: '#e67700' }} />
-          <Text size={'sm'}>Estoque médio |</Text>
-        </Group>
-        <Group position="left" align="center" mt={20} spacing={10}>
-          <IconCircleFilled style={{ color: 'green' }} />
-          <Text size={'sm'}>Estoque alto</Text>
-        </Group>
-      </Group>
-      <DrawerMercadoria
-        close={closeDrawerVisual}
-        refresDrawerVisualizar={refresDrawerVisualizar}
-        openModal={openModal}
-        dataMercadoria={produto}
-      />
-      <DrawerCadastroMercadoria
+      <DrawerCadastroCompras
         refresh={refreshList}
         openModal={opened}
         close={closeDrawer}
       />
-      {idHistorio && (
-        <ModalHistoricoMercadoria
-          closeHistorico={closeModalHistorico}
-          openModal={openModalHistorico}
-          id={idHistorio!}
-        />
-      )}
     </>
   )
 }

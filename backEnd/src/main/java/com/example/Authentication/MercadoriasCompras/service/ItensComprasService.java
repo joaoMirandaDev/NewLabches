@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ItensComprasService {
+public class ItensComprasService extends PaginationSimple {
 
     private final MessageSource messageSource;
 
@@ -75,7 +75,7 @@ public class ItensComprasService {
             throw new NullPointerException(
                     messageSource.getMessage("error.object.isEmpty", null, LocaleInteface.BR));
         }
-        Pageable pageable = paginationSimple.createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "data");
+        Pageable pageable = createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "data");
         Page<ItensCompras> itensCompras = itensCompraRepository.findIngredienteById(id,pageable,filtro.getSearch());
         if (Objects.nonNull(itensCompras)) {
             return itensCompras.map(ItensComprasPageDTO::new);

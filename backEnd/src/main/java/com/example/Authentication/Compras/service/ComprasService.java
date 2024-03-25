@@ -1,6 +1,7 @@
 package com.example.Authentication.Compras.service;
 
 import com.example.Authentication.Compras.DTO.ComprasDto;
+import com.example.Authentication.Compras.DTO.ComprasPageDto;
 import com.example.Authentication.Compras.model.Compras;
 import com.example.Authentication.Compras.repository.ComprasRepository;
 import com.example.Authentication.FormaPagamento.model.FormaPagamento;
@@ -12,6 +13,7 @@ import com.example.Authentication.MercadoriasCompras.service.ItensComprasService
 import com.example.Authentication.Utils.Interfaces.LocaleInteface;
 import com.example.Authentication.Utils.exceptions.NotFoundException;
 import com.example.Authentication.Utils.filtro.Filtro;
+import com.example.Authentication.Utils.pagination.PaginationSimple;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
@@ -20,18 +22,24 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class ComprasService {
+public class ComprasService extends PaginationSimple {
     private final ComprasRepository comprasRepository;
     private final FornecedorRepository fornecedorRepository;
-    private final MercadoriaRepository mercadoriaRepository;
     private final FormaPagamentoRepository formaPagamentoRepository;
+    private static final Map<String, String> CAMPO_ORDENACAO = new HashMap<>();
     private final MessageSource messageSource;
     private final ItensComprasService itensComprasService;
+    static {
+        CAMPO_ORDENACAO.put("dataCompra", "data_compra");
+        CAMPO_ORDENACAO.put("dataPagamento", "data_pagamento");
+        CAMPO_ORDENACAO.put("formaPagamento.nome", "fp.nome");
+        CAMPO_ORDENACAO.put("fornecedor.nomeRazaoSocial", "f.nome_razao_social");
+        CAMPO_ORDENACAO.put("valorTotalCompra", "valor_total_compra");
+    }
 
     public void addCompras(ComprasDto comprasDto) {
         Compras compras = new Compras();
@@ -45,6 +53,9 @@ public class ComprasService {
         ));
         if (Objects.nonNull(comprasDto)) {
             compras.setDataCompra(new Date());
+            Double valorCompra = comprasDto.getItensComprasDTOS().stream().map(val -> val.getValorCompra())
+                    .mapToDouble(Double::doubleValue).sum();
+            compras.setValorTotalCompra(valorCompra);
             compras.setFormaPagamento(formaPagamento);
             compras.setFornecedor(fornecedor);
             compras.setDataCompra(new Date());
@@ -73,35 +84,11 @@ public class ComprasService {
         }
     }
 
-    public Page<ComprasDto> findAllProdutos(Filtro filtro) {
-        Pageable pageable = createPageableFromFiltro(filtro);
+    public Page<ComprasPageDto> findAllByPage(Filtro filtro) {
+        Pageable pageable = createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "data_compra");
         Page<Compras> comprasPage =  comprasRepository.findAll(pageable, filtro.getSearch());
-        return comprasPage.map(ComprasDto::new);
+        return comprasPage.map(ComprasPageDto::new);
     }
 
-    private Pageable createPageableFromFiltro(Filtro filtro) {
-        if (Objects.isNull(filtro.getId())) {
-            filtro.setId("data_compra");
-            filtro.setDesc(true);
-        }
-        if (Objects.nonNull(filtro.getId())) {
-            switch (filtro.getId()) {
-                case "data_compra":
-                    filtro.setId("c.data_compra");
-                    break;
-                case "categoria.nome":
-                    filtro.setId("c.nome");
-                    break;
-                case "dataCadastro":
-                    filtro.setId("data_cadastro");
-                    break;
-                case "preco":
-                    filtro.setId("preco");
-                    break;
-            }
-        }
-        Sort sort = filtro.isDesc() ? Sort.by(filtro.getId()).descending() : Sort.by(filtro.getId()).ascending();
-        return PageRequest.of(filtro.getPagina(), filtro.getTamanhoPagina(), sort);
-    }
 }
 

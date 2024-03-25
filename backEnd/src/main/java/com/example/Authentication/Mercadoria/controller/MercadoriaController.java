@@ -2,7 +2,7 @@ package com.example.Authentication.Mercadoria.controller;
 
 import com.example.Authentication.Utils.filtro.Filtro;
 import com.example.Authentication.Mercadoria.DTO.MercadoriaDTO;
-import com.example.Authentication.Mercadoria.DTO.MercadoriaGripDTO;
+import com.example.Authentication.Mercadoria.DTO.MercadoriaSelectDTO;
 import com.example.Authentication.Mercadoria.model.Mercadoria;
 import com.example.Authentication.Mercadoria.service.MercadoriaService;
 import lombok.RequiredArgsConstructor;
@@ -35,8 +35,8 @@ public class MercadoriaController {
         return mercadoriaService.findById(id);
     }
 
-    @GetMapping(value = "/findAllGrip", produces = "application/json")
-    public List<MercadoriaGripDTO> findAllGrip()  {
+    @GetMapping(value = "/findAll", produces = "application/json")
+    public List<MercadoriaSelectDTO> findAll()  {
         return mercadoriaService.findAll();
     }
 

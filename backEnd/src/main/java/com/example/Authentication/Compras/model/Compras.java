@@ -3,6 +3,7 @@ package com.example.Authentication.Compras.model;
 import com.example.Authentication.FormaPagamento.model.FormaPagamento;
 import com.example.Authentication.Fornecedores.model.Fornecedor;
 import com.example.Authentication.MercadoriasCompras.model.ItensCompras;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,8 +29,10 @@ public class  Compras {
     @OneToOne
     @JoinColumn(name = "id_fornecedor", referencedColumnName = "id")
     private Fornecedor fornecedor;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone="GMT-3")
     @Column(name = "data_compra")
     private Date dataCompra;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone="GMT-3")
     @Column(name = "data_pagamento")
     private Date dataPagamento;
     private String observacao;

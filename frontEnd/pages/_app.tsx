@@ -33,10 +33,17 @@ import {
   verifyUserExpired,
 } from './../src/services/authetication/authentication'
 import { useRouter } from 'next/router'
-import { IconAffiliate, IconMeat, IconPizza, IconUsers } from '@tabler/icons'
+import {
+  IconAffiliate,
+  IconCash,
+  IconMeat,
+  IconPizza,
+  IconUsers,
+} from '@tabler/icons'
 import { Menu } from '@components/common/side'
 import { useLoadingStore } from 'src/stores/LoadingStore'
 import { API_URL } from 'src/utils/Api'
+import Cookies from 'js-cookie'
 
 export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {
   noLayout?: boolean
@@ -72,24 +79,31 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
       }
     },
     check: async () => {
-      try {
-        const check: boolean = await verifyUserExpired()
-        if (check) {
-          return {
-            success: true,
-            authenticated: true,
+      const token = Cookies.get('token')
+      if (token) {
+        try {
+          const check: boolean = await verifyUserExpired()
+          if (check) {
+            return {
+              success: true,
+              authenticated: true,
+            }
+          } else {
+            return {
+              authenticated: false,
+              redirectTo: '/login',
+            }
           }
-        } else {
+        } catch (error) {
           return {
             authenticated: false,
             redirectTo: '/login',
           }
         }
-      } catch (error) {
-        return {
-          authenticated: false,
-          redirectTo: '/login',
-        }
+      }
+      return {
+        authenticated: false,
+        redirectTo: '/login',
       }
     },
     logout: async () => {
@@ -109,7 +123,14 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
     }
 
     if (Component.noLayout) {
-      return <Component {...pageProps} />
+      return (
+        <Authenticated
+          key="authenticated-layout"
+          appendCurrentPathToQuery={false}
+        >
+          <Component {...pageProps} />
+        </Authenticated>
+      )
     }
 
     return (
@@ -215,27 +236,15 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
                   i18nProvider={i18nProvider}
                   resources={[
                     {
-                      name: 'colaborador',
-                      show: '/colaborador/visualizar/:id',
-                      list: '/colaborador',
-                      create: '/colaborador/cadastro',
-                      edit: '/colaborador/editar/:id',
+                      name: 'compras',
+                      show: '/compras/visualizar/:id',
+                      list: '/compras',
+                      create: '/compras/cadastro',
+                      edit: '/compras/editar/:id',
                       meta: {
                         canDelete: false,
-                        label: 'Colaboradores',
-                        icon: <IconUsers />,
-                      },
-                    },
-                    {
-                      name: 'fornecedor',
-                      show: '/fornecedor/visualizar/:id',
-                      list: '/fornecedor',
-                      create: '/fornecedor/cadastro',
-                      edit: '/fornecedor/editar/:id',
-                      meta: {
-                        canDelete: false,
-                        label: 'Fornecedores',
-                        icon: <IconAffiliate />,
+                        label: 'Compras',
+                        icon: <IconCash />,
                       },
                     },
                     {
@@ -260,6 +269,30 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
                         canDelete: false,
                         label: 'Mercadorias',
                         icon: <IconMeat />,
+                      },
+                    },
+                    {
+                      name: 'colaborador',
+                      show: '/colaborador/visualizar/:id',
+                      list: '/colaborador',
+                      create: '/colaborador/cadastro',
+                      edit: '/colaborador/editar/:id',
+                      meta: {
+                        canDelete: false,
+                        label: 'Colaboradores',
+                        icon: <IconUsers />,
+                      },
+                    },
+                    {
+                      name: 'fornecedor',
+                      show: '/fornecedor/visualizar/:id',
+                      list: '/fornecedor',
+                      create: '/fornecedor/cadastro',
+                      edit: '/fornecedor/editar/:id',
+                      meta: {
+                        canDelete: false,
+                        label: 'Fornecedores',
+                        icon: <IconAffiliate />,
                       },
                     },
                   ]}

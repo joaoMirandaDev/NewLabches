@@ -1,5 +1,6 @@
 package com.example.Authentication.Compras.controller;
 
+import com.example.Authentication.Compras.DTO.ComprasPageDto;
 import com.example.Authentication.Utils.filtro.Filtro;
 import com.example.Authentication.Compras.DTO.ComprasDto;
 import com.example.Authentication.Compras.model.Compras;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class ComprasController {
 
     private final ComprasService comprasService;
-    @PostMapping(value = "/addCompra")
+    @PostMapping(value = "/addCompra", produces = "application/json")
     public void addCompra(@RequestBody ComprasDto comprasDto) {
         comprasService.addCompras(comprasDto);
     }
@@ -25,6 +26,11 @@ public class ComprasController {
     @DeleteMapping(value = "/deleteById/{id}")
     public void deleteById(@PathVariable Integer id) {
         comprasService.deleteById(id);
+    }
+
+    @PostMapping(value = "/list", produces = "application/json")
+    public Page<ComprasPageDto> findAllByPage(Filtro filtro) {
+       return comprasService.findAllByPage(filtro);
     }
 }
 

@@ -12,8 +12,8 @@ import com.example.Authentication.Mercadoria.model.Mercadoria;
 import com.example.Authentication.Mercadoria.repository.MercadoriaRepository;
 import com.example.Authentication.Utils.exceptions.NotFoundException;
 import com.example.Authentication.Utils.filtro.Filtro;
+import com.example.Authentication.Utils.pagination.PaginationSimple;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,7 +26,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class EspecialidadeService {
+public class EspecialidadeService extends PaginationSimple {
 
     private final MessageSource messageSource;
     Locale locale = new Locale("pt", "BR");
@@ -34,6 +34,13 @@ public class EspecialidadeService {
     private final MercadoriaRepository mercadoriaRepository;
     private final CategoriaRepository categoriaRepository;
     private final RelEspecialidadeMercadoriaService relEspecialidadeMercadoriaService;
+    private static final Map<String, String > CAMPO_ORDENACAO = new HashMap<>();
+    static {
+        CAMPO_ORDENACAO.put("nome", "nome");
+        CAMPO_ORDENACAO.put("categoria.nome", "c.nome");
+        CAMPO_ORDENACAO.put("dataCadastro", "data_cadastro");
+        CAMPO_ORDENACAO.put("preco", "preco");
+    }
 
     @Transactional(rollbackFor = Exception.class)
     public void create(EspecialidadeDTO especialidadeDTO)  {
@@ -58,34 +65,9 @@ public class EspecialidadeService {
     }
 
     public Page<EspecialidadeDTO> findAllProdutos(Filtro filtro) {
-        Pageable pageable = createPageableFromFiltro(filtro);
+        Pageable pageable = createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "nome");
         Page<Especialidade> produtosPage =  especialidadeRepository.findAll(pageable, filtro.getSearch());
         return produtosPage.map(EspecialidadeDTO::new);
-    }
-
-    private Pageable createPageableFromFiltro(Filtro filtro) {
-        if (Objects.isNull(filtro.getId())) {
-            filtro.setId("nome");
-            filtro.setDesc(true);
-        }
-         if (Objects.nonNull(filtro.getId())) {
-            switch (filtro.getId()) {
-                case "nome":
-                    filtro.setId("nome");
-                    break;
-                case "categoria.nome":
-                    filtro.setId("c.nome");
-                    break;
-                case "dataCadastro":
-                    filtro.setId("data_cadastro");
-                    break;
-                case "preco":
-                    filtro.setId("preco");
-                    break;
-            }
-        }
-        Sort sort = filtro.isDesc() ? Sort.by(filtro.getId()).descending() : Sort.by(filtro.getId()).ascending();
-        return PageRequest.of(filtro.getPagina(), filtro.getTamanhoPagina(), sort);
     }
 
     public void deleteById(Integer id) {

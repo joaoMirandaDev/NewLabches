@@ -1,10 +1,7 @@
 import { axiosInstance } from '@refinedev/simple-rest'
 import Cookies from 'js-cookie'
 import { useLoadingStore } from 'src/stores/LoadingStore'
-const TOKEN_COOKIE_KEY: string = 'token'
-const urlsWOLoading = [
-  `/api/usuarios/validatorUser/${Cookies.get(TOKEN_COOKIE_KEY)}`,
-]
+const urlsWOLoading = [`/api/usuarios/validatorUser/${Cookies.get('token')}`]
 
 export const API_URL: string =
   process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:1080'

@@ -1,0 +1,294 @@
+import {
+  Button,
+  Divider,
+  Drawer,
+  Flex,
+  Group,
+  Select,
+  SelectItem,
+  Space,
+} from '@mantine/core'
+import { useEffect, useState } from 'react'
+import 'dayjs/locale/pt-br'
+import { DateTimePicker, DatesProvider } from '@mantine/dates'
+import { useTranslate } from '@refinedev/core'
+import { IconCircleXFilled, IconDatabasePlus } from '@tabler/icons-react'
+import api from 'src/utils/Api'
+import { useForm, zodResolver } from '@mantine/form'
+import { DrowerCadastroProdutos } from '../validation/schema'
+import { ErrorNotification, SuccessNotification } from '@components/common'
+import { IconArrowBarLeft } from '@tabler/icons'
+import IFornecedor from 'src/interfaces/fornecedor'
+import SimpleTable from '@components/common/tabela/simpleTable'
+import IMercadoria from 'src/interfaces/mercadoria'
+interface DrawerCadastroCompras {
+  openModal: boolean
+  close: (value: boolean) => void
+  refresh: (value: boolean) => void
+}
+
+interface formaPagamento {
+  id?: number
+  nome?: string
+}
+
+const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
+  openModal,
+  close,
+  refresh,
+}) => {
+  const t = useTranslate()
+  const form = useForm<{
+    id: number | null
+    nome: string
+    ativo: number
+    multiplicador: number
+    limiteMinimo: number
+    unidadeMedida: {
+      id: number | null
+      nome: string
+    }
+    formaPagamento: {
+      id: number | null
+      nome: string
+    }
+    valorVenda: number
+  }>({
+    initialValues: {
+      id: null,
+      ativo: 0,
+      limiteMinimo: 0,
+      multiplicador: 0,
+      nome: '',
+      unidadeMedida: {
+        id: 0,
+        nome: '',
+      },
+      formaPagamento: {
+        id: 0,
+        nome: '',
+      },
+      valorVenda: 0,
+    },
+    validate: zodResolver(DrowerCadastroProdutos()),
+  })
+  // const [data, setData] = useState<ICliente>()
+  useEffect(() => {
+    if (openModal) {
+      getAllServices()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openModal])
+  const [dataFornecedor, setDataFornecedor] = useState<SelectItem[]>([])
+  const [formaPagamento, setFormaPagamento] = useState<SelectItem[]>([])
+  const [mercadoria, setMercadoria] = useState<SelectItem[]>([])
+  const getAllServices = async () => {
+    const fornecedor = await api.get('api/fornecedor/findAll')
+    const value = await api.get('api/formaPagamento/findAll')
+    const mercadoria = await api.get('api/mercadoria/findAll')
+    const mercadoriaSelect = mercadoria.data.map((data: IMercadoria) => ({
+      value: data.id,
+      label: data.nome,
+    }))
+    setMercadoria(mercadoriaSelect)
+    const fornecedorSelect = fornecedor.data.map((data: IFornecedor) => ({
+      value: data.id,
+      label: data.nomeRazaoSocial,
+    }))
+    setDataFornecedor(fornecedorSelect)
+    const data = value.data.map((data: formaPagamento) => ({
+      value: data.id,
+      label: data.nome,
+    }))
+    setFormaPagamento(data)
+  }
+  const getFormaPagamento = (event: number) => {
+    formaPagamento.forEach(val => {
+      if (Number(val.value) == event) {
+        form.setFieldValue('formaPagamento.id', val.value)
+        form.setFieldValue('formaPagamento.nome', val.label)
+      }
+    })
+  }
+
+  const handleSubmit = async () => {
+    if (form.isValid()) {
+      await api
+        .post('api/mercadoria/adicionar', form.values)
+        .then(() => {
+          SuccessNotification({
+            message: 'Mecadoria cadastrada com sucesso',
+          })
+          handleClose()
+          refresh(true)
+        })
+        .catch(() => {
+          ErrorNotification({ message: 'Erro ao cadastrar mercadoria' })
+        })
+    }
+  }
+
+  const resetForm = () => {
+    const dados = {
+      id: null,
+      ativo: 0,
+      multiplicador: 0,
+      nome: '',
+      formaPagamento: {
+        id: null,
+        nome: '',
+      },
+      unidadeMedida: {
+        id: null,
+        nome: '',
+      },
+      valorVenda: 0,
+    }
+    form.setValues(dados)
+  }
+
+  const handleClose = () => {
+    resetForm()
+    close(false)
+  }
+
+  const renderButtons = () => (
+    <>
+      <Flex mt={'1rem'} justify={'space-between'}>
+        <Group>
+          <Button leftIcon={<IconArrowBarLeft />} onClick={() => handleClose()}>
+            {t('components.button.voltar')}
+          </Button>
+          <Button
+            color="red"
+            leftIcon={<IconCircleXFilled />}
+            onClick={() => handleClose()}
+          >
+            {t('components.button.cancelar')}
+          </Button>
+        </Group>
+        <Button leftIcon={<IconDatabasePlus />} type="submit" color="green">
+          {t('components.button.salvar')}
+        </Button>
+      </Flex>
+    </>
+  )
+
+  return (
+    <Drawer
+      opened={openModal}
+      onClose={() => close(false)}
+      position="right"
+      size={'xl'}
+      withinPortal
+      closeOnClickOutside={false}
+      withCloseButton={false}
+      closeOnEscape={false}
+      trapFocus={false}
+      title={'Cadastro de compras'}
+    >
+      <form onSubmit={form.onSubmit(handleSubmit)}>
+        <Divider />
+        <Flex>
+          <Select
+            {...form.getInputProps('unidadeMedida.id')}
+            mt={'1rem'}
+            mr={'0.5rem'}
+            w={'100%'}
+            onChange={event =>
+              form.setFieldValue('unidadeMedida.id', Number(event))
+            }
+            clearButtonProps={{ 'aria-label': 'Clear selection' }}
+            nothingFound="Nenhuma dataFornecedor unidade medida"
+            withinPortal
+            withAsterisk
+            required
+            label={t('Selecione um fornecedor')}
+            placeholder={t('Selecione uma das opções')}
+            data={dataFornecedor}
+          />
+          <Select
+            {...form.getInputProps('formaPagamento.id')}
+            mt={'1rem'}
+            onChange={event => getFormaPagamento(Number(event))}
+            clearButtonProps={{ 'aria-label': 'Clear selection' }}
+            nothingFound="Nenhuma formaPagamento encontrado"
+            withinPortal
+            withAsterisk
+            required
+            w={'100%'}
+            label={t('Selecione uma forma de Pagamento')}
+            placeholder={t('Selecione uma das opções')}
+            data={formaPagamento}
+          />
+        </Flex>
+        <Space h="xl" />
+        <Divider />
+        <Flex>
+          <DatesProvider
+            settings={{
+              locale: 'pt-br',
+              firstDayOfWeek: 0,
+              weekendDays: [0],
+            }}
+          >
+            <DateTimePicker
+              mt={'1rem'}
+              w={'100%'}
+              required
+              mr={'0.5rem'}
+              label="Selecione a data de compra"
+              placeholder="Escolha uma data"
+              maxDate={new Date()}
+            />
+          </DatesProvider>
+          {form.values.formaPagamento.nome == 'PRAZO' && (
+            <>
+              <Space h="xl" />
+              <Divider />
+              <DatesProvider
+                settings={{
+                  locale: 'pt-br',
+                  firstDayOfWeek: 0,
+                  weekendDays: [0],
+                }}
+              >
+                <DateTimePicker
+                  mt={'1rem'}
+                  w={'100%'}
+                  label="Selecione a data para pagamento"
+                  placeholder="Escolha uma data"
+                  maxDate={new Date()}
+                />
+              </DatesProvider>
+            </>
+          )}
+        </Flex>
+        <Space h="xl" />
+        <Divider />
+        <Select
+          {...form.getInputProps('unidadeMedida.id')}
+          mt={'1rem'}
+          onChange={event =>
+            form.setFieldValue('unidadeMedida.id', Number(event))
+          }
+          clearButtonProps={{ 'aria-label': 'Clear selection' }}
+          nothingFound="Nenhuma dataFornecedor unidade medida"
+          withinPortal
+          withAsterisk
+          required
+          label={t('Selecione uma mercadoria')}
+          placeholder={t('Selecione uma das opções')}
+          data={mercadoria}
+        />
+        <Space h="xl" />
+        <Divider />
+        <Space h="xl" />
+        <SimpleTable columns={[]} data={[]} />
+        {renderButtons()}
+      </form>
+    </Drawer>
+  )
+}
+
+export default DrawerCadastroCompras

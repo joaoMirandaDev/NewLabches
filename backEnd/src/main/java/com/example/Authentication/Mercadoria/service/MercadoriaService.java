@@ -4,7 +4,7 @@ import com.example.Authentication.Tipo.repository.TipoRepository;
 import com.example.Authentication.Utils.filtro.Filtro;
 import com.example.Authentication.Utils.pagination.PaginationSimple;
 import com.example.Authentication.Mercadoria.DTO.MercadoriaDTO;
-import com.example.Authentication.Mercadoria.DTO.MercadoriaGripDTO;
+import com.example.Authentication.Mercadoria.DTO.MercadoriaSelectDTO;
 import com.example.Authentication.Mercadoria.Interface.UnidadeMedidaInterface;
 import com.example.Authentication.Mercadoria.model.Mercadoria;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class MercadoriaService {
+public class MercadoriaService extends PaginationSimple {
 
     private final MercadoriaRepository mercadoriaRepository;
     private final UnidadeMedidaRepository unidadeMedidaRepository;
@@ -111,7 +111,7 @@ public class MercadoriaService {
         CAMPO_ORDENACAO.put("dataCadastro", "data_cadastro");
     }
     public Page<Mercadoria> findAllByPage(Filtro filtro) {
-        Pageable pageable = paginationSimple.createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "nome");
+        Pageable pageable = createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "nome");
         return mercadoriaRepository.findAll(pageable, filtro.getSearch());
     }
 
@@ -121,7 +121,7 @@ public class MercadoriaService {
                 NotFoundException(messageSource.getMessage("error.isEmpty", null, locale)));
     }
 
-    public List<MercadoriaGripDTO> findAll() {
-        return  mercadoriaRepository.findAll().stream().map(MercadoriaGripDTO::new).collect(Collectors.toList());
+    public List<MercadoriaSelectDTO> findAll() {
+        return  mercadoriaRepository.findAll().stream().map(MercadoriaSelectDTO::new).collect(Collectors.toList());
     }
 }

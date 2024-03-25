@@ -2,10 +2,12 @@ package com.example.Authentication.Fornecedores.service;
 
 import com.example.Authentication.Fornecedores.DTO.FornecedorDto;
 import com.example.Authentication.Fornecedores.DTO.FornecedorListagemDto;
+import com.example.Authentication.Fornecedores.DTO.FornecedorSelectDto;
 import com.example.Authentication.Utils.exceptions.NotFoundException;
 import com.example.Authentication.Utils.filtro.Filtro;
 import com.example.Authentication.Fornecedores.model.Fornecedor;
 import com.example.Authentication.Fornecedores.repository.FornecedorRepository;
+import com.example.Authentication.Utils.pagination.PaginationSimple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DataAccessException;
@@ -17,17 +19,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
-public class FornecedorService {
+public class FornecedorService extends PaginationSimple {
 
     private final MessageSource messageSource;
 
     Locale locale = new Locale("pt", "BR");
     @Autowired
     private static FornecedorRepository fornecedorRepository;
+    private static final Map<String, String> CAMPO_ORDENACAO = new HashMap<>();
+    static {
+        CAMPO_ORDENACAO.put("nomeRazaoSocial", "nome_razao_social");
+        CAMPO_ORDENACAO.put("cpfCnpj", "cpf_cnpj");
+        CAMPO_ORDENACAO.put("telefone", "telefone");
+    }
 
     @Autowired
     public FornecedorService(MessageSource messageSource, FornecedorRepository fornecedorRepository) {
@@ -87,27 +95,9 @@ public class FornecedorService {
     }
 
     public Page<FornecedorListagemDto> findAllfornecedor(Filtro filtro) {
-        Pageable pageable = createPageableFromFiltro(filtro);
+        Pageable pageable = createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "nome_razao_social");
         Page<Fornecedor> fornecedor =  fornecedorRepository.findAll(pageable, filtro.getSearch());
         return fornecedor.map(FornecedorListagemDto::new);
-    }
-    private Pageable createPageableFromFiltro(Filtro filtro) {
-        if (Objects.isNull(filtro.getId())) {
-            filtro.setId("nome_razao_social");
-            filtro.setDesc(true);
-        }
-        if (Objects.nonNull(filtro.getId())) {
-            switch (filtro.getId()) {
-                case "nomeRazaoSocial":
-                    filtro.setId("nome_razao_social");
-                    break;
-                case "cpfCnpj":
-                    filtro.setId("cpf_cnpj");
-                    break;
-            }
-        }
-        Sort sort = filtro.isDesc() ? Sort.by(filtro.getId()).descending() : Sort.by(filtro.getId()).ascending();
-        return PageRequest.of(filtro.getPagina(), filtro.getTamanhoPagina(), sort);
     }
 
     public void editarFornecedor(FornecedorDto fornecedorDto) throws Exception {
@@ -151,4 +141,8 @@ public class FornecedorService {
         }
     }
 
+    public List<FornecedorSelectDto> findAll() {
+        List<Fornecedor> fornecedor = fornecedorRepository.findAll();
+        return fornecedor.stream().map(FornecedorSelectDto::new).collect(Collectors.toList());
+    }
 }
