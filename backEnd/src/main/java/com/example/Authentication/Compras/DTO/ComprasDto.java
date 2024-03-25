@@ -26,7 +26,7 @@ public class ComprasDto {
     private Double valorTotalCompra;
     private Integer pago;
     private Integer ativo;
-    private List<ItensComprasDTO> itensComprasDTOS;
+    private List<ItensComprasDTO> itensCompras;
 
     public ComprasDto(Compras compras) {
         this.id = compras.getId();

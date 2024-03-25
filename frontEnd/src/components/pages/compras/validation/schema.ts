@@ -6,14 +6,18 @@ const DrowerCadastroProdutos = () => {
   const requiredField = t('components.general.campoObrigatorio')
   return z.object({
     nome: z.string().nonempty({ message: requiredField }),
-    valorVenda: z.number().positive({ message: requiredField }),
-    limiteMinimo: z.number().positive({ message: requiredField }),
-    unidadeMedida: z
+    dataCompra: z
+      .date()
+      .max(new Date(), { message: 'Data superior a data atual!' }),
+    dataPagamento: z
+      .date()
+      .min(new Date(), { message: 'Data inferior a data atual!' }),
+    fornecedor: z
       .object({
         id: z.number().positive({ message: requiredField }),
       })
       .required(),
-    tipo: z
+    formaPagamento: z
       .object({
         id: z.number().positive({ message: requiredField }),
       })

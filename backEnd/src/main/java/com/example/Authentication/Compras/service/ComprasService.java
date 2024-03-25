@@ -53,7 +53,7 @@ public class ComprasService extends PaginationSimple {
         ));
         if (Objects.nonNull(comprasDto)) {
             compras.setDataCompra(new Date());
-            Double valorCompra = comprasDto.getItensComprasDTOS().stream().map(val -> val.getValorCompra())
+            Double valorCompra = comprasDto.getItensCompras().stream().map(val -> val.getValorCompra())
                     .mapToDouble(Double::doubleValue).sum();
             compras.setValorTotalCompra(valorCompra);
             compras.setFormaPagamento(formaPagamento);
@@ -71,7 +71,7 @@ public class ComprasService extends PaginationSimple {
             compras.setAtivo(0);
             compras.setValorTotalCompra(comprasDto.getValorTotalCompra());
             comprasRepository.save(compras);
-            itensComprasService.saveListDto(comprasDto.getItensComprasDTOS(),compras);
+            itensComprasService.saveListDto(comprasDto.getItensCompras(),compras);
         }
 
     }

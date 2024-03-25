@@ -63,7 +63,7 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
       dataCadastro: new Date(),
       nome: '',
       categoria: {
-        id: null,
+        id: 0,
         nome: '',
       },
       preco: 0,

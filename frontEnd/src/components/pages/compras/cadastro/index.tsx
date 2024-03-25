@@ -21,6 +21,7 @@ import { IconArrowBarLeft } from '@tabler/icons'
 import IFornecedor from 'src/interfaces/fornecedor'
 import SimpleTable from '@components/common/tabela/simpleTable'
 import IMercadoria from 'src/interfaces/mercadoria'
+import ITensCompra from 'src/interfaces/itensCompra'
 interface DrawerCadastroCompras {
   openModal: boolean
   close: (value: boolean) => void
@@ -40,11 +41,7 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
   const t = useTranslate()
   const form = useForm<{
     id: number | null
-    nome: string
-    ativo: number
-    multiplicador: number
-    limiteMinimo: number
-    unidadeMedida: {
+    fornecedor: {
       id: number | null
       nome: string
     }
@@ -52,15 +49,16 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
       id: number | null
       nome: string
     }
-    valorVenda: number
+    dataCompra: Date | null
+    dataPagamento: Date | null
+    ativo: number
+    itensCompras: ITensCompra[]
   }>({
     initialValues: {
+      itensCompras: [],
       id: null,
       ativo: 0,
-      limiteMinimo: 0,
-      multiplicador: 0,
-      nome: '',
-      unidadeMedida: {
+      fornecedor: {
         id: 0,
         nome: '',
       },
@@ -68,7 +66,8 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
         id: 0,
         nome: '',
       },
-      valorVenda: 0,
+      dataCompra: new Date(),
+      dataPagamento: new Date(),
     },
     validate: zodResolver(DrowerCadastroProdutos()),
   })
@@ -191,15 +190,15 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
         <Divider />
         <Flex>
           <Select
-            {...form.getInputProps('unidadeMedida.id')}
+            {...form.getInputProps('fornecedor.id')}
             mt={'1rem'}
             mr={'0.5rem'}
             w={'100%'}
             onChange={event =>
-              form.setFieldValue('unidadeMedida.id', Number(event))
+              form.setFieldValue('fornecedor.id', Number(event))
             }
             clearButtonProps={{ 'aria-label': 'Clear selection' }}
-            nothingFound="Nenhuma dataFornecedor unidade medida"
+            nothingFound="Nenhum fornecedor encontrado"
             withinPortal
             withAsterisk
             required
@@ -212,7 +211,7 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
             mt={'1rem'}
             onChange={event => getFormaPagamento(Number(event))}
             clearButtonProps={{ 'aria-label': 'Clear selection' }}
-            nothingFound="Nenhuma formaPagamento encontrado"
+            nothingFound="Nenhuma forma de pgamento encontrado"
             withinPortal
             withAsterisk
             required
@@ -233,6 +232,7 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
             }}
           >
             <DateTimePicker
+              {...form.getInputProps('dataCompra')}
               mt={'1rem'}
               w={'100%'}
               required
@@ -254,11 +254,12 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
                 }}
               >
                 <DateTimePicker
+                  {...form.getInputProps('dataPagamento')}
                   mt={'1rem'}
                   w={'100%'}
                   label="Selecione a data para pagamento"
                   placeholder="Escolha uma data"
-                  maxDate={new Date()}
+                  minDate={new Date()}
                 />
               </DatesProvider>
             </>
