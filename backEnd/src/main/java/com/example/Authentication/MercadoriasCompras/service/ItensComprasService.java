@@ -45,7 +45,7 @@ public class ItensComprasService extends PaginationSimple {
         for (ItensComprasDTO itensComprasDTO : itensComprasDTOS) {
             ItensCompras itensCompras = new ItensCompras();
             Mercadoria mercadoria = mercadoriaRepository.
-                    findById(itensComprasDTO.getMercadoriaDTO().getId()).orElseThrow(()
+                    findById(itensComprasDTO.getMercadoria().getId()).orElseThrow(()
                             -> new NotFoundException(
                             messageSource.getMessage("error.isEmpty", null, LocaleInteface.BR)
                     ));

@@ -49,7 +49,7 @@ const ModalHistoricoMercadoria: React.FC<ModalHistoricoMercadoria> = ({
 
   useEffect(() => {
     if (sorting.length == 0) {
-      setSorting([{ id: 'data', desc: true }])
+      setSorting([{ id: 'data', desc: false }])
     }
     sorting.map(value => {
       setFiltro(prevData => ({ ...prevData, id: value.id, desc: value.desc }))

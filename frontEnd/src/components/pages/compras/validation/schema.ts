@@ -9,9 +9,7 @@ const DrowerCadastroProdutos = () => {
     dataCompra: z
       .date()
       .max(new Date(), { message: 'Data superior a data atual!' }),
-    dataPagamento: z
-      .date()
-      .min(new Date(), { message: 'Data inferior a data atual!' }),
+    dataPagamento: z.nullable(z.date()),
     fornecedor: z
       .object({
         id: z.number().positive({ message: requiredField }),

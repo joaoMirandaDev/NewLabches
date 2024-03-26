@@ -250,7 +250,7 @@ export default function FornecedorList() {
       <DrawerCadastroCompras
         refresh={refreshList}
         openModal={opened}
-        close={closeDrawer}
+        closed={closeDrawer}
       />
     </>
   )

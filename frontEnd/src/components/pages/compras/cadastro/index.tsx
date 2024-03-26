@@ -10,7 +10,7 @@ import {
 } from '@mantine/core'
 import { useEffect, useState } from 'react'
 import 'dayjs/locale/pt-br'
-import { DateTimePicker, DatesProvider } from '@mantine/dates'
+import { DatePickerInput, DatesProvider } from '@mantine/dates'
 import { useTranslate } from '@refinedev/core'
 import { IconCircleXFilled, IconDatabasePlus } from '@tabler/icons-react'
 import api from 'src/utils/Api'
@@ -22,9 +22,12 @@ import IFornecedor from 'src/interfaces/fornecedor'
 import SimpleTable from '@components/common/tabela/simpleTable'
 import IMercadoria from 'src/interfaces/mercadoria'
 import ITensCompra from 'src/interfaces/itensCompra'
+import IMercadoriaCompraDto from 'src/interfaces/mercadoriaCompraDto'
+import ModalInsertCompras from '../modal/modal'
+import { useDisclosure } from '@mantine/hooks'
 interface DrawerCadastroCompras {
   openModal: boolean
-  close: (value: boolean) => void
+  closed: (value: boolean) => void
   refresh: (value: boolean) => void
 }
 
@@ -35,10 +38,11 @@ interface formaPagamento {
 
 const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
   openModal,
-  close,
+  closed,
   refresh,
 }) => {
   const t = useTranslate()
+  const [opened, { open, close }] = useDisclosure(false)
   const form = useForm<{
     id: number | null
     fornecedor: {
@@ -79,6 +83,8 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openModal])
   const [dataFornecedor, setDataFornecedor] = useState<SelectItem[]>([])
+  const [mercadoriaSelecionada, setMercadoriaSelecionada] =
+    useState<IMercadoriaCompraDto | null>(null)
   const [formaPagamento, setFormaPagamento] = useState<SelectItem[]>([])
   const [mercadoria, setMercadoria] = useState<SelectItem[]>([])
   const getAllServices = async () => {
@@ -148,7 +154,19 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
 
   const handleClose = () => {
     resetForm()
-    close(false)
+    closed(false)
+  }
+
+  const handleCHangeMercadoria = (event: number) => {
+    mercadoria.forEach(val => {
+      if (Number(val.value) == event) {
+        const dados: IMercadoriaCompraDto = {}
+        dados.id = Number(val.value)
+        dados.nome = val.label
+        setMercadoriaSelecionada(dados)
+        open()
+      }
+    })
   }
 
   const renderButtons = () => (
@@ -176,7 +194,7 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
   return (
     <Drawer
       opened={openModal}
-      onClose={() => close(false)}
+      onClose={() => closed(false)}
       position="right"
       size={'xl'}
       withinPortal
@@ -227,11 +245,9 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
           <DatesProvider
             settings={{
               locale: 'pt-br',
-              firstDayOfWeek: 0,
-              weekendDays: [0],
             }}
           >
-            <DateTimePicker
+            <DatePickerInput
               {...form.getInputProps('dataCompra')}
               mt={'1rem'}
               w={'100%'}
@@ -249,14 +265,13 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
               <DatesProvider
                 settings={{
                   locale: 'pt-br',
-                  firstDayOfWeek: 0,
-                  weekendDays: [0],
                 }}
               >
-                <DateTimePicker
+                <DatePickerInput
                   {...form.getInputProps('dataPagamento')}
                   mt={'1rem'}
                   w={'100%'}
+                  required
                   label="Selecione a data para pagamento"
                   placeholder="Escolha uma data"
                   minDate={new Date()}
@@ -270,11 +285,9 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
         <Select
           {...form.getInputProps('unidadeMedida.id')}
           mt={'1rem'}
-          onChange={event =>
-            form.setFieldValue('unidadeMedida.id', Number(event))
-          }
+          onChange={event => handleCHangeMercadoria(Number(event))}
           clearButtonProps={{ 'aria-label': 'Clear selection' }}
-          nothingFound="Nenhuma dataFornecedor unidade medida"
+          nothingFound="Nenhuma mercadoria encontrada"
           withinPortal
           withAsterisk
           required
@@ -288,6 +301,11 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
         <SimpleTable columns={[]} data={[]} />
         {renderButtons()}
       </form>
+      <ModalInsertCompras
+        closeModal={close}
+        openModal={opened}
+        data={mercadoriaSelecionada}
+      />
     </Drawer>
   )
 }

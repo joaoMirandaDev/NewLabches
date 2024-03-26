@@ -14,14 +14,14 @@ import java.util.Date;
 public class ItensComprasDTO {
 
     private Integer id;
-    private MercadoriaDTO mercadoriaDTO;
+    private MercadoriaDTO mercadoria;
     private Double quantidade;
     private Date data;
     private Double valorCompra;
 
     public ItensComprasDTO(ItensCompras itensCompras) {
         this.id = itensCompras.getId();
-        this.mercadoriaDTO = new MercadoriaDTO(itensCompras.getMercadoria());
+        this.mercadoria = new MercadoriaDTO(itensCompras.getMercadoria());
         this.quantidade = itensCompras.getQuantidade();
         this.data = itensCompras.getData();
         this.valorCompra = itensCompras.getValorCompra();
