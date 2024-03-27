@@ -36,7 +36,7 @@ const ModalHistoricoMercadoria: React.FC<ModalHistoricoMercadoria> = ({
     pagina: 0,
     tamanhoPagina: 10,
     id: 'data',
-    desc: true,
+    desc: false,
   })
 
   const [data, setData] = useState<IMercadoriaCompra[]>([])

@@ -9,6 +9,6 @@ export default interface IMercadoriaCompra {
   valorCompra?: number
   valorFinalUnitario?: number
   unidadeMedida?: IUnidadeMedida
-  dataNascimento?: Date
+  data?: Date
   quantidadeFinal?: number
 }

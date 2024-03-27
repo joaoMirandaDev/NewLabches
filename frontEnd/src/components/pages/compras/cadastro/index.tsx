@@ -22,9 +22,9 @@ import IFornecedor from 'src/interfaces/fornecedor'
 import SimpleTable from '@components/common/tabela/simpleTable'
 import IMercadoria from 'src/interfaces/mercadoria'
 import ITensCompra from 'src/interfaces/itensCompra'
-import IMercadoriaCompraDto from 'src/interfaces/mercadoriaCompraDto'
 import ModalInsertCompras from '../modal/modal'
 import { useDisclosure } from '@mantine/hooks'
+import IItemCompra from 'src/interfaces/compras/itensCompra'
 interface DrawerCadastroCompras {
   openModal: boolean
   closed: (value: boolean) => void
@@ -84,7 +84,7 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
   }, [openModal])
   const [dataFornecedor, setDataFornecedor] = useState<SelectItem[]>([])
   const [mercadoriaSelecionada, setMercadoriaSelecionada] =
-    useState<IMercadoriaCompraDto | null>(null)
+    useState<IMercadoria | null>(null)
   const [formaPagamento, setFormaPagamento] = useState<SelectItem[]>([])
   const [mercadoria, setMercadoria] = useState<SelectItem[]>([])
   const getAllServices = async () => {
@@ -114,6 +114,10 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
         form.setFieldValue('formaPagamento.nome', val.label)
       }
     })
+  }
+
+  const objetoModal = (event: IItemCompra) => {
+    console.log(event, 'deu bom')
   }
 
   const handleSubmit = async () => {
@@ -158,14 +162,9 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
   }
 
   const handleCHangeMercadoria = (event: number) => {
-    mercadoria.forEach(val => {
-      if (Number(val.value) == event) {
-        const dados: IMercadoriaCompraDto = {}
-        dados.id = Number(val.value)
-        dados.nome = val.label
-        setMercadoriaSelecionada(dados)
-        open()
-      }
+    api.get(`api/mercadoria/findById/${event}`).then(response => {
+      setMercadoriaSelecionada(response.data)
+      open()
     })
   }
 
@@ -303,6 +302,7 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
       </form>
       <ModalInsertCompras
         closeModal={close}
+        dataModal={objetoModal}
         openModal={opened}
         data={mercadoriaSelecionada}
       />
