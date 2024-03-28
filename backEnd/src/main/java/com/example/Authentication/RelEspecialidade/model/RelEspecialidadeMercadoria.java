@@ -1,4 +1,4 @@
-package com.example.Authentication.Especialidade.Rel.model;
+package com.example.Authentication.RelEspecialidade.model;
 
 import com.example.Authentication.Especialidade.model.Especialidade;
 import com.example.Authentication.Mercadoria.model.Mercadoria;

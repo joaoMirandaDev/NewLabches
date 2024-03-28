@@ -28,7 +28,6 @@ public class MercadoriaService extends PaginationSimple {
     private final MercadoriaRepository mercadoriaRepository;
     private final UnidadeMedidaRepository unidadeMedidaRepository;
     private final TipoRepository tipoRepository;
-    private final PaginationSimple paginationSimple;
     private static final Map<String, String> CAMPO_ORDENACAO = new HashMap<>();
     private final MessageSource messageSource;
     Locale locale = new Locale("pt", "BR");

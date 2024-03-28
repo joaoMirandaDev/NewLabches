@@ -62,7 +62,7 @@ public class ItensComprasService extends PaginationSimple {
                     calculoQuantidade(mercadoria.getUnidadeMedida(),
                             mercadoria.getMultiplicador(), itensComprasDTO.getQuantidade()));
             itensCompras.setValorCompra(itensComprasDTO.getValorCompra());
-            itensCompras.setValorUnitario((itensCompras.getValorCompra() * itensCompras.getQuantidade()) / itensCompras.getQuantidadeFinal());
+            itensCompras.setValorUnitario(itensCompras.getQuantidadeFinal() / itensCompras.getValorCompra());
             itensCompras.setData(new Date());
             mercadoriaRepository.save(mercadoria);
             itensCompraRepository.save(itensCompras);

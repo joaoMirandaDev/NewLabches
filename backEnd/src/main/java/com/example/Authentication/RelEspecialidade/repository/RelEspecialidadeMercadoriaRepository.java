@@ -1,6 +1,6 @@
-package com.example.Authentication.Especialidade.Rel.repository;
+package com.example.Authentication.RelEspecialidade.repository;
 
-import com.example.Authentication.Especialidade.Rel.model.RelEspecialidadeMercadoria;
+import com.example.Authentication.RelEspecialidade.model.RelEspecialidadeMercadoria;
 import com.example.Authentication.Especialidade.model.Especialidade;
 import com.example.Authentication.Mercadoria.model.Mercadoria;
 import org.springframework.data.jpa.repository.JpaRepository;

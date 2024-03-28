@@ -29,7 +29,7 @@ public class ComprasController {
     }
 
     @PostMapping(value = "/list", produces = "application/json")
-    public Page<ComprasPageDto> findAllByPage(Filtro filtro) {
+    public Page<ComprasPageDto> findAllByPage(@RequestBody Filtro filtro) {
        return comprasService.findAllByPage(filtro);
     }
 }

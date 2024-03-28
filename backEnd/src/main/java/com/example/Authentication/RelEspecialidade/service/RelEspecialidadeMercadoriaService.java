@@ -1,25 +1,14 @@
-package com.example.Authentication.Especialidade.Rel.service;
+package com.example.Authentication.RelEspecialidade.service;
 
-import com.example.Authentication.Categoria.model.Categoria;
-import com.example.Authentication.Categoria.repository.CategoriaRepository;
-import com.example.Authentication.Especialidade.DTO.EspecialidadeDTO;
-import com.example.Authentication.Especialidade.Rel.model.RelEspecialidadeMercadoria;
-import com.example.Authentication.Especialidade.Rel.repository.RelEspecialidadeMercadoriaRepository;
+import com.example.Authentication.RelEspecialidade.model.RelEspecialidadeMercadoria;
+import com.example.Authentication.RelEspecialidade.repository.RelEspecialidadeMercadoriaRepository;
 import com.example.Authentication.Especialidade.model.Especialidade;
-import com.example.Authentication.Especialidade.repository.EspecialidadeRepository;
-import com.example.Authentication.Mercadoria.DTO.MercadoriaDTO;
 import com.example.Authentication.Mercadoria.model.Mercadoria;
 import com.example.Authentication.Mercadoria.repository.MercadoriaRepository;
 import com.example.Authentication.Utils.exceptions.NotFoundException;
-import com.example.Authentication.Utils.filtro.Filtro;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
