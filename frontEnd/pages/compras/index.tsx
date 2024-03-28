@@ -4,7 +4,7 @@ import DrawerCadastroCompras from '@components/pages/compras/cadastro'
 import { ActionIcon, Button, Flex, Tooltip } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { useTranslate } from '@refinedev/core'
-import { IconCirclePlus, IconEye, IconFileSearch } from '@tabler/icons'
+import { IconCirclePlus, IconEye } from '@tabler/icons'
 import Cookies from 'js-cookie'
 import {
   MRT_ColumnDef,
@@ -22,7 +22,6 @@ import { PAGE_INDEX, PAGE_SIZE } from 'src/utils/Constants'
 
 export default function FornecedorList() {
   const t = useTranslate()
-  // const [openModalHistorico, setOpenModalHistorico] = useState<boolean>(false)
   const [opened, { open, close }] = useDisclosure(false)
   const [sorting, setSorting] = useState<MRT_SortingState>([])
   const [dataCompra, setDataCompra] = useState<ICompra[]>([])
@@ -36,8 +35,8 @@ export default function FornecedorList() {
     search: '',
     pagina: 0,
     tamanhoPagina: 10,
-    id: 'data_compra',
-    desc: false,
+    id: 'dataCompra',
+    desc: true,
   })
   useEffect(() => {
     if (
@@ -57,7 +56,14 @@ export default function FornecedorList() {
 
   useEffect(() => {
     if (sorting.length == 0) {
-      setSorting([{ id: 'nome', desc: false }])
+      setSorting([{ id: 'dataCompra', desc: false }])
+    } else {
+      const localFiltro = {
+        ...filtro,
+        id: sorting[0].id,
+        desc: !sorting[0].desc,
+      }
+      setFiltro(localFiltro)
     }
     sorting.map(value => {
       setFiltro(prevData => ({ ...prevData, id: value.id, desc: value.desc }))
@@ -65,7 +71,7 @@ export default function FornecedorList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sorting])
 
-  const filterCliente = (value: string) => {
+  const filterCompras = (value: string) => {
     if (value.length > 0) {
       setResetPesquisa(true)
     } else {
@@ -157,18 +163,6 @@ export default function FornecedorList() {
     []
   )
 
-  // const visualizar = (id: number) => {
-  //   api.get(`api/mercadoria/findById/${id}`).then(response => {
-  //     setProduto(response.data)
-  //     setOpenModal(true)
-  //   })
-  // }
-
-  // const closeModalHistorico = (value: boolean) => {
-  //   setOpenModalHistorico(value)
-  //   setIdHistorio(null)
-  // }
-
   const closeDrawer = (condicao: boolean) => {
     if (!condicao) {
       close()
@@ -189,20 +183,9 @@ export default function FornecedorList() {
           disabled={validatePermissionRole()}
           variant="transparent"
           aria-label="Settings"
-          // onClick={() => visualizar(row.original.id!)}
+          onClick={() => console.log(row.original.id!)}
         >
           <IconEye style={{ cursor: 'pointer' }} />
-        </ActionIcon>
-      </Tooltip>
-      <Tooltip label={'Histórico'}>
-        <ActionIcon
-          size="sm"
-          disabled={validatePermissionRole()}
-          variant="transparent"
-          aria-label="Settings"
-          onClick={() => console.log(row)}
-        >
-          <IconFileSearch style={{ cursor: 'pointer' }} />
         </ActionIcon>
       </Tooltip>
     </Flex>
@@ -217,7 +200,7 @@ export default function FornecedorList() {
         clearSearch={resetPesquisa}
         textSearch={t('pages.produtos.buttonSearchBar')}
         icone={true}
-        onDataFilter={filterCliente}
+        onDataFilter={filterCompras}
       />
       <Flex justify={'flex-end'} m={10}>
         <Button

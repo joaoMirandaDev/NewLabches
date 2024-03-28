@@ -40,7 +40,7 @@ const SimpleTable = <T extends Record<string, any>>({
       enableRowActions: enableRowActions,
       renderRowActions: rowActions,
       positionActionsColumn: positionActionsColumn,
-      enableSorting: true,
+      enableSorting: false,
       mantineTableProps: {
         sx: {
           marginRight: -10000,

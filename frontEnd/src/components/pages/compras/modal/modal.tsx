@@ -33,10 +33,6 @@ const ModalInsertCompras: React.FC<ModalInsertCompras> = ({
     },
     validate: zodResolver(ModalCadastoCompra()),
   })
-  const fecharModal = () => {
-    closeModal(false)
-    close()
-  }
   useEffect(() => {
     if (openModal && data) {
       open()
@@ -44,10 +40,23 @@ const ModalInsertCompras: React.FC<ModalInsertCompras> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, openModal])
-
+  const resetForm = () => {
+    const dados = {
+      quantidade: 0,
+      mercadoria: null,
+      valorCompra: 0,
+    }
+    form.setValues(dados)
+  }
+  const fecharModal = () => {
+    closeModal(false)
+    resetForm()
+    close()
+  }
   const handleSubmit = async () => {
     if (form.isValid()) {
       dataModal(form.values)
+      resetForm()
       closeModal(false)
       close()
     }
@@ -92,7 +101,7 @@ const ModalInsertCompras: React.FC<ModalInsertCompras> = ({
           thousandsSeparator="."
           defaultValue={form.values.valorCompra}
           placeholder={'Insira o valor de compra'}
-          label={'Valor de compra'}
+          label={'Valor total de compra'}
           withAsterisk
           hideControls
           onChange={value => form.setFieldValue('valorCompra', Number(value))}
@@ -107,7 +116,7 @@ const ModalInsertCompras: React.FC<ModalInsertCompras> = ({
             Cancelar
           </Button>
           <Button leftIcon={<IconDatabasePlus />} type="submit" color="green">
-            Inserir
+            Salvar
           </Button>
         </Flex>
       </form>

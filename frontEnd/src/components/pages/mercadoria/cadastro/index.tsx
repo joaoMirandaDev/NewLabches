@@ -77,13 +77,13 @@ const DrawerCadastroMercadoria: React.FC<DrawerCadastroMercadoria> = ({
   // const [data, setData] = useState<ICliente>()
   useEffect(() => {
     if (openModal) {
-      getAllUnidadeMeidaAndTipo()
+      getUnidadeMedidaAndTipo()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openModal])
   const [categoria, setCategoria] = useState<SelectItem[]>([])
   const [tipo, setTipo] = useState<SelectItem[]>([])
-  const getAllUnidadeMeidaAndTipo = async () => {
+  const getUnidadeMedidaAndTipo = async () => {
     const unidadeMedida = await api.get('api/unidadeMedida/findAll')
     const value = await api.get('api/tipo')
     const dataMedida = unidadeMedida.data.map((data: Mercadoria) => ({

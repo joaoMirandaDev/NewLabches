@@ -1,4 +1,5 @@
 import {
+  ActionIcon,
   Button,
   Divider,
   Drawer,
@@ -7,8 +8,9 @@ import {
   Select,
   SelectItem,
   Space,
+  Tooltip,
 } from '@mantine/core'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import 'dayjs/locale/pt-br'
 import { DatePickerInput, DatesProvider } from '@mantine/dates'
 import { useTranslate } from '@refinedev/core'
@@ -17,7 +19,7 @@ import api from 'src/utils/Api'
 import { useForm, zodResolver } from '@mantine/form'
 import { DrowerCadastroProdutos } from '../validation/schema'
 import { ErrorNotification, SuccessNotification } from '@components/common'
-import { IconArrowBarLeft } from '@tabler/icons'
+import { IconArrowBarLeft, IconTrash } from '@tabler/icons'
 import IFornecedor from 'src/interfaces/fornecedor'
 import SimpleTable from '@components/common/tabela/simpleTable'
 import IMercadoria from 'src/interfaces/mercadoria'
@@ -25,6 +27,7 @@ import ITensCompra from 'src/interfaces/itensCompra'
 import ModalInsertCompras from '../modal/modal'
 import { useDisclosure } from '@mantine/hooks'
 import IItemCompra from 'src/interfaces/compras/itensCompra'
+import { MRT_ColumnDef, MRT_Row } from 'mantine-react-table'
 interface DrawerCadastroCompras {
   openModal: boolean
   closed: (value: boolean) => void
@@ -55,13 +58,15 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
     }
     dataCompra: Date | null
     dataPagamento: Date | null
+    idMercadoria: number
     ativo: number
-    itensCompras: ITensCompra[]
+    itensCompras: IItemCompra[]
   }>({
     initialValues: {
       itensCompras: [],
       id: null,
       ativo: 0,
+      idMercadoria: 0,
       fornecedor: {
         id: 0,
         nome: '',
@@ -75,7 +80,6 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
     },
     validate: zodResolver(DrowerCadastroProdutos()),
   })
-  // const [data, setData] = useState<ICliente>()
   useEffect(() => {
     if (openModal) {
       getAllServices()
@@ -86,7 +90,71 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
   const [mercadoriaSelecionada, setMercadoriaSelecionada] =
     useState<IMercadoria | null>(null)
   const [formaPagamento, setFormaPagamento] = useState<SelectItem[]>([])
+  const [data, setData] = useState<IItemCompra[]>([])
   const [mercadoria, setMercadoria] = useState<SelectItem[]>([])
+  const columns = useMemo<MRT_ColumnDef<ITensCompra>[]>(
+    () => [
+      {
+        accessorKey: 'mercadoria.nome',
+        header: 'Nome',
+        size: 15,
+        minSize: 10,
+        maxSize: 30,
+        mantineTableBodyCellProps: {
+          align: 'center',
+        },
+        mantineTableHeadCellProps: {
+          align: 'center',
+        },
+      },
+      {
+        accessorKey: 'quantidade',
+        header: 'Quantidade',
+        size: 15,
+        minSize: 10,
+        maxSize: 30,
+        mantineTableBodyCellProps: {
+          align: 'center',
+        },
+        mantineTableHeadCellProps: {
+          align: 'center',
+        },
+      },
+      {
+        accessorKey: 'valorCompra',
+        header: 'Valor de compra',
+        size: 15,
+        minSize: 10,
+        maxSize: 30,
+        mantineTableBodyCellProps: {
+          align: 'center',
+        },
+        mantineTableHeadCellProps: {
+          align: 'center',
+        },
+      },
+    ],
+    []
+  )
+  const removeMercadoria = (row: MRT_Row) => {
+    const newData = [...data]
+    newData.splice(row.index, 1)
+    setData(newData)
+  }
+  const rowActions = ({ row }: { row: MRT_Row<IItemCompra> }) => (
+    <Flex>
+      <Tooltip label={'Remover'}>
+        <ActionIcon
+          size="sm"
+          variant="transparent"
+          aria-label="Settings"
+          onClick={() => removeMercadoria(row)}
+        >
+          <IconTrash style={{ cursor: 'pointer' }} />
+        </ActionIcon>
+      </Tooltip>
+    </Flex>
+  )
   const getAllServices = async () => {
     const fornecedor = await api.get('api/fornecedor/findAll')
     const value = await api.get('api/formaPagamento/findAll')
@@ -107,26 +175,23 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
     }))
     setFormaPagamento(data)
   }
-  const getFormaPagamento = (event: number) => {
-    formaPagamento.forEach(val => {
-      if (Number(val.value) == event) {
-        form.setFieldValue('formaPagamento.id', val.value)
-        form.setFieldValue('formaPagamento.nome', val.label)
-      }
-    })
-  }
 
   const objetoModal = (event: IItemCompra) => {
-    console.log(event, 'deu bom')
+    setData(prev => [...prev, event])
   }
 
   const handleSubmit = async () => {
+    if (data.length == 0) {
+      console.log(form.values)
+      return ErrorNotification({ message: 'Insira no mínimo uma mercadoria!' })
+    }
     if (form.isValid()) {
+      const updatedFormValues = { ...form.values, itensCompras: data }
       await api
-        .post('api/mercadoria/adicionar', form.values)
+        .post('api/compras/addCompra', updatedFormValues)
         .then(() => {
           SuccessNotification({
-            message: 'Mecadoria cadastrada com sucesso',
+            message: 'Compra cadastrada com sucesso',
           })
           handleClose()
           refresh(true)
@@ -139,19 +204,20 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
 
   const resetForm = () => {
     const dados = {
+      itensCompras: [],
       id: null,
       ativo: 0,
-      multiplicador: 0,
-      nome: '',
+      idMercadoria: 0,
+      fornecedor: {
+        id: 0,
+        nome: '',
+      },
       formaPagamento: {
-        id: null,
+        id: 0,
         nome: '',
       },
-      unidadeMedida: {
-        id: null,
-        nome: '',
-      },
-      valorVenda: 0,
+      dataCompra: new Date(),
+      dataPagamento: new Date(),
     }
     form.setValues(dados)
   }
@@ -161,11 +227,13 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
     closed(false)
   }
 
-  const handleCHangeMercadoria = (event: number) => {
-    api.get(`api/mercadoria/findById/${event}`).then(response => {
-      setMercadoriaSelecionada(response.data)
-      open()
-    })
+  const handleCHangeMercadoria = () => {
+    api
+      .get(`api/mercadoria/findById/${form.values.idMercadoria}`)
+      .then(response => {
+        setMercadoriaSelecionada(response.data)
+        open()
+      })
   }
 
   const renderButtons = () => (
@@ -210,15 +278,15 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
             {...form.getInputProps('fornecedor.id')}
             mt={'1rem'}
             mr={'0.5rem'}
-            w={'100%'}
             onChange={event =>
               form.setFieldValue('fornecedor.id', Number(event))
             }
             clearButtonProps={{ 'aria-label': 'Clear selection' }}
             nothingFound="Nenhum fornecedor encontrado"
+            w={'50%'}
             withinPortal
             withAsterisk
-            required
+            searchable
             label={t('Selecione um fornecedor')}
             placeholder={t('Selecione uma das opções')}
             data={dataFornecedor}
@@ -226,13 +294,14 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
           <Select
             {...form.getInputProps('formaPagamento.id')}
             mt={'1rem'}
-            onChange={event => getFormaPagamento(Number(event))}
+            onChange={event =>
+              form.setFieldValue('formaPagamento.id', Number(event))
+            }
             clearButtonProps={{ 'aria-label': 'Clear selection' }}
             nothingFound="Nenhuma forma de pgamento encontrado"
             withinPortal
+            w={'50%'}
             withAsterisk
-            required
-            w={'100%'}
             label={t('Selecione uma forma de Pagamento')}
             placeholder={t('Selecione uma das opções')}
             data={formaPagamento}
@@ -281,23 +350,41 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
         </Flex>
         <Space h="xl" />
         <Divider />
-        <Select
-          {...form.getInputProps('unidadeMedida.id')}
-          mt={'1rem'}
-          onChange={event => handleCHangeMercadoria(Number(event))}
-          clearButtonProps={{ 'aria-label': 'Clear selection' }}
-          nothingFound="Nenhuma mercadoria encontrada"
-          withinPortal
-          withAsterisk
-          required
-          label={t('Selecione uma mercadoria')}
-          placeholder={t('Selecione uma das opções')}
-          data={mercadoria}
-        />
+        <Flex mt={'1rem'} align={'flex-end'} w={'100%'}>
+          <Select
+            {...form.getInputProps('idMercadoria')}
+            onChange={event =>
+              form.setFieldValue('idMercadoria', Number(event))
+            }
+            clearButtonProps={{ 'aria-label': 'Clear selection' }}
+            nothingFound="Nenhuma mercadoria encontrada"
+            withinPortal
+            w={'100%'}
+            searchable
+            clearable
+            withAsterisk
+            label={t('Selecione uma mercadoria')}
+            placeholder={t('Selecione uma das opções')}
+            data={mercadoria}
+          />
+          <Button
+            leftIcon={<IconDatabasePlus />}
+            onClick={() => handleCHangeMercadoria()}
+            ml={'0.5rem'}
+            color="green"
+          >
+            Inserir
+          </Button>
+        </Flex>
         <Space h="xl" />
         <Divider />
         <Space h="xl" />
-        <SimpleTable columns={[]} data={[]} />
+        <SimpleTable
+          enableRowActions
+          rowActions={rowActions}
+          columns={columns}
+          data={data}
+        />
         {renderButtons()}
       </form>
       <ModalInsertCompras
