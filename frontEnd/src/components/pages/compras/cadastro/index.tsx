@@ -20,7 +20,7 @@ import api from 'src/utils/Api'
 import { useForm, zodResolver } from '@mantine/form'
 import { DrowerCadastroProdutos } from '../validation/schema'
 import { ErrorNotification, SuccessNotification } from '@components/common'
-import { IconArrowBarLeft, IconTrash } from '@tabler/icons'
+import { IconArrowBarLeft, IconEdit, IconTrash } from '@tabler/icons'
 import IFornecedor from 'src/interfaces/fornecedor'
 import SimpleTable from '@components/common/tabela/simpleTable'
 import IMercadoria from 'src/interfaces/mercadoria'
@@ -90,8 +90,9 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openModal])
   const [dataFornecedor, setDataFornecedor] = useState<SelectItem[]>([])
-  const [mercadoriaSelecionada, setMercadoriaSelecionada] =
-    useState<IMercadoria | null>(null)
+  const [itemSelecionado, setItemSelecionado] = useState<IItemCompra | null>(
+    null
+  )
   const [formaPagamento, setFormaPagamento] = useState<SelectItem[]>([])
   const [data, setData] = useState<IItemCompra[]>([])
   const [mercadoria, setMercadoria] = useState<SelectItem[]>([])
@@ -144,6 +145,10 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
     newData.splice(row.index, 1)
     setData(newData)
   }
+  const editarMercadoria = (row: MRT_Row) => {
+    setItemSelecionado(row.original)
+    open()
+  }
   const rowActions = ({ row }: { row: MRT_Row<IItemCompra> }) => (
     <Flex>
       <Tooltip label={'Remover'}>
@@ -156,6 +161,16 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
           <IconTrash style={{ cursor: 'pointer' }} />
         </ActionIcon>
       </Tooltip>
+      <Tooltip label={'Editar'}>
+        <ActionIcon
+          size="sm"
+          variant="transparent"
+          aria-label="Settings"
+          onClick={() => editarMercadoria(row)}
+        >
+          <IconEdit style={{ cursor: 'pointer' }} />
+        </ActionIcon>
+      </Tooltip>
     </Flex>
   )
   const getAllServices = async () => {
@@ -165,6 +180,7 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
     const mercadoriaSelect = mercadoria.data.map((data: IMercadoria) => ({
       value: data.id,
       label: data.nome,
+      group: data.tipo.nome,
     }))
     setMercadoria(mercadoriaSelect)
     const fornecedorSelect = fornecedor.data.map((data: IFornecedor) => ({
@@ -180,6 +196,13 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
   }
 
   const objetoModal = (event: IItemCompra) => {
+    const index = data.findIndex(
+      val => val.mercadoria?.nome == event.mercadoria?.nome
+    )
+    if (index != -1) {
+      data.splice(index, 1)
+    }
+    setItemSelecionado(null)
     setData(prev => [...prev, event])
   }
 
@@ -240,11 +263,15 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
     closed(false)
   }
 
+  const handleChange = (key: string, event: IItemCompra) => {
+    setItemSelecionado({ ...itemSelecionado, [key]: event })
+  }
+
   const handleCHangeMercadoria = () => {
     api
       .get(`api/mercadoria/findById/${form.values.idMercadoria}`)
       .then(response => {
-        setMercadoriaSelecionada(response.data)
+        handleChange('mercadoria', response.data)
         open()
       })
   }
@@ -412,7 +439,7 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
         closeModal={close}
         dataModal={objetoModal}
         openModal={opened}
-        data={mercadoriaSelecionada}
+        data={itemSelecionado}
       />
     </Drawer>
   )

@@ -39,7 +39,7 @@ export default function Login() {
           <Card.Section px={80} py={30}>
             <Text
               variant="gradient"
-              gradient={{ from: 'indigo', to: 'cyan', deg: 45 }}
+              gradient={{ from: 'yellow', to: 'orange', deg: 45 }}
               sx={{ fontFamily: 'Greycliff CF, sans-serif' }}
               ta="center"
               fz="xl"

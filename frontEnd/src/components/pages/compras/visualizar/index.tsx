@@ -24,6 +24,7 @@ import { DrowerCadastroProdutos } from '../validation/schema'
 import { ErrorNotification, SuccessNotification } from '@components/common'
 import {
   IconArrowBarLeft,
+  IconEdit,
   IconExclamationCircle,
   IconTrash,
 } from '@tabler/icons'
@@ -98,8 +99,9 @@ const DrawerVisualizarCompra: React.FC<DrawerVisualizarCompra> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openModal])
   const [dataFornecedor, setDataFornecedor] = useState<SelectItem[]>([])
-  const [mercadoriaSelecionada, setMercadoriaSelecionada] =
-    useState<IMercadoria | null>(null)
+  const [itemSelecionado, setItemSelecionado] = useState<IItemCompra | null>(
+    null
+  )
   const [formaPagamento, setFormaPagamento] = useState<SelectItem[]>([])
   const [data, setData] = useState<IItemCompra[]>([])
   const [onEdit, setOnEdit] = useState<boolean>(false)
@@ -153,6 +155,10 @@ const DrawerVisualizarCompra: React.FC<DrawerVisualizarCompra> = ({
     newData.splice(row.index, 1)
     setData(newData)
   }
+  const editarMercadoria = (row: MRT_Row) => {
+    setItemSelecionado(row.original)
+    open()
+  }
   const rowActions = ({ row }: { row: MRT_Row<IItemCompra> }) => (
     <Flex>
       <Tooltip label={'Remover'}>
@@ -164,6 +170,17 @@ const DrawerVisualizarCompra: React.FC<DrawerVisualizarCompra> = ({
           onClick={() => removeMercadoria(row)}
         >
           <IconTrash style={{ cursor: 'pointer' }} />
+        </ActionIcon>
+      </Tooltip>
+      <Tooltip label={'Editar'}>
+        <ActionIcon
+          disabled={!onEdit}
+          size="sm"
+          variant="transparent"
+          aria-label="Settings"
+          onClick={() => editarMercadoria(row)}
+        >
+          <IconEdit style={{ cursor: 'pointer' }} />
         </ActionIcon>
       </Tooltip>
     </Flex>
@@ -184,6 +201,7 @@ const DrawerVisualizarCompra: React.FC<DrawerVisualizarCompra> = ({
     const mercadoriaSelect = mercadoria.data.map((data: IMercadoria) => ({
       value: data.id,
       label: data.nome,
+      group: data.tipo.nome,
     }))
     setMercadoria(mercadoriaSelect)
     const fornecedorSelect = fornecedor.data.map((data: IFornecedor) => ({
@@ -199,6 +217,13 @@ const DrawerVisualizarCompra: React.FC<DrawerVisualizarCompra> = ({
   }
 
   const objetoModal = (event: IItemCompra) => {
+    const index = data.findIndex(
+      val => val.mercadoria?.nome == event.mercadoria?.nome
+    )
+    if (index != -1) {
+      data.splice(index, 1)
+    }
+    setItemSelecionado(null)
     setData(prev => [...prev, event])
   }
 
@@ -244,7 +269,6 @@ const DrawerVisualizarCompra: React.FC<DrawerVisualizarCompra> = ({
           SuccessNotification({
             message: 'Compra atualizada com sucesso',
           })
-          refresh(true)
           handleClose()
         })
         .catch(() => {
@@ -254,10 +278,10 @@ const DrawerVisualizarCompra: React.FC<DrawerVisualizarCompra> = ({
   }
 
   const handleClose = () => {
-    setOnEdit(false)
-    resetForm()
     closed(false)
+    setOnEdit(false)
     refresh(true)
+    resetForm()
   }
 
   const handleDelete = () => {
@@ -284,11 +308,15 @@ const DrawerVisualizarCompra: React.FC<DrawerVisualizarCompra> = ({
     setOnEdit(true)
   }
 
+  const handleChange = (key: string, event: IItemCompra) => {
+    setItemSelecionado({ ...itemSelecionado, [key]: event })
+  }
+
   const handleCHangeMercadoria = () => {
     api
       .get(`api/mercadoria/findById/${form.values.idMercadoria}`)
       .then(response => {
-        setMercadoriaSelecionada(response.data)
+        handleChange('mercadoria', response.data)
         open()
       })
   }
@@ -509,7 +537,7 @@ const DrawerVisualizarCompra: React.FC<DrawerVisualizarCompra> = ({
         closeModal={close}
         dataModal={objetoModal}
         openModal={opened}
-        data={mercadoriaSelecionada}
+        data={itemSelecionado}
       />
     </Drawer>
   )

@@ -9,6 +9,7 @@ import com.example.Authentication.FormaPagamento.repository.FormaPagamentoReposi
 import com.example.Authentication.Fornecedores.model.Fornecedor;
 import com.example.Authentication.Fornecedores.repository.FornecedorRepository;
 import com.example.Authentication.Mercadoria.repository.MercadoriaRepository;
+import com.example.Authentication.Mercadoria.service.MercadoriaService;
 import com.example.Authentication.MercadoriasCompras.service.ItensComprasService;
 import com.example.Authentication.Utils.Interfaces.LocaleInteface;
 import com.example.Authentication.Utils.exceptions.NotFoundException;
@@ -17,9 +18,7 @@ import com.example.Authentication.Utils.pagination.PaginationSimple;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -30,6 +29,7 @@ public class ComprasService extends PaginationSimple {
     private final ComprasRepository comprasRepository;
     private final FornecedorRepository fornecedorRepository;
     private final FormaPagamentoRepository formaPagamentoRepository;
+    private final MercadoriaService mercadoriaService;
     private static final Map<String, String> CAMPO_ORDENACAO = new HashMap<>();
     private final MessageSource messageSource;
     private final ItensComprasService itensComprasService;
@@ -100,6 +100,7 @@ public class ComprasService extends PaginationSimple {
         if (Objects.nonNull(id)) {
            Compras compras =  comprasRepository.findById(id).orElseThrow(() -> new NotFoundException(
                     messageSource.getMessage("error.isEmpty", null, LocaleInteface.BR)));
+            mercadoriaService.revertValues(compras.getIngredientesList());
             comprasRepository.delete(compras);
         }
     }

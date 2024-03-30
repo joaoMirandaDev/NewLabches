@@ -1,5 +1,6 @@
 package com.example.Authentication.Mercadoria.service;
 
+import com.example.Authentication.MercadoriasCompras.model.ItensCompras;
 import com.example.Authentication.Tipo.repository.TipoRepository;
 import com.example.Authentication.Utils.filtro.Filtro;
 import com.example.Authentication.Utils.pagination.PaginationSimple;
@@ -122,5 +123,15 @@ public class MercadoriaService extends PaginationSimple {
 
     public List<MercadoriaSelectDTO> findAll() {
         return  mercadoriaRepository.findAll().stream().map(MercadoriaSelectDTO::new).collect(Collectors.toList());
+    }
+
+    public void revertValues(List<ItensCompras> ingredientesList) {
+        for (ItensCompras itensCompras :ingredientesList) {
+            Mercadoria mercadoria = mercadoriaRepository.findById(itensCompras.getMercadoria().getId()).orElseThrow(() ->
+                    new NotFoundException(messageSource.getMessage("error.isEmpty", null, locale)));
+
+            mercadoria.setSaldoEstoque(mercadoria.getSaldoEstoque() - itensCompras.getQuantidadeFinal());
+            mercadoriaRepository.save(mercadoria);
+        }
     }
 }

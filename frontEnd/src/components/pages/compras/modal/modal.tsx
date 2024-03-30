@@ -9,7 +9,7 @@ import IItemCompra from 'src/interfaces/compras/itensCompra'
 import IMercadoria from 'src/interfaces/mercadoria'
 interface ModalInsertCompras {
   openModal: boolean
-  data: IMercadoria | null
+  data: IItemCompra | null
   closeModal: (value: boolean) => void
   dataModal: (value: IItemCompra) => void
 }
@@ -35,8 +35,9 @@ const ModalInsertCompras: React.FC<ModalInsertCompras> = ({
   })
   useEffect(() => {
     if (openModal && data) {
+      console.log(data)
       open()
-      form.setFieldValue('mercadoria', data)
+      form.setValues(data)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, openModal])
@@ -75,7 +76,7 @@ const ModalInsertCompras: React.FC<ModalInsertCompras> = ({
       radius={'md'}
       closeOnEscape={false}
       trapFocus={true}
-      title={data?.nome}
+      title={data?.mercadoria?.nome}
     >
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Divider />

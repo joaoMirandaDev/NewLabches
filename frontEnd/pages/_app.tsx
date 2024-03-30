@@ -179,38 +179,11 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             //@ts-ignore
             theme={{
-              ...RefineThemes.Blue,
-              colors: {
-                brand: [
-                  '#BFEFFF',
-                  '#99C2E8',
-                  '#6FA1D2',
-                  '#4E7FA0',
-                  '#00BFFF',
-                  '#0096D6',
-                  '#0074CC',
-                  '#00539C',
-                  '#003366',
-                  '#001F3F',
-                ],
-                blue: [
-                  '#BFEFFF',
-                  '#99C2E8',
-                  '#6FA1D2',
-                  '#4E7FA0',
-                  '#00BFFF',
-                  '#0096D6',
-                  '#0074CC',
-                  '#00539C',
-                  '#003366',
-                  '#001F3F',
-                ],
-              },
+              ...RefineThemes.Yellow,
               colorScheme: colorScheme,
               fontFamily: "'Plus Jakarta Sans', sans-serif",
               fontFamilyMonospace: 'Monaco, Courier, monospace',
               headings: { fontFamily: "'Plus Jakarta Sans', sans-serif" },
-              primaryColor: 'brand',
             }}
             withNormalizeCSS
             withGlobalStyles
@@ -220,7 +193,6 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
               overlayOpacity={0.6}
               zIndex={100000}
               style={{
-                backgroundColor: 'f000',
                 width: '100vw',
                 height: '100vh',
                 overflow: 'hidden',
