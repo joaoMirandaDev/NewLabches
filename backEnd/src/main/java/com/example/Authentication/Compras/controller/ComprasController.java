@@ -23,6 +23,11 @@ public class ComprasController {
         comprasService.addCompras(comprasDto);
     }
 
+    @PutMapping(value = "/edit", produces = "application/json")
+    public void edit(@RequestBody ComprasDto comprasDto) {
+        comprasService.editar(comprasDto);
+    }
+
     @DeleteMapping(value = "/deleteById/{id}")
     public void deleteById(@PathVariable Integer id) {
         comprasService.deleteById(id);
@@ -31,6 +36,11 @@ public class ComprasController {
     @PostMapping(value = "/list", produces = "application/json")
     public Page<ComprasPageDto> findAllByPage(@RequestBody Filtro filtro) {
        return comprasService.findAllByPage(filtro);
+    }
+
+    @GetMapping(value = "/{id}", produces = "application/json")
+    public ComprasDto findAllByPage(@PathVariable Integer id) {
+        return comprasService.findById(id);
     }
 }
 

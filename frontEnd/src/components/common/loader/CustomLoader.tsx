@@ -1,5 +1,5 @@
-import ImageCustomLoading from 'src/assets/customLoading'
+import ImageDelivery from 'src/assets'
 
 export default function customLoader() {
-  return <ImageCustomLoading />
+  return <ImageDelivery />
 }

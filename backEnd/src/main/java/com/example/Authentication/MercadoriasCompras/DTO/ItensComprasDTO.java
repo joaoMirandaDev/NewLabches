@@ -2,6 +2,7 @@ package com.example.Authentication.MercadoriasCompras.DTO;
 
 import com.example.Authentication.Mercadoria.DTO.MercadoriaDTO;
 import com.example.Authentication.MercadoriasCompras.model.ItensCompras;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ public class ItensComprasDTO {
     private Integer id;
     private MercadoriaDTO mercadoria;
     private Double quantidade;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone="GMT-3")
     private Date data;
     private Double valorCompra;
 

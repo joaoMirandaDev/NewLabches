@@ -22,7 +22,7 @@ public class  Compras {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Short id;
+    private Integer id;
     @OneToOne
     @JoinColumn(name = "id_forma_pagamento", referencedColumnName = "id")
     private FormaPagamento formaPagamento;

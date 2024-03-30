@@ -67,7 +67,7 @@ const PaginationTable = <T extends Record<string, any>>({
       onPaginationChange: setPagination,
       rowCount: rowCount,
       mantinePaginationProps: {
-        rowsPerPageOptions: ['10', '25', '50', '100'],
+        rowsPerPageOptions: ['5', '10', '25', '50', '100'],
       },
       mantineTableProps: {
         sx: {

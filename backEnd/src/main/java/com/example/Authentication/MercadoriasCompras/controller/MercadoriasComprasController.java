@@ -21,5 +21,10 @@ public class MercadoriasComprasController {
     public Page<ItensComprasPageDTO> findAllByIdMercadoria(@PathVariable  Integer id, @RequestBody Filtro filtro) {
         return itensComprasService.findAllMercadoriaComprasByIdMercadoria(id, filtro);
     }
+//
+//    @DeleteMapping("{id}")
+//    public void delete(@PathVariable  Integer id) {
+//         itensComprasService.delete(id);
+//    }
 
 }

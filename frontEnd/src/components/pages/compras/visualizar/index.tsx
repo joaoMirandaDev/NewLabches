@@ -5,9 +5,11 @@ import {
   Drawer,
   Flex,
   Group,
+  Popover,
   Select,
   SelectItem,
   Space,
+  Text,
   Textarea,
   Tooltip,
 } from '@mantine/core'
@@ -15,12 +17,16 @@ import { useEffect, useState, useMemo } from 'react'
 import 'dayjs/locale/pt-br'
 import { DatePickerInput, DatesProvider } from '@mantine/dates'
 import { useTranslate } from '@refinedev/core'
-import { IconCircleXFilled, IconDatabasePlus } from '@tabler/icons-react'
+import { IconDatabaseEdit, IconDatabasePlus } from '@tabler/icons-react'
 import api from 'src/utils/Api'
 import { useForm, zodResolver } from '@mantine/form'
 import { DrowerCadastroProdutos } from '../validation/schema'
 import { ErrorNotification, SuccessNotification } from '@components/common'
-import { IconArrowBarLeft, IconTrash } from '@tabler/icons'
+import {
+  IconArrowBarLeft,
+  IconExclamationCircle,
+  IconTrash,
+} from '@tabler/icons'
 import IFornecedor from 'src/interfaces/fornecedor'
 import SimpleTable from '@components/common/tabela/simpleTable'
 import IMercadoria from 'src/interfaces/mercadoria'
@@ -29,8 +35,9 @@ import ModalInsertCompras from '../modal/modal'
 import { useDisclosure } from '@mantine/hooks'
 import IItemCompra from 'src/interfaces/compras/itensCompra'
 import { MRT_ColumnDef, MRT_Row } from 'mantine-react-table'
-interface DrawerCadastroCompras {
+interface DrawerVisualizarCompra {
   openModal: boolean
+  idCompra: number | null
   closed: (value: boolean) => void
   refresh: (value: boolean) => void
 }
@@ -40,9 +47,10 @@ interface formaPagamento {
   nome?: string
 }
 
-const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
+const DrawerVisualizarCompra: React.FC<DrawerVisualizarCompra> = ({
   openModal,
   closed,
+  idCompra,
   refresh,
 }) => {
   const t = useTranslate()
@@ -84,7 +92,7 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
     validate: zodResolver(DrowerCadastroProdutos()),
   })
   useEffect(() => {
-    if (openModal) {
+    if (openModal && idCompra) {
       getAllServices()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -94,6 +102,7 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
     useState<IMercadoria | null>(null)
   const [formaPagamento, setFormaPagamento] = useState<SelectItem[]>([])
   const [data, setData] = useState<IItemCompra[]>([])
+  const [onEdit, setOnEdit] = useState<boolean>(false)
   const [mercadoria, setMercadoria] = useState<SelectItem[]>([])
   const columns = useMemo<MRT_ColumnDef<ITensCompra>[]>(
     () => [
@@ -148,6 +157,7 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
     <Flex>
       <Tooltip label={'Remover'}>
         <ActionIcon
+          disabled={!onEdit}
           size="sm"
           variant="transparent"
           aria-label="Settings"
@@ -161,6 +171,15 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
   const getAllServices = async () => {
     const fornecedor = await api.get('api/fornecedor/findAll')
     const value = await api.get('api/formaPagamento/findAll')
+    const compraById = await api.get(`api/compras/${idCompra}`)
+    form.setValues(compraById.data)
+    form.setFieldValue('dataCompra', new Date(compraById.data.dataCompra))
+    form.setFieldValue('dataPagamento', new Date(compraById.data.dataPagamento))
+    const dados =
+      compraById.data.observacao == null ? '' : compraById.data.observacao
+    form.setFieldValue('observacao', dados)
+    setData(compraById.data.itensCompras)
+
     const mercadoria = await api.get('api/mercadoria/findAll')
     const mercadoriaSelect = mercadoria.data.map((data: IMercadoria) => ({
       value: data.id,
@@ -220,14 +239,13 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
     if (form.isValid()) {
       const updatedFormValues = { ...form.values, itensCompras: data }
       await api
-        .post('api/compras/addCompra', updatedFormValues)
+        .put('api/compras/edit', updatedFormValues)
         .then(() => {
           SuccessNotification({
-            message: 'Compra cadastrada com sucesso',
+            message: 'Compra atualizada com sucesso',
           })
-          handleClose()
-          resetForm()
           refresh(true)
+          handleClose()
         })
         .catch(() => {
           ErrorNotification({ message: 'Erro ao cadastrar mercadoria' })
@@ -236,8 +254,34 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
   }
 
   const handleClose = () => {
+    setOnEdit(false)
     resetForm()
     closed(false)
+    refresh(true)
+  }
+
+  const handleDelete = () => {
+    api
+      .delete(`/api/compras/deleteById/${form.values.id}`)
+      .then(() => {
+        SuccessNotification({
+          message: 'Compra deletada com sucesso!',
+        })
+        handleClose()
+      })
+      .catch(() => {
+        ErrorNotification({
+          message: 'Erro ao deletar compra!',
+        })
+      })
+  }
+
+  const handleCancelar = () => {
+    handleClose()
+  }
+
+  const enableEdit = () => {
+    setOnEdit(true)
   }
 
   const handleCHangeMercadoria = () => {
@@ -256,17 +300,62 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
           <Button leftIcon={<IconArrowBarLeft />} onClick={() => handleClose()}>
             {t('components.button.voltar')}
           </Button>
-          <Button
-            color="red"
-            leftIcon={<IconCircleXFilled />}
-            onClick={() => handleClose()}
-          >
-            {t('components.button.cancelar')}
-          </Button>
+          <Popover width={200} position="bottom" withArrow shadow="md">
+            <Popover.Target>
+              <Button color="red" leftIcon={<IconTrash />}>
+                {t('components.button.deletar')}
+              </Button>
+            </Popover.Target>
+            <Popover.Dropdown ml={'0.5rem'}>
+              <Flex align={'center'}>
+                <IconExclamationCircle color="orange" />
+                <Text size="sm" ml={'0.5rem'}>
+                  Deseja deletar esta compra ?
+                </Text>
+              </Flex>
+              <Flex>
+                <Button
+                  onClick={() => handleDelete()}
+                  compact
+                  variant="subtle"
+                  color="red"
+                >
+                  {t('components.button.confirmar')}
+                </Button>
+                <Button
+                  onClick={() => handleCancelar()}
+                  compact
+                  variant="subtle"
+                >
+                  {t('components.button.cancelar')}
+                </Button>
+              </Flex>
+            </Popover.Dropdown>
+          </Popover>
         </Group>
-        <Button leftIcon={<IconDatabasePlus />} type="submit" color="green">
+        {!onEdit && (
+          <Button
+            leftIcon={<IconDatabaseEdit />}
+            onClick={enableEdit}
+            type="submit"
+            color="green"
+          >
+            {t('components.button.editar')}
+          </Button>
+        )}
+        {onEdit && (
+          <Button
+            leftIcon={<IconDatabaseEdit />}
+            onClick={enableEdit}
+            type="submit"
+            color="green"
+          >
+            {t('components.button.salvar')}
+          </Button>
+        )}
+        {/* <Button leftIcon={<IconDatabasePlus />} type="submit" color="green">
           {t('components.button.salvar')}
-        </Button>
+        </Button> */}
       </Flex>
     </>
   )
@@ -297,6 +386,7 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
             clearButtonProps={{ 'aria-label': 'Clear selection' }}
             nothingFound="Nenhum fornecedor encontrado"
             w={'50%'}
+            disabled={!onEdit}
             withinPortal
             withAsterisk
             searchable
@@ -307,6 +397,7 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
           <Select
             {...form.getInputProps('formaPagamento.id')}
             mt={'1rem'}
+            disabled={!onEdit}
             onChange={event => getFormaPagamento(Number(event))}
             clearButtonProps={{ 'aria-label': 'Clear selection' }}
             nothingFound="Nenhuma forma de pgamento encontrado"
@@ -327,6 +418,7 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
             }}
           >
             <DatePickerInput
+              disabled={!onEdit}
               {...form.getInputProps('dataCompra')}
               mt={'1rem'}
               w={'100%'}
@@ -349,6 +441,7 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
                 <DatePickerInput
                   {...form.getInputProps('dataPagamento')}
                   mt={'1rem'}
+                  disabled={!onEdit}
                   w={'100%'}
                   required
                   label="Selecione a data para pagamento"
@@ -367,6 +460,7 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
             onChange={event =>
               form.setFieldValue('idMercadoria', Number(event))
             }
+            disabled={!onEdit}
             clearButtonProps={{ 'aria-label': 'Clear selection' }}
             nothingFound="Nenhuma mercadoria encontrada"
             withinPortal
@@ -379,6 +473,7 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
             data={mercadoria}
           />
           <Button
+            disabled={!onEdit}
             leftIcon={<IconDatabasePlus />}
             onClick={() => handleCHangeMercadoria()}
             ml={'0.5rem'}
@@ -390,6 +485,8 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
         <Space h="xl" />
         <Divider />
         <Textarea
+          disabled={!onEdit}
+          {...form.getInputProps('observacao')}
           mt={'1rem'}
           onChange={event =>
             form.setFieldValue('observacao', event.target.value)
@@ -418,4 +515,4 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
   )
 }
 
-export default DrawerCadastroCompras
+export default DrawerVisualizarCompra

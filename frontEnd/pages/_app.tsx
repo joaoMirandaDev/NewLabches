@@ -220,6 +220,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
               overlayOpacity={0.6}
               zIndex={100000}
               style={{
+                backgroundColor: 'f000',
                 width: '100vw',
                 height: '100vh',
                 overflow: 'hidden',

@@ -1,6 +1,7 @@
 import SearchBar from '@components/common/filtro/filtro-sem-remocao-caracter'
 import PaginationTable from '@components/common/tabela/paginationTable'
 import DrawerCadastroCompras from '@components/pages/compras/cadastro'
+import DrawerVisualizarCompra from '@components/pages/compras/visualizar'
 import { ActionIcon, Button, Flex, Tooltip } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { useTranslate } from '@refinedev/core'
@@ -23,10 +24,12 @@ import { PAGE_INDEX, PAGE_SIZE } from 'src/utils/Constants'
 export default function FornecedorList() {
   const t = useTranslate()
   const [opened, { open, close }] = useDisclosure(false)
+  const [openedVisualizar, setOpenedVisualizar] = useState<boolean>(false)
   const [sorting, setSorting] = useState<MRT_SortingState>([])
   const [dataCompra, setDataCompra] = useState<ICompra[]>([])
   const [resetPesquisa, setResetPesquisa] = useState<boolean>(false)
   const [totalElements, setTotalElements] = useState<number>(0)
+  const [idCompra, setIdCompra] = useState<number | null>(null)
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: PAGE_INDEX,
     pageSize: PAGE_SIZE,
@@ -55,16 +58,6 @@ export default function FornecedorList() {
   }, [pagination, filtro])
 
   useEffect(() => {
-    if (sorting.length == 0) {
-      setSorting([{ id: 'dataCompra', desc: false }])
-    } else {
-      const localFiltro = {
-        ...filtro,
-        id: sorting[0].id,
-        desc: !sorting[0].desc,
-      }
-      setFiltro(localFiltro)
-    }
     sorting.map(value => {
       setFiltro(prevData => ({ ...prevData, id: value.id, desc: value.desc }))
     })
@@ -169,10 +162,22 @@ export default function FornecedorList() {
     }
   }
 
+  const closeDrawerVisuzaliar = (condicao: boolean) => {
+    if (!condicao) {
+      setOpenedVisualizar(false)
+      close()
+    }
+  }
+
   const validatePermissionRole = () => {
     if (Cookies.get('role') == 'CAIXA') {
       return true
     }
+  }
+
+  const openDrawerVisualizar = (event: number) => {
+    setOpenedVisualizar(true)
+    setIdCompra(event)
   }
 
   const rowActions = ({ row }: { row: MRT_Row<ICompra> }) => (
@@ -183,7 +188,7 @@ export default function FornecedorList() {
           disabled={validatePermissionRole()}
           variant="transparent"
           aria-label="Settings"
-          onClick={() => console.log(row.original.id!)}
+          onClick={() => openDrawerVisualizar(row.original.id!)}
         >
           <IconEye style={{ cursor: 'pointer' }} />
         </ActionIcon>
@@ -218,6 +223,7 @@ export default function FornecedorList() {
         setPagination={setPagination}
         enableRowActions
         enableSorting
+        enablePinning={true}
         enableClickToCopy={true}
         positionActionsColumn="last"
         data={dataCompra}
@@ -234,6 +240,12 @@ export default function FornecedorList() {
         refresh={refreshList}
         openModal={opened}
         closed={closeDrawer}
+      />
+      <DrawerVisualizarCompra
+        idCompra={idCompra}
+        refresh={refreshList}
+        openModal={openedVisualizar}
+        closed={closeDrawerVisuzaliar}
       />
     </>
   )

@@ -19,7 +19,7 @@ import java.util.List;
 @Data
 public class ComprasPageDto {
 
-    private Short id;
+    private Integer id;
     private FormaPagamentoDTO formaPagamento;
     private FornecedorByCompraDto fornecedor;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone="GMT-3")

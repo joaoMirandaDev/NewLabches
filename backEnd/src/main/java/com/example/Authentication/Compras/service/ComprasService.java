@@ -33,7 +33,12 @@ public class ComprasService extends PaginationSimple {
     private static final Map<String, String> CAMPO_ORDENACAO = new HashMap<>();
     private final MessageSource messageSource;
     private final ItensComprasService itensComprasService;
-
+    static {
+        CAMPO_ORDENACAO.put("dataCompra", "data_compra");
+        CAMPO_ORDENACAO.put("formaPagamento.nome", "fp.nome");
+        CAMPO_ORDENACAO.put("fornecedor.nomeRazaoSocial", "f.nome_razao_social");
+        CAMPO_ORDENACAO.put("valorTotalCompra", "valor_total_compra");
+    }
 
     public void addCompras(ComprasDto comprasDto) {
         Compras compras = new Compras();
@@ -67,6 +72,30 @@ public class ComprasService extends PaginationSimple {
 
     }
 
+    public void editar(ComprasDto comprasDto) {
+        FormaPagamento formaPagamento = formaPagamentoRepository.findById(comprasDto.getFormaPagamento().getId())
+                .orElseThrow(() -> new NotFoundException(
+                        messageSource.getMessage("error.isEmpty", null, LocaleInteface.BR)
+                ));
+        Fornecedor fornecedor = fornecedorRepository.findById(comprasDto.getFornecedor().getId())
+                .orElseThrow(() -> new NotFoundException(
+                        messageSource.getMessage("error.isEmpty", null, LocaleInteface.BR)
+                ));
+        Compras compras = comprasRepository.findById(comprasDto.getId()).orElseThrow(() -> new NotFoundException(
+                messageSource.getMessage("error.isEmpty", null, LocaleInteface.BR)
+        ));
+        compras.setDataCompra(comprasDto.getDataCompra());
+        compras.setDataPagamento(comprasDto.getDataPagamento());
+        compras.setFormaPagamento(formaPagamento);
+        compras.setFornecedor(fornecedor);
+        compras.setObservacao(comprasDto.getObservacao());
+        Double valorCompra = comprasDto.getItensCompras().stream().map(val -> val.getValorCompra())
+                .mapToDouble(Double::doubleValue).sum();
+        compras.setValorTotalCompra(valorCompra);
+        comprasRepository.save(compras);
+        itensComprasService.saveAndEdit(comprasDto.getItensCompras(),compras);
+    }
+
     public void deleteById(Integer id) {
         if (Objects.nonNull(id)) {
            Compras compras =  comprasRepository.findById(id).orElseThrow(() -> new NotFoundException(
@@ -75,16 +104,17 @@ public class ComprasService extends PaginationSimple {
         }
     }
 
-    static {
-        CAMPO_ORDENACAO.put("dataCompra", "data_compra");
-        CAMPO_ORDENACAO.put("formaPagamento.nome", "fp.nome");
-        CAMPO_ORDENACAO.put("fornecedor.nomeRazaoSocial", "f.nome_razao_social");
-        CAMPO_ORDENACAO.put("valorTotalCompra", "valor_total_compra");
-    }
     public Page<ComprasPageDto> findAllByPage(Filtro filtro) {
         Pageable pageable = createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "data_compra");
         Page<Compras> comprasPage =  comprasRepository.findAll(pageable, filtro.getSearch());
         return comprasPage.map(ComprasPageDto::new);
+    }
+
+    public ComprasDto findById(Integer id) {
+        Compras compras = comprasRepository.findById(id).orElseThrow(() -> new NotFoundException(
+                messageSource.getMessage("error.isEmpty", null, LocaleInteface.BR)));
+        return new ComprasDto(compras);
+
     }
 
 }

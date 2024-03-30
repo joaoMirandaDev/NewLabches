@@ -4,16 +4,15 @@ import com.example.Authentication.Compras.model.Compras;
 import com.example.Authentication.Mercadoria.model.Mercadoria;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "item_compra")
 public class ItensCompras {
@@ -24,7 +23,6 @@ public class ItensCompras {
     @JoinColumn(name = "id_ingrediente", referencedColumnName = "id")
     private Mercadoria mercadoria;
     @ManyToOne
-    @JsonIgnoreProperties(value = {"listLancheIngrediente", "hibernateLazyInitializer"})
     @JoinColumn(name = "id_registro_compra", referencedColumnName = "id")
     private Compras compras;
     private Double quantidade;
