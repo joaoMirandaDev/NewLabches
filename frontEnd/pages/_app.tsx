@@ -68,7 +68,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
         )
         Cookies.set('name', value.data.nome)
         SuccessNotification({
-          message: 'Seja bem vindo ' + value.data.nome + ' !',
+          message: 'Seja bem vindo(a) ' + value.data.nome + ' !',
         })
         return {
           authenticated: true,
