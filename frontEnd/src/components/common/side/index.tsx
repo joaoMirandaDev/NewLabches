@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   CanAccess,
   ITreeMenu,
@@ -24,17 +24,17 @@ import {
   ScrollArea,
   MediaQuery,
   Tooltip,
-  Text,
   TooltipProps,
   Styles,
   Flex,
-  Button,
   Divider,
   Image,
+  Avatar,
+  Title,
 } from '@mantine/core'
 import { IconList, IconMenu2, IconPower, IconDashboard } from '@tabler/icons'
 import { RefineLayoutSiderProps } from '@refinedev/mantine'
-import { useRouter } from 'next/router'
+import Cookies from 'js-cookie'
 const defaultNavIcon = <IconList size={18} />
 
 export const Menu: React.FC<RefineLayoutSiderProps> = ({ render, meta }) => {
@@ -44,8 +44,8 @@ export const Menu: React.FC<RefineLayoutSiderProps> = ({ render, meta }) => {
   const NewLink = useLink()
   const { Link: LegacyLink } = useRouterContext()
   const Link = routerType === 'legacy' ? LegacyLink : NewLink
-  const navigate = useRouter()
   const { defaultOpenKeys, menuItems, selectedKey } = useMenu({ meta })
+  const [name, setName] = useState<string>('')
   const isExistAuthentication = useIsExistAuthentication()
   const t = useTranslate()
   const { hasDashboard } = useRefineContext()
@@ -88,6 +88,12 @@ export const Menu: React.FC<RefineLayoutSiderProps> = ({ render, meta }) => {
     arrowOffset: 12,
     offset: 4,
   }
+
+  useEffect(() => {
+    const dados = Cookies.get('name')
+    setName(dados!)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const renderTreeView = (tree: ITreeMenu[], selectedKey?: string) => {
     return tree.map(item => {
@@ -224,20 +230,6 @@ export const Menu: React.FC<RefineLayoutSiderProps> = ({ render, meta }) => {
           zIndex={1200}
           withCloseButton={false}
         >
-          <Navbar.Section px="xs">
-            <Flex justify={'center'}>
-              <Text
-                size="xl"
-                fw={900}
-                variant="gradient"
-                gradient={{ from: 'purple', to: 'brand', deg: 90 }}
-                onClick={() => navigate.push('/colaborador')}
-                style={{ cursor: 'pointer' }}
-              >
-                X-LANCHES
-              </Text>
-            </Flex>
-          </Navbar.Section>
           <Navbar.Section grow component={ScrollArea} mx="-xs" px="xs">
             {renderSider()}
           </Navbar.Section>
@@ -265,28 +257,16 @@ export const Menu: React.FC<RefineLayoutSiderProps> = ({ render, meta }) => {
             height: '100vh',
           }}
         >
-          <Navbar.Section
-            px="xs"
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              position: 'relative',
-              marginTop: '20px',
-            }}
-          >
-            <Flex justify={'center'}>
-              <Button
-                size="xl"
-                fw={900}
-                variant="subtle"
-                gradient={{ from: '#57bde6', to: '#1d1deb', deg: 90 }}
-                onClick={() => navigate.push('/colaborador')}
-                style={{ cursor: 'pointer' }}
-              >
-                X-TUDÃO
-              </Button>
+          <Navbar.Section>
+            <Flex align={'center'} m={'1rem'}>
+              <Avatar alt={name} radius="xl" color="orange" />
+              <Title order={4} ml={'0.5rem'}>
+                {name}
+              </Title>
             </Flex>
           </Navbar.Section>
+
+          <Divider />
           <Navbar.Section grow mt="sm" component={ScrollArea} mx="-xs" px="xs">
             {renderSider()}
           </Navbar.Section>

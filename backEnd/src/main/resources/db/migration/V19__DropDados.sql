@@ -1,2 +1,2 @@
-ALTER TABLE lanchonete.produtos DROP COLUMN ingrediente;
+ALTER TABLE lanchonete.especialidade DROP COLUMN ingrediente;
 

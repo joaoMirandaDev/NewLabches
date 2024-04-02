@@ -30,7 +30,7 @@ public class EspecialidadeController {
     }
 
     @PostMapping(value = "/list", produces = "application/json")
-    public Page<EspecialidadeDTO> findAllProdutos(@RequestBody Filtro filtro) throws ParseException {
+    public Page<EspecialidadeDTO> findAllProdutos(@RequestBody Filtro filtro) {
         return especialidadeService.findAllProdutos(filtro);
     }
 

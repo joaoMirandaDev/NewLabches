@@ -129,7 +129,7 @@ export default function FornecedorList() {
       },
       {
         accessorKey: 'saldoEstoque',
-        header: t('pages.mercadoria.table.saldoEstoque'),
+        header: 'Estoque disponível',
         enableSorting: true,
         enableColumnFilter: true,
         size: 25,

@@ -12,9 +12,9 @@ const DrowerCadastroProdutos = () => {
         id: z.number().positive({ message: requiredField }),
       })
       .required(),
-    idMercadoria: z
-      .array(z.number().positive({ message: requiredField }))
-      .nonempty({ message: requiredField }),
+    // idMercadoria: z
+    //   .array(z.number().positive({ message: requiredField }))
+    //   .nonempty({ message: requiredField }),
   })
 }
 

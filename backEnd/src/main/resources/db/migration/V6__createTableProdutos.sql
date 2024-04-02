@@ -6,7 +6,7 @@ CREATE TABLE categoria (
   PRIMARY KEY (id)
 );
 
-CREATE TABLE produtos (
+CREATE TABLE especialidade (
   id SMALLINT NOT NULL AUTO_INCREMENT,
   nome VARCHAR(100),
   categoria_id SMALLINT,

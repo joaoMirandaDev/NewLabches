@@ -2,6 +2,8 @@ package com.example.Authentication.Especialidade.DTO;
 
 import com.example.Authentication.Categoria.DTO.CategoriaDTO;
 import com.example.Authentication.Especialidade.model.Especialidade;
+import com.example.Authentication.EspecialidadeMercadoria.DTO.EspecialidadeMercadoriaDTO;
+import com.example.Authentication.EspecialidadeMercadoria.model.EspecialidadeMercadoria;
 import com.example.Authentication.Mercadoria.DTO.MercadoriaDTO;
 import com.example.Authentication.Mercadoria.model.Mercadoria;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -24,10 +26,6 @@ public class EspecialidadeDTO {
 
     private CategoriaDTO categoria;
 
-    private List<MercadoriaDTO> mercadorias;
-
-    private List<Integer> idMercadoria;
-
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone="GMT-3")
     private Date data_cadastro;
 
@@ -35,7 +33,7 @@ public class EspecialidadeDTO {
 
     private Double preco;
 
-    private String precoFormatado;
+   private List<EspecialidadeMercadoriaDTO> especialidadeMercadoria;
 
     public EspecialidadeDTO(Especialidade especialidade) {
         this.id = especialidade.getId();
@@ -43,6 +41,7 @@ public class EspecialidadeDTO {
         this.categoria = new CategoriaDTO(especialidade.getCategoria());
         this.data_cadastro = especialidade.getData_cadastro();
         this.preco = especialidade.getPreco();
-        this.idMercadoria = especialidade.getMercadorias().stream().map(val -> val.getId()).collect(Collectors.toList());
+        this.especialidadeMercadoria = especialidade.getEspecialidadeMercadorias().stream()
+                .map(EspecialidadeMercadoriaDTO::new).collect(Collectors.toList());
     }
 }

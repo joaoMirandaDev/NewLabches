@@ -1,5 +1,7 @@
 package com.example.Authentication.Mercadoria.model;
 
+import com.example.Authentication.Mercadoria.DTO.MercadoriaDTO;
+import com.example.Authentication.Mercadoria.DTO.MercadoriaSelectDTO;
 import com.example.Authentication.Tipo.model.Tipo;
 import com.example.Authentication.UnidadeMedida.model.UnidadeMedida;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -39,4 +41,12 @@ public class Mercadoria {
     @JoinColumn(name = "id_tipo", referencedColumnName = "id")
     private Tipo tipo;
 
+    public Mercadoria(MercadoriaDTO mercadoriaDTO) {
+        this.id = mercadoriaDTO.getId();
+    }
+
+    public Mercadoria(MercadoriaSelectDTO mercadoria) {
+        this.id = mercadoria.getId();
+
+    }
 }

@@ -23,7 +23,6 @@ public class CategoriaService {
 
     public List<CategoriaDTO> getAllCategoria() {
         List<Categoria> categoria = categoriaRepository.findAll();
-
         return categoria.stream().map(CategoriaDTO::new).collect(Collectors.toList());
 
     }

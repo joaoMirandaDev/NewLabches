@@ -49,4 +49,8 @@ public class ColaboradorDto {
         this.email = colaborador.getEmail();
         this.senha = "";
     }
+
+    public ColaboradorDto(String nome) {
+        this.nome = nome;
+    }
 }

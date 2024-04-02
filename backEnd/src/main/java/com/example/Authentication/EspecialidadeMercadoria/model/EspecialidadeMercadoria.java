@@ -1,28 +1,29 @@
-package com.example.Authentication.RelEspecialidade.model;
+package com.example.Authentication.EspecialidadeMercadoria.model;
 
 import com.example.Authentication.Especialidade.model.Especialidade;
 import com.example.Authentication.Mercadoria.model.Mercadoria;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "rel_especialidades_mercadorias")
-public class RelEspecialidadeMercadoria {
+@Table(name = "especialidade_mercadoria")
+public class EspecialidadeMercadoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne
-    @JoinColumn(name = "id_especialidade", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "id_especialidade")
     private Especialidade especialidade;
 
     @OneToOne
     @JoinColumn(name = "id_mercadoria", referencedColumnName = "id")
     private Mercadoria mercadoria;
+
+    private Integer quantidade;
 }

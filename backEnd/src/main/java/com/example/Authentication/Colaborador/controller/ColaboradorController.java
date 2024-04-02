@@ -45,5 +45,10 @@ public class ColaboradorController {
     public void editar(@RequestBody ColaboradorDto colaboradorDto) throws Exception {
         colaboradorService.editar(colaboradorDto);
     }
+
+    @GetMapping(value = "/findByCpfCnpj/{CpfCnpj}", produces = "application/json")
+    public ColaboradorDto findById(@PathVariable String CpfCnpj) {
+        return colaboradorService.findByCpfCnpj(CpfCnpj);
+    }
 }
 

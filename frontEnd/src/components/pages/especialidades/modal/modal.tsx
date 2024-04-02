@@ -4,17 +4,17 @@ import { useDisclosure } from '@mantine/hooks'
 import { useEffect } from 'react'
 import { IconCircleXFilled, IconDatabasePlus } from '@tabler/icons-react'
 import { useForm, zodResolver } from '@mantine/form'
-import { ModalCadastoCompra } from '../validation/schemaModal'
-import IItemCompra from 'src/interfaces/compras/itensCompra'
+import { ModalCadastoMercadoria } from '../validation/schemaModal'
 import IMercadoria from 'src/interfaces/mercadoria'
-interface ModalInsertCompras {
+import IEspecialidadeMercadoria from 'src/interfaces/especialidadeCompra'
+interface ModalInsertMercadoria {
   openModal: boolean
-  data: IItemCompra | null
+  data: IEspecialidadeMercadoria | null
   closeModal: (value: boolean) => void
-  dataModal: (value: IItemCompra) => void
+  dataModal: (value: IEspecialidadeMercadoria) => void
 }
 
-const ModalInsertCompras: React.FC<ModalInsertCompras> = ({
+const ModalInsertMercadoria: React.FC<ModalInsertMercadoria> = ({
   openModal,
   data,
   closeModal,
@@ -24,14 +24,12 @@ const ModalInsertCompras: React.FC<ModalInsertCompras> = ({
   const form = useForm<{
     quantidade: number
     mercadoria: IMercadoria | null
-    valorCompra: number
   }>({
     initialValues: {
       quantidade: 0,
       mercadoria: null,
-      valorCompra: 0,
     },
-    validate: zodResolver(ModalCadastoCompra()),
+    validate: zodResolver(ModalCadastoMercadoria()),
   })
   useEffect(() => {
     if (openModal && data) {
@@ -44,7 +42,6 @@ const ModalInsertCompras: React.FC<ModalInsertCompras> = ({
     const dados = {
       quantidade: 0,
       mercadoria: null,
-      valorCompra: 0,
     }
     form.setValues(dados)
   }
@@ -86,25 +83,11 @@ const ModalInsertCompras: React.FC<ModalInsertCompras> = ({
           decimalSeparator=","
           thousandsSeparator="."
           defaultValue={form.values.quantidade}
-          placeholder={'Insira a quantidade de compra'}
-          label={'Quantidade de compra'}
+          placeholder={'Insira a quantidade'}
+          label={'Quantidade'}
           withAsterisk
           hideControls
           onChange={value => form.setFieldValue('quantidade', Number(value))}
-          required
-        />
-        <NumberInput
-          {...form.getInputProps('valorCompra')}
-          mt={'1rem'}
-          precision={2}
-          decimalSeparator=","
-          thousandsSeparator="."
-          defaultValue={form.values.valorCompra}
-          placeholder={'Insira o valor de compra'}
-          label={'Valor total de compra'}
-          withAsterisk
-          hideControls
-          onChange={value => form.setFieldValue('valorCompra', Number(value))}
           required
         />
         <Flex mt={20} justify={'space-between'}>
@@ -124,4 +107,4 @@ const ModalInsertCompras: React.FC<ModalInsertCompras> = ({
   )
 }
 
-export default ModalInsertCompras
+export default ModalInsertMercadoria

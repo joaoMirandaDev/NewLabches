@@ -18,4 +18,5 @@ public interface ColaboradorRepository extends JpaRepository<Colaborador, Short>
             "p.nome LIKE :search OR p.cpf LIKE :search OR p.telefone LIKE :search)")
     Page<Colaborador> findAll(Pageable pageable, String search);
 
+    Colaborador findByCpf(String cpf);
 }

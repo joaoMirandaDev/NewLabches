@@ -1,19 +1,15 @@
 import {
   ActionIcon,
-  Avatar,
   Flex,
   Group,
   Header as MantineHeader,
-  Menu,
   Sx,
   useMantineColorScheme,
   useMantineTheme,
 } from '@mantine/core'
-import { useActiveAuthProvider, useGetLocale, useLogout } from '@refinedev/core'
+import { useActiveAuthProvider, useLogout } from '@refinedev/core'
 import { RefineThemedLayoutV2HeaderProps } from '@refinedev/mantine'
-import { IconLanguage, IconLogout, IconMoonStars, IconSun } from '@tabler/icons'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
+import { IconLogout, IconMoonStars, IconSun } from '@tabler/icons'
 import React from 'react'
 
 export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
@@ -27,10 +23,6 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
   const { mutate: mutateLogout } = useLogout({
     v3LegacyAuthProviderCompatible: Boolean(authProvider?.isLegacy),
   })
-
-  const locale = useGetLocale()
-  const currentLocale = locale()
-  const { locales } = useRouter()
 
   let stickyStyles: Sx = {}
   if (sticky) {
@@ -60,7 +52,7 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
         }}
       >
         <Group>
-          <Menu shadow="md">
+          {/* <Menu shadow="md">
             <Menu.Target>
               <ActionIcon variant="outline">
                 <IconLanguage size={18} />
@@ -87,7 +79,7 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
                 </Menu.Item>
               ))}
             </Menu.Dropdown>
-          </Menu>
+          </Menu> */}
 
           <ActionIcon
             variant="outline"

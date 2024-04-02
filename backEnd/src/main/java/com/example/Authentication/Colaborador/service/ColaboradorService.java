@@ -130,4 +130,9 @@ public class ColaboradorService extends PaginationSimple {
             throw new Exception(messageSource.getMessage("error.save", null, locale),e);
         }
     }
+
+    public ColaboradorDto findByCpfCnpj(String cpf) {
+        Colaborador colaborador = colaboradorRepository.findByCpf(cpf);
+        return new ColaboradorDto(colaborador.getNome());
+    }
 }

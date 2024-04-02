@@ -3,7 +3,9 @@ package com.example.Authentication.Especialidade.service;
 import com.example.Authentication.Categoria.model.Categoria;
 import com.example.Authentication.Categoria.repository.CategoriaRepository;
 import com.example.Authentication.Especialidade.DTO.EspecialidadeDTO;
-import com.example.Authentication.RelEspecialidade.service.RelEspecialidadeMercadoriaService;
+import com.example.Authentication.EspecialidadeMercadoria.DTO.EspecialidadeMercadoriaDTO;
+import com.example.Authentication.EspecialidadeMercadoria.model.EspecialidadeMercadoria;
+import com.example.Authentication.EspecialidadeMercadoria.service.EspecialidadeMercadoriaService;
 import com.example.Authentication.Especialidade.model.Especialidade;
 import com.example.Authentication.Especialidade.repository.EspecialidadeRepository;
 import com.example.Authentication.Mercadoria.model.Mercadoria;
@@ -29,7 +31,7 @@ public class EspecialidadeService extends PaginationSimple {
     private final EspecialidadeRepository especialidadeRepository;
     private final MercadoriaRepository mercadoriaRepository;
     private final CategoriaRepository categoriaRepository;
-    private final RelEspecialidadeMercadoriaService relEspecialidadeMercadoriaService;
+    private final EspecialidadeMercadoriaService especialidadeMercadoriaService;
     private static final Map<String, String > CAMPO_ORDENACAO = new HashMap<>();
     static {
         CAMPO_ORDENACAO.put("nome", "nome");
@@ -46,18 +48,12 @@ public class EspecialidadeService extends PaginationSimple {
         especialidade.setNome(especialidadeDTO.getNome());
         especialidade.setPreco(especialidadeDTO.getPreco());
         especialidade.setCategoria(categoria);
-        List<Mercadoria> mercadoriaList = new ArrayList<>();
-        especialidadeDTO.getIdMercadoria().forEach(merc -> {
-            if (Objects.nonNull(merc)) {
-                mercadoriaList.add(mercadoriaRepository.findById(merc).orElseThrow(() ->
-                        new NotFoundException(messageSource.getMessage("error.isEmpty", null, locale))));
-            }
-        });
-        especialidade.setMercadorias(mercadoriaList);
         especialidade.setData_cadastro(new Date());
         especialidade.setAtivo(especialidadeDTO.getAtivo());
-        especialidadeRepository.save(especialidade);
-
+        especialidadeDTO.getEspecialidadeMercadoria().forEach(value -> {
+            especialidadeMercadoriaService.create(value,
+                    especialidadeRepository.save(especialidade));
+        });
     }
 
     public Page<EspecialidadeDTO> findAllProdutos(Filtro filtro) {
@@ -94,10 +90,12 @@ public class EspecialidadeService extends PaginationSimple {
         especialidade.setNome(especialidadeDTO.getNome());
         especialidade.setCategoria(categoria);
         especialidade.setPreco(especialidadeDTO.getPreco());
-        relEspecialidadeMercadoriaService.deleteAndCreateByEspecialidadeMercadoria(especialidade, especialidadeDTO.getIdMercadoria());
+        especialidadeDTO.getEspecialidadeMercadoria().forEach(value -> {
+        });
         especialidade.setData_cadastro(especialidadeDTO.getData_cadastro());
         especialidade.setAtivo(especialidadeDTO.getAtivo());
         especialidadeRepository.save(especialidade);
+        especialidadeMercadoriaService.deleteAndCreateByEspecialidadeMercadoria(especialidadeDTO.getEspecialidadeMercadoria(), especialidade);
 
     }
 

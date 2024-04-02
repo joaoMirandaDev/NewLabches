@@ -120,6 +120,7 @@ const DrawerCadastroMercadoria: React.FC<DrawerCadastroMercadoria> = ({
       id: null,
       ativo: 0,
       multiplicador: 0,
+      limiteMinimo: 0,
       nome: '',
       tipo: {
         id: null,

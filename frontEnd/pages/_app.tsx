@@ -13,7 +13,7 @@ import routerProvider, {
 } from '@refinedev/nextjs-router'
 import type { NextPage } from 'next'
 import { AppProps } from 'next/app'
-
+import api from 'src/utils/Api'
 import { Header } from '@components/common/header'
 import {
   ColorScheme,
@@ -44,6 +44,7 @@ import { Menu } from '@components/common/side'
 import { useLoadingStore } from 'src/stores/LoadingStore'
 import { API_URL } from 'src/utils/Api'
 import Cookies from 'js-cookie'
+import { SuccessNotification } from '@components/common'
 
 export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {
   noLayout?: boolean
@@ -62,10 +63,16 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
       }
       const data = await loginAuth(user)
       if (data) {
-        localStorage.setItem('username', username)
+        const value = await api.get(
+          `/api/colaborador/findByCpfCnpj/${Cookies.get('dados_usuario')}`
+        )
+        Cookies.set('name', value.data.nome)
+        SuccessNotification({
+          message: 'Seja bem vindo ' + value.data.nome + ' !',
+        })
         return {
           authenticated: true,
-          redirectTo: '/produto',
+          redirectTo: '/compras',
           success: true,
         }
       }

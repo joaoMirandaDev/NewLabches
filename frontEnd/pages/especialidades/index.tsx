@@ -252,7 +252,7 @@ export default function FornecedorList() {
         rowCount={totalElements}
       />
       <DrawerProduto
-        close={closeDrawerVisual}
+        closeDrower={closeDrawerVisual}
         refresDrawerVisualizar={refresDrawerVisualizar}
         openModal={openModal}
         dataProduto={produto}
@@ -260,7 +260,7 @@ export default function FornecedorList() {
       <DrawerCadastroProduto
         refresh={refreshList}
         openModal={opened}
-        close={closeDrawer}
+        closeDrower={closeDrawer}
       />
     </>
   )

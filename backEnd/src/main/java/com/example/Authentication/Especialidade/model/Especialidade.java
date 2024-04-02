@@ -1,6 +1,7 @@
 package com.example.Authentication.Especialidade.model;
 
 import com.example.Authentication.Categoria.model.Categoria;
+import com.example.Authentication.EspecialidadeMercadoria.model.EspecialidadeMercadoria;
 import com.example.Authentication.Mercadoria.model.Mercadoria;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -15,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "produtos")
+@Table(name = "especialidade")
 public class Especialidade {
 
     @Id
@@ -30,10 +31,6 @@ public class Especialidade {
     private Date data_cadastro;
     private Integer ativo;
     private Double preco;
-    @OneToMany
-    @JoinTable(name = "rel_especialidades_mercadorias",
-            joinColumns = @JoinColumn(name = "id_especialidade", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "id_mercadoria", referencedColumnName = "id")
-    )
-    private List<Mercadoria> mercadorias;
+    @OneToMany(mappedBy = "especialidade")
+    private List<EspecialidadeMercadoria> especialidadeMercadorias;
 }
