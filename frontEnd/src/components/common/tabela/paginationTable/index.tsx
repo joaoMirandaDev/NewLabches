@@ -62,7 +62,7 @@ const PaginationTable = <T extends Record<string, any>>({
       enableColumnActions: true,
       enableColumnDragging: true,
       enableColumnOrdering: true,
-      enableEditing: true,
+      enableEditing: false,
       enableGlobalFilter: true,
       enableGrouping: true,
       enableHiding: true,
@@ -77,7 +77,7 @@ const PaginationTable = <T extends Record<string, any>>({
       positionToolbarAlertBanner: 'bottom',
       mantinePaginationProps: {
         radius: 'xl',
-        size: 'md',
+        size: 'lg',
       },
       renderRowActions: rowActions,
       onPaginationChange: setPagination,

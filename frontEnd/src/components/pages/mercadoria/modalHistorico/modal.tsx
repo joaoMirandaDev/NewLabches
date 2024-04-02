@@ -182,9 +182,10 @@ const ModalHistoricoMercadoria: React.FC<ModalHistoricoMercadoria> = ({
   return (
     <Modal
       opened={opened}
+      zIndex={1000}
       onClose={close}
       centered
-      size={800}
+      size={'100%'}
       closeOnClickOutside={false}
       withCloseButton={false}
       radius={'md'}
@@ -195,9 +196,9 @@ const ModalHistoricoMercadoria: React.FC<ModalHistoricoMercadoria> = ({
       <PaginationTable
         setSorting={setSorting}
         columns={columns}
+        enableRowActions={false}
         setPagination={setPagination}
         enableSorting
-        positionActionsColumn="last"
         data={data}
         state={{
           sorting,
