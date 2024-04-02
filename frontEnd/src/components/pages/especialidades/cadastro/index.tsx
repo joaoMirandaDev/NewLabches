@@ -110,6 +110,7 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
         mantineTableHeadCellProps: {
           align: 'center',
         },
+        Cell: ({ cell }) => cell.getValue<number>().toFixed(2),
       },
     ],
     []

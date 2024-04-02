@@ -123,6 +123,7 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
         mantineTableHeadCellProps: {
           align: 'center',
         },
+        Cell: ({ cell }) => cell.getValue<number>().toFixed(2),
       },
       {
         accessorKey: 'valorCompra',
@@ -136,6 +137,10 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
         mantineTableHeadCellProps: {
           align: 'center',
         },
+        Cell: ({ cell }) =>
+          cell
+            .getValue<number>()
+            .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
       },
     ],
     []
