@@ -21,21 +21,33 @@ CREATE TABLE pedido (
   PRIMARY KEY (id)
 );
 
-CREATE TABLE rel_pedidos_mercadoria (
+CREATE TABLE pedidos_mercadoria (
   id SMALLINT NOT NULL AUTO_INCREMENT,
   id_mercadoria SMALLINT NOT NULL,
   id_pedido SMALLINT NOT NULL,
+  quantidade INTEGER,
   FOREIGN KEY (id_pedido) REFERENCES pedido(id) ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (id_mercadoria) REFERENCES mercadoria(id) ON UPDATE CASCADE ON DELETE CASCADE,
   PRIMARY KEY (id)
 );
 
-CREATE TABLE rel_pedidos_especialidade (
+CREATE TABLE pedidos_especialidade (
   id SMALLINT NOT NULL AUTO_INCREMENT,
   id_especialidade SMALLINT NOT NULL,
   id_pedido SMALLINT NOT NULL,
+  quantidade INTEGER,
   FOREIGN KEY (id_pedido) REFERENCES pedido(id) ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (id_especialidade) REFERENCES especialidade(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE adicional_especialidade (
+  id SMALLINT NOT NULL AUTO_INCREMENT,
+  id_mercadoria SMALLINT NOT NULL,
+  id_pedidos_especialidade SMALLINT NOT NULL,
+  quantidade INTEGER,
+  FOREIGN KEY (id_pedidos_especialidade) REFERENCES pedidos_especialidade(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (id_mercadoria) REFERENCES mercadoria(id) ON UPDATE CASCADE ON DELETE CASCADE,
   PRIMARY KEY (id)
 );
 
