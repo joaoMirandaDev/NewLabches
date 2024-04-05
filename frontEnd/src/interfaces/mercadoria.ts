@@ -4,8 +4,8 @@ interface unidadeMedida {
 }
 
 interface Tipo {
-  id?: number
-  nome?: string
+  id: number | null
+  nome: string
 }
 export default interface IMercadoria {
   id: number | null
