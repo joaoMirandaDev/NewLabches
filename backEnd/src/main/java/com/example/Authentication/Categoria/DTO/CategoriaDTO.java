@@ -20,7 +20,6 @@ public class CategoriaDTO {
     public CategoriaDTO(Categoria categoria) {
         this.id = categoria.getId();
         this.nome = categoria.getNome();
-        this.dataCadastro = categoria.getData_cadastro();
         this.ativo = categoria.getAtivo();
     }
 }

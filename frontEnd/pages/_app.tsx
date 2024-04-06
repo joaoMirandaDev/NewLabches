@@ -191,6 +191,28 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
               fontFamily: "'Plus Jakarta Sans', sans-serif",
               fontFamilyMonospace: 'Monaco, Courier, monospace',
               headings: { fontFamily: "'Plus Jakarta Sans', sans-serif" },
+              components: {
+                Drawer: {
+                  defaultProps: {
+                    zIndex: 100000,
+                  },
+                },
+                Select: {
+                  defaultProps: {
+                    zIndex: 1000000,
+                  },
+                },
+                Modal: {
+                  defaultProps: {
+                    zIndex: 100000,
+                  },
+                },
+                Text: {
+                  defaultProps: {
+                    fw: 'bold',
+                  },
+                },
+              },
             }}
             withNormalizeCSS
             withGlobalStyles

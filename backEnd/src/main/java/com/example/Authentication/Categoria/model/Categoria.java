@@ -21,9 +21,5 @@ public class Categoria {
 
     private String nome;
 
-    @Column(name = "data_cadastro")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone="GMT-3")
-    private Date data_cadastro;
-
     private Integer ativo;
 }
