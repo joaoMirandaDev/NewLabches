@@ -2,7 +2,7 @@ import SearchBar from '@components/common/filtro/filtro-sem-remocao-caracter'
 import PaginationTable from '@components/common/tabela/paginationTable'
 import DrawerCadastroProduto from '@components/pages/especialidades/cadastro'
 import DrawerProduto from '@components/pages/especialidades/editar/drawer'
-import { ActionIcon, Button, Flex, Tooltip } from '@mantine/core'
+import { ActionIcon, Button, Flex, Text, Tooltip } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { useTranslate } from '@refinedev/core'
 import { IconEye, IconMeat } from '@tabler/icons'
@@ -223,7 +223,8 @@ export default function FornecedorList() {
         icone={true}
         onDataFilter={filterCliente}
       />
-      <Flex justify={'flex-end'} m={10}>
+      <Flex justify={'space-between'} align={'center'} m={10}>
+        <Text fz={'1.5rem'}>Listagem Especialidades</Text>
         <Button
           leftIcon={<IconMeat size={16} />}
           disabled={validatePermissionRole()}

@@ -286,7 +286,8 @@ export default function FornecedorList() {
         icone={true}
         onDataFilter={filterCliente}
       />
-      <Flex justify={'flex-end'} m={10}>
+      <Flex justify={'space-between'} align={'center'} m={10}>
+        <Text fz={'1.5rem'}>Listagem de mercadorias</Text>
         <Button
           leftIcon={<IconCirclePlus size={16} />}
           disabled={validatePermissionRole()}

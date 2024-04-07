@@ -2,7 +2,7 @@ import SearchBar from '@components/common/filtro/filtro-sem-remocao-caracter'
 import PaginationTable from '@components/common/tabela/paginationTable'
 import DrawerCadastroCompras from '@components/pages/compras/cadastro'
 import DrawerVisualizarCompra from '@components/pages/compras/visualizar'
-import { ActionIcon, Button, Flex, Tooltip } from '@mantine/core'
+import { ActionIcon, Button, Flex, Text, Tooltip } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { useTranslate } from '@refinedev/core'
 import { IconCirclePlus, IconEye } from '@tabler/icons'
@@ -209,7 +209,8 @@ export default function FornecedorList() {
         icone={true}
         onDataFilter={filterCompras}
       />
-      <Flex justify={'flex-end'} m={10}>
+      <Flex justify={'space-between'} m={10} align={'center'}>
+        <Text fz={'1.5rem'}>Listagem de compras</Text>
         <Button
           leftIcon={<IconCirclePlus size={16} />}
           disabled={validatePermissionRole()}

@@ -233,10 +233,7 @@ export default function Caixa() {
       <Flex justify={'space-between'} align={'center'} m={10}>
         <Flex align={'center'}>
           <Text fz={'1.5rem'}>Listagem caixa</Text>
-          <Tooltip
-            zIndex={10000}
-            label="Se houver um caixa aberto, ele deverá ser fechado antes de abrir um novo."
-          >
+          <Tooltip label="Se houver um caixa aberto, ele deverá ser fechado antes de abrir um novo.">
             <IconInfoSquareRounded
               cursor={'pointer'}
               size={'1rem'}

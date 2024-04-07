@@ -2,7 +2,7 @@ import { ErrorNotification, SuccessNotification } from '@components/common'
 import SearchBar from '@components/common/filtro'
 import PaginationTable from '@components/common/tabela/paginationTable'
 import ModalColaborador from '@components/pages/colaborador/modal'
-import { ActionIcon, Button, Flex, Tooltip } from '@mantine/core'
+import { ActionIcon, Button, Flex, Text, Tooltip } from '@mantine/core'
 import { useTranslate } from '@refinedev/core'
 import { IconEdit, IconEye, IconTrash, IconUserPlus } from '@tabler/icons'
 import Cookies from 'js-cookie'
@@ -220,7 +220,8 @@ export default function ColaboradorList() {
         icone={true}
         onDataFilter={filterCliente}
       />
-      <Flex justify={'flex-end'} m={10}>
+      <Flex justify={'space-between'} align={'center'} m={10}>
+        <Text fz={'1.5rem'}>Listagem de colaboradores</Text>
         <Button
           disabled={validatePermissionRole()}
           leftIcon={<IconUserPlus size={16} />}

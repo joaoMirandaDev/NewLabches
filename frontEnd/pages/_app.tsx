@@ -205,6 +205,12 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
                     fw: 'bold',
                   },
                 },
+                Tooltip: {
+                  defaultProps: {
+                    zIndex: 100000,
+                    fw: 'bold',
+                  },
+                },
                 Select: {
                   defaultProps: {
                     zIndex: 1000000,
