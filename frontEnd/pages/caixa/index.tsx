@@ -2,12 +2,7 @@ import SearchBar from '@components/common/filtro/filtro-sem-remocao-caracter'
 import PaginationTable from '@components/common/tabela/paginationTable'
 import { Box, Button, Flex, Group, Text, Tooltip } from '@mantine/core'
 import { useTranslate } from '@refinedev/core'
-import {
-  IconAlertTriangle,
-  IconCircleCheck,
-  IconInfoSquareRounded,
-  IconUserPlus,
-} from '@tabler/icons'
+import { IconAlertTriangle, IconCircleCheck, IconUserPlus } from '@tabler/icons'
 import {
   MRT_ColumnDef,
   MRT_PaginationState,
@@ -22,6 +17,7 @@ import ISearch from 'src/interfaces/search'
 import { PAGE_INDEX, PAGE_SIZE } from 'src/utils/Constants'
 import { CAIXA_PAGE } from 'src/utils/Routes'
 import ICaixa from 'src/interfaces/Caixa'
+import { IconInfoSquareRounded } from '@tabler/icons-react'
 
 export default function Caixa() {
   const t = useTranslate()
