@@ -102,17 +102,13 @@ export default function Caixa() {
           >
             {row.original.caixaAberto == 1 && (
               <>
-                <Tooltip label="Caixa aberto">
-                  <IconAlertTriangle size={16} color="red" />
-                </Tooltip>
+                <IconAlertTriangle size={16} color="red" />
                 <span>{renderedCellValue}</span>
               </>
             )}
             {row.original.caixaAberto == 0 && (
               <>
-                <Tooltip label="Caixa fechado">
-                  <IconCircleCheck size={16} color="green" />
-                </Tooltip>
+                <IconCircleCheck size={16} color="green" />
                 <span>{renderedCellValue}</span>
               </>
             )}
@@ -134,9 +130,12 @@ export default function Caixa() {
           align: 'center',
         },
         Cell: ({ cell }) =>
-          cell
-            .getValue<number>()
-            .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+          cell.getValue<number>() == null
+            ? '-'
+            : cell.getValue<number>().toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+              }),
       },
       {
         accessorKey: 'dataAbertura',
@@ -152,6 +151,8 @@ export default function Caixa() {
         mantineTableHeadCellProps: {
           align: 'center',
         },
+        Cell: ({ cell }) =>
+          cell.getValue<string>() == null ? '-' : cell.getValue<string>(),
       },
       {
         accessorKey: 'valorFechamentoCaixa',
@@ -168,9 +169,12 @@ export default function Caixa() {
           align: 'center',
         },
         Cell: ({ cell }) =>
-          cell
-            .getValue<number>()
-            .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+          cell.getValue<number>() == null
+            ? '-'
+            : cell.getValue<number>().toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+              }),
       },
       {
         accessorKey: 'dataFechamento',
@@ -186,6 +190,8 @@ export default function Caixa() {
         mantineTableHeadCellProps: {
           align: 'center',
         },
+        Cell: ({ cell }) =>
+          cell.getValue<string>() == null ? '-' : cell.getValue<string>(),
       },
       {
         accessorKey: 'caixaAberto',
