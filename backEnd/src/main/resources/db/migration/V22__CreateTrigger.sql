@@ -10,7 +10,7 @@ BEGIN
 
      SET ano_atual = YEAR(NOW());
 
-    SELECT COUNT(*) INTO contador FROM caixa WHERE YEAR(ano_atual) = ano_atual;
+    SELECT COUNT(*) INTO contador FROM caixa;
 
     IF contador = 0 THEN
         SET nova_string = CONCAT('0001/', ano_atual);

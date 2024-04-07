@@ -1,6 +1,7 @@
 package com.example.Authentication.Caixa.model;
 
 import com.example.Authentication.Pedido.model.Pedido;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,9 @@ public class Caixa {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "numero_caixa")
+    private String numeroCaixa;
+
     @Column(name = "valor_abertura_caixa")
     private Double valorAberturaCaixa;
 
@@ -29,14 +33,19 @@ public class Caixa {
     private Double valorFechamentoCaixa;
 
     @Column(name = "data_abertura")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone="GMT-3")
     private Date dataAbertura;
 
     @Column(name = "data_fechamento")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone="GMT-3")
     private Date dataFechamento;
 
     private String observacao;
 
     private Integer ativo;
+
+    @Column(name = "caixa_aberto")
+    private Integer caixaAberto;
 
     @OneToMany(mappedBy = "caixa")
     private List<Pedido> pedidos;

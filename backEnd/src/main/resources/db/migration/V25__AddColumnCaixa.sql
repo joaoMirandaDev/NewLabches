@@ -1,0 +1,1 @@
+ALTER TABLE caixa ADD COLUMN caixa_aberto INTEGER;

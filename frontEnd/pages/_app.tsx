@@ -35,6 +35,7 @@ import {
 import { useRouter } from 'next/router'
 import {
   IconAffiliate,
+  IconBusinessplan,
   IconCash,
   IconMeat,
   IconPizza,
@@ -57,6 +58,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
   const isLoading = useLoadingStore(state => state.isLoading)
   const authProvider: AuthBindings = {
     login: async ({ username, password }) => {
+      clearDados()
       const user: ILogin = {
         login: username,
         senha: password,
@@ -192,14 +194,21 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
               fontFamilyMonospace: 'Monaco, Courier, monospace',
               headings: { fontFamily: "'Plus Jakarta Sans', sans-serif" },
               components: {
+                InputLabel: {
+                  defaultProps: {
+                    fw: 'bold',
+                  },
+                },
                 Drawer: {
                   defaultProps: {
                     zIndex: 100000,
+                    fw: 'bold',
                   },
                 },
                 Select: {
                   defaultProps: {
                     zIndex: 1000000,
+                    fw: 'bold',
                   },
                 },
                 Modal: {
@@ -212,6 +221,21 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
                     fw: 'bold',
                   },
                 },
+                Button: {
+                  defaultProps: {
+                    fw: 'bold',
+                  },
+                },
+                Input: {
+                  defaultProps: {
+                    fw: 'bold',
+                  },
+                },
+                Title: {
+                  defaultProps: {
+                    fw: 'bold',
+                  },
+                },
               },
             }}
             withNormalizeCSS
@@ -220,7 +244,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
             <LoadingOverlay
               visible={isLoading}
               overlayOpacity={0.6}
-              zIndex={100000}
+              zIndex={1000000}
               style={{
                 width: '100vw',
                 height: '100vh',
@@ -237,6 +261,18 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
                   notificationProvider={notificationProvider}
                   i18nProvider={i18nProvider}
                   resources={[
+                    {
+                      name: 'caixa',
+                      show: '/caixa/visualizar/:id',
+                      list: '/caixa',
+                      create: '/caixa/cadastro',
+                      edit: '/caixa/editar/:id',
+                      meta: {
+                        canDelete: false,
+                        label: 'Caixa',
+                        icon: <IconBusinessplan />,
+                      },
+                    },
                     {
                       name: 'compras',
                       show: '/compras/visualizar/:id',

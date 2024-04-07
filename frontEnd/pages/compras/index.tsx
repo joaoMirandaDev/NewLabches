@@ -25,7 +25,9 @@ export default function FornecedorList() {
   const t = useTranslate()
   const [opened, { open, close }] = useDisclosure(false)
   const [openedVisualizar, setOpenedVisualizar] = useState<boolean>(false)
-  const [sorting, setSorting] = useState<MRT_SortingState>([])
+  const [sorting, setSorting] = useState<MRT_SortingState>([
+    { id: 'dataCompra', desc: true },
+  ])
   const [dataCompra, setDataCompra] = useState<ICompra[]>([])
   const [resetPesquisa, setResetPesquisa] = useState<boolean>(false)
   const [totalElements, setTotalElements] = useState<number>(0)

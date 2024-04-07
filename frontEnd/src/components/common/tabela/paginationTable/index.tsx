@@ -64,6 +64,7 @@ const PaginationTable = <T extends Record<string, any>>({
       enableColumnOrdering: true,
       enableEditing: false,
       enableGlobalFilter: true,
+      enableSortingRemoval: false,
       enableGrouping: true,
       enableHiding: true,
       positionActionsColumn: positionActionsColumn,
