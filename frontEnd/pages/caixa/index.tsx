@@ -2,7 +2,12 @@ import SearchBar from '@components/common/filtro/filtro-sem-remocao-caracter'
 import PaginationTable from '@components/common/tabela/paginationTable'
 import { Box, Button, Flex, Group, Text, Tooltip } from '@mantine/core'
 import { useTranslate } from '@refinedev/core'
-import { IconAlertTriangle, IconCircleCheck, IconUserPlus } from '@tabler/icons'
+import {
+  IconAlertTriangle,
+  IconCircleCheck,
+  IconInfoSquareRounded,
+  IconUserPlus,
+} from '@tabler/icons'
 import {
   MRT_ColumnDef,
   MRT_PaginationState,
@@ -17,7 +22,6 @@ import ISearch from 'src/interfaces/search'
 import { PAGE_INDEX, PAGE_SIZE } from 'src/utils/Constants'
 import { CAIXA_PAGE } from 'src/utils/Routes'
 import ICaixa from 'src/interfaces/Caixa'
-import { IconInfoSquareRoundedFilled } from '@tabler/icons-react'
 
 export default function Caixa() {
   const t = useTranslate()
@@ -231,7 +235,7 @@ export default function Caixa() {
             zIndex={10000}
             label="Se houver um caixa aberto, ele deverá ser fechado antes de abrir um novo."
           >
-            <IconInfoSquareRoundedFilled
+            <IconInfoSquareRounded
               cursor={'pointer'}
               size={'1rem'}
               style={{ marginLeft: '0.5rem' }}
