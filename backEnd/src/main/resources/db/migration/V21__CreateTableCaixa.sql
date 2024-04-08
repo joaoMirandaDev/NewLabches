@@ -17,7 +17,9 @@ CREATE TABLE pedido (
   ativo INTEGER,
   valor_total DOUBLE,
   id_caixa INTEGER NOT NULL,
+  id_forma_pagamento SMALLINT NOT NULL,
   FOREIGN KEY (id_caixa) REFERENCES caixa(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (id_forma_pagamento) REFERENCES forma_pagamento(id) ON UPDATE CASCADE ON DELETE CASCADE,
   PRIMARY KEY (id)
 );
 
