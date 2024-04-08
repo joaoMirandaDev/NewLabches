@@ -63,7 +63,7 @@ export const clearDados = () => {
 
 export const verifyUserExpired = async () => {
   const check = await api
-    .get(`${VALIDATOR_USUARIO}/${Cookies.get(TOKEN_COOKIE_KEY)}`)
+    .get(VALIDATOR_USUARIO + `${Cookies.get(TOKEN_COOKIE_KEY)}`)
     .then(response => {
       if (!response.data) {
         removeAllCookies()
@@ -75,6 +75,7 @@ export const verifyUserExpired = async () => {
     .catch(() => {
       removeAllCookies()
       clearAuthentication()
+      return false
     })
   return check
 }

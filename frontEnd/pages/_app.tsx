@@ -1,5 +1,4 @@
 import { AuthBindings, Authenticated, Refine } from '@refinedev/core'
-import { DevtoolsProvider } from '@refinedev/devtools'
 import { RefineKbar, RefineKbarProvider } from '@refinedev/kbar'
 import {
   notificationProvider,
@@ -88,31 +87,23 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
       }
     },
     check: async () => {
-      const token = Cookies.get('token')
-      if (token) {
-        try {
-          const check: boolean = await verifyUserExpired()
-          if (check) {
-            return {
-              success: true,
-              authenticated: true,
-            }
-          } else {
-            return {
-              authenticated: false,
-              redirectTo: '/login',
-            }
+      try {
+        const check: boolean = await verifyUserExpired()
+        if (check) {
+          return {
+            authenticated: true,
           }
-        } catch (error) {
+        } else {
           return {
             authenticated: false,
             redirectTo: '/login',
           }
         }
-      }
-      return {
-        authenticated: false,
-        redirectTo: '/login',
+      } catch (error) {
+        return {
+          authenticated: false,
+          redirectTo: '/login',
+        }
       }
     },
     logout: async () => {
@@ -131,17 +122,6 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
       return <Component {...pageProps} />
     }
 
-    if (Component.noLayout) {
-      return (
-        <Authenticated
-          key="authenticated-layout"
-          appendCurrentPathToQuery={false}
-        >
-          <Component {...pageProps} />
-        </Authenticated>
-      )
-    }
-
     return (
       <ThemedLayoutV2
         initialSiderCollapsed={false}
@@ -152,8 +132,9 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
         )}
       >
         <Authenticated
-          key="authenticated-layout"
           appendCurrentPathToQuery={false}
+          loading
+          key={'authenticated'}
         >
           <Component {...pageProps} />
         </Authenticated>
@@ -259,98 +240,96 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
             />
             <Global styles={{ body: { WebkitFontSmoothing: 'auto' } }} />
             <NotificationsProvider position="top-center">
-              <DevtoolsProvider>
-                <Refine
-                  authProvider={authProvider}
-                  routerProvider={routerProvider}
-                  dataProvider={dataProvider(AUTH_USUARIO)}
-                  notificationProvider={notificationProvider}
-                  i18nProvider={i18nProvider}
-                  resources={[
-                    {
-                      name: 'caixa',
-                      show: '/caixa/visualizar/:id',
-                      list: '/caixa',
-                      create: '/caixa/cadastro',
-                      edit: '/caixa/editar/:id',
-                      meta: {
-                        canDelete: false,
-                        label: 'Caixa',
-                        icon: <IconBusinessplan />,
-                      },
+              <Refine
+                authProvider={authProvider}
+                routerProvider={routerProvider}
+                dataProvider={dataProvider(AUTH_USUARIO)}
+                notificationProvider={notificationProvider}
+                i18nProvider={i18nProvider}
+                resources={[
+                  {
+                    name: 'caixa',
+                    show: '/caixa/visualizar/:id',
+                    list: '/caixa',
+                    create: '/caixa/cadastro',
+                    edit: '/caixa/editar/:id',
+                    meta: {
+                      canDelete: false,
+                      label: 'Caixa',
+                      icon: <IconBusinessplan />,
                     },
-                    {
-                      name: 'compras',
-                      show: '/compras/visualizar/:id',
-                      list: '/compras',
-                      create: '/compras/cadastro',
-                      edit: '/compras/editar/:id',
-                      meta: {
-                        canDelete: false,
-                        label: 'Compras',
-                        icon: <IconCash />,
-                      },
+                  },
+                  {
+                    name: 'compras',
+                    show: '/compras/visualizar/:id',
+                    list: '/compras',
+                    create: '/compras/cadastro',
+                    edit: '/compras/editar/:id',
+                    meta: {
+                      canDelete: false,
+                      label: 'Compras',
+                      icon: <IconCash />,
                     },
-                    {
-                      name: 'especialidades',
-                      show: '/especialidades/visualizar/:id',
-                      list: '/especialidades',
-                      create: '/especialidades/cadastro',
-                      edit: '/especialidades/editar/:id',
-                      meta: {
-                        canDelete: false,
-                        label: 'Especialidades',
-                        icon: <IconPizza />,
-                      },
+                  },
+                  {
+                    name: 'especialidades',
+                    show: '/especialidades/visualizar/:id',
+                    list: '/especialidades',
+                    create: '/especialidades/cadastro',
+                    edit: '/especialidades/editar/:id',
+                    meta: {
+                      canDelete: false,
+                      label: 'Especialidades',
+                      icon: <IconPizza />,
                     },
-                    {
-                      name: 'mercadoria',
-                      show: '/mercadoria/visualizar/:id',
-                      list: '/mercadoria',
-                      create: '/mercadoria/cadastro',
-                      edit: '/mercadoria/editar/:id',
-                      meta: {
-                        canDelete: false,
-                        label: 'Mercadorias',
-                        icon: <IconMeat />,
-                      },
+                  },
+                  {
+                    name: 'mercadoria',
+                    show: '/mercadoria/visualizar/:id',
+                    list: '/mercadoria',
+                    create: '/mercadoria/cadastro',
+                    edit: '/mercadoria/editar/:id',
+                    meta: {
+                      canDelete: false,
+                      label: 'Mercadorias',
+                      icon: <IconMeat />,
                     },
-                    {
-                      name: 'colaborador',
-                      show: '/colaborador/visualizar/:id',
-                      list: '/colaborador',
-                      create: '/colaborador/cadastro',
-                      edit: '/colaborador/editar/:id',
-                      meta: {
-                        canDelete: false,
-                        label: 'Colaboradores',
-                        icon: <IconUsers />,
-                      },
+                  },
+                  {
+                    name: 'colaborador',
+                    show: '/colaborador/visualizar/:id',
+                    list: '/colaborador',
+                    create: '/colaborador/cadastro',
+                    edit: '/colaborador/editar/:id',
+                    meta: {
+                      canDelete: false,
+                      label: 'Colaboradores',
+                      icon: <IconUsers />,
                     },
-                    {
-                      name: 'fornecedor',
-                      show: '/fornecedor/visualizar/:id',
-                      list: '/fornecedor',
-                      create: '/fornecedor/cadastro',
-                      edit: '/fornecedor/editar/:id',
-                      meta: {
-                        canDelete: false,
-                        label: 'Fornecedores',
-                        icon: <IconAffiliate />,
-                      },
+                  },
+                  {
+                    name: 'fornecedor',
+                    show: '/fornecedor/visualizar/:id',
+                    list: '/fornecedor',
+                    create: '/fornecedor/cadastro',
+                    edit: '/fornecedor/editar/:id',
+                    meta: {
+                      canDelete: false,
+                      label: 'Fornecedores',
+                      icon: <IconAffiliate />,
                     },
-                  ]}
-                  options={{
-                    syncWithLocation: true,
-                    warnWhenUnsavedChanges: true,
-                  }}
-                >
-                  {renderComponent()}
-                  <RefineKbar />
-                  <UnsavedChangesNotifier />
-                  <DocumentTitleHandler />
-                </Refine>
-              </DevtoolsProvider>
+                  },
+                ]}
+                options={{
+                  syncWithLocation: true,
+                  warnWhenUnsavedChanges: true,
+                }}
+              >
+                {renderComponent()}
+                <RefineKbar />
+                <UnsavedChangesNotifier />
+                <DocumentTitleHandler />
+              </Refine>
             </NotificationsProvider>
           </MantineProvider>
         </ColorSchemeProvider>
