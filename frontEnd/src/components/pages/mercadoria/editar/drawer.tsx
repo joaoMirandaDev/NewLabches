@@ -26,6 +26,12 @@ import { ErrorNotification, SuccessNotification } from '@components/common'
 import { useForm, zodResolver } from '@mantine/form'
 import IMercadoria from 'src/interfaces/mercadoria'
 import { DrowerEditarMercadoria } from '../validation/editarValidation'
+import {
+  FIND_ALL_TIPO,
+  FIND_ALL_UNIDADE_MEDIDA,
+  MERCADORIA_DELETE_BY_ID,
+  MERCADORIA_EDITAR_BY_ID,
+} from 'src/utils/Routes'
 
 interface DrawerMercadoria {
   openModal: boolean
@@ -101,8 +107,8 @@ const DrawerMercadoria: React.FC<DrawerMercadoria> = ({
   }, [openModal])
 
   const getAllUnidadeMeidaAndTipo = async () => {
-    const unidadeMedida = await api.get('api/unidadeMedida/findAll')
-    const value = await api.get('api/tipo')
+    const unidadeMedida = await api.get(FIND_ALL_UNIDADE_MEDIDA)
+    const value = await api.get(FIND_ALL_TIPO)
     const dataMedida = unidadeMedida.data.map((data: UnidadeMedida) => ({
       value: data.id,
       label: data.nome,
@@ -117,7 +123,7 @@ const DrawerMercadoria: React.FC<DrawerMercadoria> = ({
 
   const handleDelete = () => {
     api
-      .delete(`/api/mercadoria/deleteById/${form.values.id}`)
+      .delete(MERCADORIA_DELETE_BY_ID + `${form.values.id}`)
       .then(() => {
         SuccessNotification({
           message: form.values.nome + ' deletado(a) com sucesso!',
@@ -136,7 +142,7 @@ const DrawerMercadoria: React.FC<DrawerMercadoria> = ({
   const handleSubmit = async () => {
     if (form.isValid()) {
       await api
-        .put('api/mercadoria/editar', form.values)
+        .put(MERCADORIA_EDITAR_BY_ID, form.values)
         .then(() => {
           SuccessNotification({
             message: form.values.nome + ' editado(a) com sucesso!',

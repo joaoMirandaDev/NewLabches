@@ -4,10 +4,12 @@ import Cookies from 'js-cookie'
 import { removeformatarCPFCNPJ } from 'src/utils/FormatterUtils'
 import ILogin from 'src/interfaces/login'
 import api from 'src/utils/Api'
-import { ErrorNotification } from '@components/common'
+import {
+  AUTH_USUARIO,
+  FIND_BY_USUARIO_LOGIN,
+  VALIDATOR_USUARIO,
+} from 'src/utils/Routes'
 
-const API_URL = '/api/usuarios/auth'
-const API_URL_VERIFY = '/api/usuarios/validatorUser'
 const TOKEN_COOKIE_KEY: string = 'token'
 const USER_COOKIE_KEY: string = 'user'
 const DADOS_USUARIO: string = 'dados_usuario'
@@ -28,7 +30,7 @@ const clearAuthentication = () => {
 export const loginAuth = async (credentials: ILogin) => {
   credentials.login = removeformatarCPFCNPJ(credentials.login)
   await api
-    .post(API_URL, credentials)
+    .post(AUTH_USUARIO, credentials)
     .then(async response => {
       const token = response.data.token
       const user = jwtDecode(token)
@@ -43,13 +45,12 @@ export const loginAuth = async (credentials: ILogin) => {
       const usuario = userCookie.sub
       Cookies.set(DADOS_USUARIO, usuario, { expires: 1, secure: true })
       await api
-        .get(`/api/usuarios/findByLogin/${response.data.login}`)
+        .get(FIND_BY_USUARIO_LOGIN + `${response.data.login}`)
         .then(response => {
           Cookies.set(ROLE, response.data.role.name)
         })
     })
     .catch(() => {
-      ErrorNotification({ message: 'Erro' })
       return false
     })
   return true
@@ -62,7 +63,7 @@ export const clearDados = () => {
 
 export const verifyUserExpired = async () => {
   const check = await api
-    .get(`${API_URL_VERIFY}/${Cookies.get(TOKEN_COOKIE_KEY)}`)
+    .get(`${VALIDATOR_USUARIO}/${Cookies.get(TOKEN_COOKIE_KEY)}`)
     .then(response => {
       if (!response.data) {
         removeAllCookies()

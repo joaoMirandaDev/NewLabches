@@ -18,6 +18,7 @@ import { PAGE_INDEX, PAGE_SIZE } from 'src/utils/Constants'
 import { CAIXA_PAGE } from 'src/utils/Routes'
 import ICaixa from 'src/interfaces/Caixa'
 import { IconInfoSquareRounded } from '@tabler/icons-react'
+import Cookies from 'js-cookie'
 
 export default function Caixa() {
   const t = useTranslate()
@@ -76,6 +77,12 @@ export default function Caixa() {
     setFiltro(prevData => ({ ...prevData, search: value, pagina: 0 }))
   }
 
+  const validatePermissionRole = () => {
+    if (Cookies.get('role') == 'CAIXA') {
+      return true
+    }
+  }
+
   const columns = useMemo<MRT_ColumnDef<ICaixa>[]>(
     () => [
       {
@@ -100,13 +107,13 @@ export default function Caixa() {
               gap: '16px',
             }}
           >
-            {row.original.caixaAberto == 1 && (
+            {row.original.caixaAberto == 0 && (
               <>
                 <IconAlertTriangle size={16} color="red" />
                 <span>{renderedCellValue}</span>
               </>
             )}
-            {row.original.caixaAberto == 0 && (
+            {row.original.caixaAberto == 1 && (
               <>
                 <IconCircleCheck size={16} color="green" />
                 <span>{renderedCellValue}</span>
@@ -210,8 +217,8 @@ export default function Caixa() {
         },
         Cell: ({ row }) => (
           <Box>
-            {row.original.caixaAberto == 1 && <>Aberto</>}
-            {row.original.caixaAberto == 0 && <>Fechado</>}
+            {row.original.caixaAberto == 0 && <>Aberto</>}
+            {row.original.caixaAberto == 1 && <>Fechado</>}
           </Box>
         ),
       },
@@ -243,10 +250,10 @@ export default function Caixa() {
         </Flex>
         <Button
           leftIcon={<IconUserPlus size={16} />}
-          // disabled={validatePermissionRole()}
+          disabled={validatePermissionRole()}
           onClick={() => navigate.push('fornecedor/cadastro')}
         >
-          {t('pages.fornecedor.buttonCadastro')}
+          Abrir novo caixa
         </Button>
       </Flex>
       <PaginationTable

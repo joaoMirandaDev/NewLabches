@@ -1,0 +1,9 @@
+CREATE TABLE saida(
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  valor_saida DOUBLE,
+  observacao TEXT,
+  id_caixa INTEGER NOT NULL,
+  ativo INTEGER,
+  FOREIGN KEY (id_caixa) REFERENCES caixa(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  PRIMARY KEY (id)
+);

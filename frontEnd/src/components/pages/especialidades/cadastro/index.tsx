@@ -31,6 +31,12 @@ import IEspecialidadeMercadoria from 'src/interfaces/especialidadeCompra'
 import { useDisclosure } from '@mantine/hooks'
 import { MRT_ColumnDef, MRT_Row } from 'mantine-react-table'
 import IMercadoria from 'src/interfaces/mercadoria'
+import {
+  FIND_ALL_CATEGORIA,
+  FIND_ALL_MERCADORIA,
+  MERCADORIA_BY_ID,
+  PRODUTO_ADD,
+} from 'src/utils/Routes'
 interface DrawerCadastroProduto {
   openModal: boolean
   closeDrower: (value: boolean) => void
@@ -124,13 +130,13 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
   }, [openModal])
 
   const getAllCategoria = async () => {
-    const value = await api.get('api/categoria/findAll')
+    const value = await api.get(FIND_ALL_CATEGORIA)
     const data = value.data.map((data: Categoria) => ({
       value: data.id,
       label: data.nome,
     }))
     setCategoria(data)
-    const mercadoria = await api.get('api/mercadoria/findAll')
+    const mercadoria = await api.get(FIND_ALL_MERCADORIA)
     const dataMercadoria = mercadoria.data.map((data: IMercadoria) => ({
       value: data.id,
       label: data.nome,
@@ -146,7 +152,7 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
         especialidadeMercadoria: data,
       }
       await api
-        .post('api/produtos/adicionar', updatedFormValues)
+        .post(PRODUTO_ADD, updatedFormValues)
         .then(() => {
           SuccessNotification({
             message: 'Especialidade cadastrada com sucesso!',
@@ -201,7 +207,7 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
   }
 
   const handleChangeMercadoria = () => {
-    api.get(`api/mercadoria/findById/${idMercadoria}`).then(response => {
+    api.get(MERCADORIA_BY_ID + `${idMercadoria}`).then(response => {
       handleChange('mercadoria', response.data)
       open()
     })

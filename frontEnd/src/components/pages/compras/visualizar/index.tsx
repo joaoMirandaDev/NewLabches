@@ -36,6 +36,15 @@ import ModalInsertCompras from '../modal/modal'
 import { useDisclosure } from '@mantine/hooks'
 import IItemCompra from 'src/interfaces/compras/itensCompra'
 import { MRT_ColumnDef, MRT_Row } from 'mantine-react-table'
+import {
+  COMPRAS_BY_ID,
+  COMPRAS_DELETE_BY_ID,
+  COMPRAS_EDIT_BY_ID,
+  FIND_ALL_FORMA_PAGAMENTO,
+  FIND_ALL_FORNECEDOR,
+  FIND_ALL_MERCADORIA,
+  MERCADORIA_BY_ID,
+} from 'src/utils/Routes'
 interface DrawerVisualizarCompra {
   openModal: boolean
   idCompra: number | null
@@ -191,9 +200,9 @@ const DrawerVisualizarCompra: React.FC<DrawerVisualizarCompra> = ({
     </Flex>
   )
   const getAllServices = async () => {
-    const fornecedor = await api.get('api/fornecedor/findAll')
-    const value = await api.get('api/formaPagamento/findAll')
-    const compraById = await api.get(`api/compras/${idCompra}`)
+    const fornecedor = await api.get(FIND_ALL_FORNECEDOR)
+    const value = await api.get(FIND_ALL_FORMA_PAGAMENTO)
+    const compraById = await api.get(COMPRAS_BY_ID + `/${idCompra}`)
     form.setValues(compraById.data)
     form.setFieldValue('dataCompra', new Date(compraById.data.dataCompra))
     form.setFieldValue('dataPagamento', new Date(compraById.data.dataPagamento))
@@ -202,7 +211,7 @@ const DrawerVisualizarCompra: React.FC<DrawerVisualizarCompra> = ({
     form.setFieldValue('observacao', dados)
     setData(compraById.data.itensCompras)
 
-    const mercadoria = await api.get('api/mercadoria/findAll')
+    const mercadoria = await api.get(FIND_ALL_MERCADORIA)
     const mercadoriaSelect = mercadoria.data.map((data: IMercadoria) => ({
       value: data.id,
       label: data.nome,
@@ -269,7 +278,7 @@ const DrawerVisualizarCompra: React.FC<DrawerVisualizarCompra> = ({
     if (form.isValid()) {
       const updatedFormValues = { ...form.values, itensCompras: data }
       await api
-        .put('api/compras/edit', updatedFormValues)
+        .put(COMPRAS_EDIT_BY_ID, updatedFormValues)
         .then(() => {
           SuccessNotification({
             message: 'Compra atualizada com sucesso',
@@ -291,7 +300,7 @@ const DrawerVisualizarCompra: React.FC<DrawerVisualizarCompra> = ({
 
   const handleDelete = () => {
     api
-      .delete(`/api/compras/deleteById/${form.values.id}`)
+      .delete(COMPRAS_DELETE_BY_ID + `${form.values.id}`)
       .then(() => {
         SuccessNotification({
           message: 'Compra deletada com sucesso!',
@@ -318,12 +327,10 @@ const DrawerVisualizarCompra: React.FC<DrawerVisualizarCompra> = ({
   }
 
   const handleCHangeMercadoria = () => {
-    api
-      .get(`api/mercadoria/findById/${form.values.idMercadoria}`)
-      .then(response => {
-        handleChange('mercadoria', response.data)
-        open()
-      })
+    api.get(MERCADORIA_BY_ID + `${form.values.idMercadoria}`).then(response => {
+      handleChange('mercadoria', response.data)
+      open()
+    })
   }
 
   const renderButtons = () => (
@@ -386,9 +393,6 @@ const DrawerVisualizarCompra: React.FC<DrawerVisualizarCompra> = ({
             {t('components.button.salvar')}
           </Button>
         )}
-        {/* <Button leftIcon={<IconDatabasePlus />} type="submit" color="green">
-          {t('components.button.salvar')}
-        </Button> */}
       </Flex>
     </>
   )

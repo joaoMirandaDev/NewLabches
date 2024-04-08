@@ -18,6 +18,11 @@ import { useForm, zodResolver } from '@mantine/form'
 import { DrowerCadastroProdutos } from '../validation/schema'
 import { ErrorNotification, SuccessNotification } from '@components/common'
 import { IconArrowBarLeft } from '@tabler/icons'
+import {
+  FIND_ALL_TIPO,
+  FIND_ALL_UNIDADE_MEDIDA,
+  MERCADORIA_ADD,
+} from 'src/utils/Routes'
 interface DrawerCadastroMercadoria {
   openModal: boolean
   close: (value: boolean) => void
@@ -84,8 +89,8 @@ const DrawerCadastroMercadoria: React.FC<DrawerCadastroMercadoria> = ({
   const [categoria, setCategoria] = useState<SelectItem[]>([])
   const [tipo, setTipo] = useState<SelectItem[]>([])
   const getUnidadeMedidaAndTipo = async () => {
-    const unidadeMedida = await api.get('api/unidadeMedida/findAll')
-    const value = await api.get('api/tipo')
+    const unidadeMedida = await api.get(FIND_ALL_UNIDADE_MEDIDA)
+    const value = await api.get(FIND_ALL_TIPO)
     const dataMedida = unidadeMedida.data.map((data: Mercadoria) => ({
       value: data.id,
       label: data.nome,
@@ -101,7 +106,7 @@ const DrawerCadastroMercadoria: React.FC<DrawerCadastroMercadoria> = ({
   const handleSubmit = async () => {
     if (form.isValid()) {
       await api
-        .post('api/mercadoria/adicionar', form.values)
+        .post(MERCADORIA_ADD, form.values)
         .then(() => {
           SuccessNotification({
             message: 'Mecadoria cadastrada com sucesso',

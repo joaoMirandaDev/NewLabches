@@ -29,6 +29,13 @@ import ModalInsertCompras from '../modal/modal'
 import { useDisclosure } from '@mantine/hooks'
 import IItemCompra from 'src/interfaces/compras/itensCompra'
 import { MRT_ColumnDef, MRT_Row } from 'mantine-react-table'
+import {
+  COMPRAS_ADD,
+  FIND_ALL_FORMA_PAGAMENTO,
+  FIND_ALL_FORNECEDOR,
+  FIND_ALL_MERCADORIA,
+  MERCADORIA_BY_ID,
+} from 'src/utils/Routes'
 interface DrawerCadastroCompras {
   openModal: boolean
   closed: (value: boolean) => void
@@ -179,9 +186,9 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
     </Flex>
   )
   const getAllServices = async () => {
-    const fornecedor = await api.get('api/fornecedor/findAll')
-    const value = await api.get('api/formaPagamento/findAll')
-    const mercadoria = await api.get('api/mercadoria/findAll')
+    const fornecedor = await api.get(FIND_ALL_FORNECEDOR)
+    const value = await api.get(FIND_ALL_FORMA_PAGAMENTO)
+    const mercadoria = await api.get(FIND_ALL_MERCADORIA)
     const mercadoriaSelect = mercadoria.data.map((data: IMercadoria) => ({
       value: data.id,
       label: data.nome,
@@ -248,7 +255,7 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
     if (form.isValid()) {
       const updatedFormValues = { ...form.values, itensCompras: data }
       await api
-        .post('api/compras/addCompra', updatedFormValues)
+        .post(COMPRAS_ADD, updatedFormValues)
         .then(() => {
           SuccessNotification({
             message: 'Compra cadastrada com sucesso',
@@ -273,12 +280,10 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
   }
 
   const handleCHangeMercadoria = () => {
-    api
-      .get(`api/mercadoria/findById/${form.values.idMercadoria}`)
-      .then(response => {
-        handleChange('mercadoria', response.data)
-        open()
-      })
+    api.get(MERCADORIA_BY_ID + `${form.values.idMercadoria}`).then(response => {
+      handleChange('mercadoria', response.data)
+      open()
+    })
   }
 
   const renderButtons = () => (

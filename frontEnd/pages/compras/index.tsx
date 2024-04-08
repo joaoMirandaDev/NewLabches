@@ -20,6 +20,7 @@ import ICompra from 'src/interfaces/compras'
 import ISearch from 'src/interfaces/search'
 import api from 'src/utils/Api'
 import { PAGE_INDEX, PAGE_SIZE } from 'src/utils/Constants'
+import { COMPRAS_PAGE } from 'src/utils/Routes'
 
 export default function FornecedorList() {
   const t = useTranslate()
@@ -86,7 +87,7 @@ export default function FornecedorList() {
   }
 
   const findAllProdutos = async () => {
-    const value = await api.post('/api/compras/list', filtro)
+    const value = await api.post(COMPRAS_PAGE, filtro)
     setDataCompra(value.data.content)
     setTotalElements(value.data.totalElements)
   }

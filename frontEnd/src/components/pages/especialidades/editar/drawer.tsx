@@ -35,6 +35,13 @@ import ModalInsertMercadoria from '../modal/modal'
 import { useDisclosure } from '@mantine/hooks'
 import IProduto from 'src/interfaces/produto'
 import IMercadoria from 'src/interfaces/mercadoria'
+import {
+  FIND_ALL_CATEGORIA,
+  FIND_ALL_MERCADORIA,
+  MERCADORIA_BY_ID,
+  PRODUTO_DELETE_BY_ID,
+  PRODUTO_EDIT,
+} from 'src/utils/Routes'
 
 interface DrawerProduto {
   openModal: boolean
@@ -104,13 +111,13 @@ const DrawerProduto: React.FC<DrawerProduto> = ({
   }, [openModal])
 
   const getAllCategoria = async () => {
-    const value = await api.get('api/categoria/findAll')
+    const value = await api.get(FIND_ALL_CATEGORIA)
     const data = value.data.map((data: ISelect) => ({
       value: data.id,
       label: data.nome,
     }))
     setCategoria(data)
-    const grip = await api.get('api/mercadoria/findAll')
+    const grip = await api.get(FIND_ALL_MERCADORIA)
     const dataMercadoria = grip.data.map((data: IMercadoria) => ({
       value: data.id,
       label: data.nome,
@@ -131,7 +138,7 @@ const DrawerProduto: React.FC<DrawerProduto> = ({
 
   const handleDelete = () => {
     api
-      .delete(`/api/produtos/delete/${form.values.id}`)
+      .delete(PRODUTO_DELETE_BY_ID + `${form.values.id}`)
       .then(() => {
         SuccessNotification({
           message: t('pages.produtos.notification.delete'),
@@ -152,7 +159,7 @@ const DrawerProduto: React.FC<DrawerProduto> = ({
         especialidadeMercadoria: data,
       }
       await api
-        .put('api/produtos/editar', updatedFormValues)
+        .put(PRODUTO_EDIT, updatedFormValues)
         .then(() => {
           SuccessNotification({
             message: t('pages.produtos.notification.sucessoEdit'),
@@ -314,7 +321,7 @@ const DrawerProduto: React.FC<DrawerProduto> = ({
   }
 
   const handleChangeMercadoria = () => {
-    api.get(`api/mercadoria/findById/${idMercadoria}`).then(response => {
+    api.get(MERCADORIA_BY_ID + `${idMercadoria}`).then(response => {
       handleChange('mercadoria', response.data)
       open()
     })

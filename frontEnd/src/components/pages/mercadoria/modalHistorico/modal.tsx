@@ -13,6 +13,7 @@ import {
 } from 'mantine-react-table'
 import { PAGE_INDEX, PAGE_SIZE } from 'src/utils/Constants'
 import { IconArrowBarLeft } from '@tabler/icons'
+import { MERCADORIA_COMPRAS_BY_ID_PAGE } from 'src/utils/Routes'
 interface ModalHistoricoMercadoria {
   openModal: boolean
   id: number
@@ -74,7 +75,10 @@ const ModalHistoricoMercadoria: React.FC<ModalHistoricoMercadoria> = ({
   }, [pagination, filtro])
 
   const getMerdoriasCompra = async () => {
-    const dados = await api.post(`api/merdoriasCompra/list/${id}`, filtro)
+    const dados = await api.post(
+      MERCADORIA_COMPRAS_BY_ID_PAGE + `${id}`,
+      filtro
+    )
     setTotalElements(dados.data.totalElements)
     setData(dados.data.content)
   }

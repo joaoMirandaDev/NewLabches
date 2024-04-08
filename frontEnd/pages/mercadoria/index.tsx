@@ -30,6 +30,7 @@ import IMercadoria from 'src/interfaces/mercadoria'
 import ISearch from 'src/interfaces/search'
 import api from 'src/utils/Api'
 import { PAGE_INDEX, PAGE_SIZE } from 'src/utils/Constants'
+import { MERCADORIA_BY_ID, MERCADORIA_PAGE } from 'src/utils/Routes'
 
 export default function FornecedorList() {
   const t = useTranslate()
@@ -105,7 +106,7 @@ export default function FornecedorList() {
   }
 
   const findAllProdutos = async () => {
-    const value = await api.post('/api/mercadoria/list', filtro)
+    const value = await api.post(MERCADORIA_PAGE, filtro)
     setDataMercadoria(value.data.content)
     setTotalElements(value.data.totalElements)
   }
@@ -214,7 +215,7 @@ export default function FornecedorList() {
   )
 
   const visualizar = (id: number) => {
-    api.get(`api/mercadoria/findById/${id}`).then(response => {
+    api.get(MERCADORIA_BY_ID + `${id}`).then(response => {
       setProduto(response.data)
       setOpenModal(true)
     })

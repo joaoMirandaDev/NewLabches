@@ -43,9 +43,9 @@ import {
 } from '@tabler/icons'
 import { Menu } from '@components/common/side'
 import { useLoadingStore } from 'src/stores/LoadingStore'
-import { API_URL } from 'src/utils/Api'
 import Cookies from 'js-cookie'
 import { SuccessNotification } from '@components/common'
+import { AUTH_USUARIO, FIND_COLABORADOR } from 'src/utils/Routes'
 
 export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {
   noLayout?: boolean
@@ -66,7 +66,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
       const data = await loginAuth(user)
       if (data) {
         const value = await api.get(
-          `/api/colaborador/findByCpfCnpj/${Cookies.get('dados_usuario')}`
+          FIND_COLABORADOR + `${Cookies.get('dados_usuario')}`
         )
         Cookies.set('name', value.data.nome)
         SuccessNotification({
@@ -263,7 +263,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
                 <Refine
                   authProvider={authProvider}
                   routerProvider={routerProvider}
-                  dataProvider={dataProvider(API_URL)}
+                  dataProvider={dataProvider(AUTH_USUARIO)}
                   notificationProvider={notificationProvider}
                   i18nProvider={i18nProvider}
                   resources={[

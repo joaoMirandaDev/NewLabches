@@ -21,6 +21,7 @@ import ISearch from 'src/interfaces/search'
 import api from 'src/utils/Api'
 import { PAGE_INDEX, PAGE_SIZE } from 'src/utils/Constants'
 import { formatarCPFCNPJ, formatarTelefone } from 'src/utils/FormatterUtils'
+import { PRODUTO_BY_ID, PRODUTO_PAGE } from 'src/utils/Routes'
 
 export default function FornecedorList() {
   const t = useTranslate()
@@ -94,7 +95,7 @@ export default function FornecedorList() {
   }
 
   const findAllProdutos = async () => {
-    const value = await api.post('/api/produtos/list', filtro)
+    const value = await api.post(PRODUTO_PAGE, filtro)
     value.data.content.map((value: { cpfCnpj: string; telefone: string }) => {
       value.cpfCnpj = formatarCPFCNPJ(value.cpfCnpj)
       value.telefone = formatarTelefone(value.telefone)
@@ -174,7 +175,7 @@ export default function FornecedorList() {
   )
 
   const visualizar = (id: number) => {
-    api.get(`api/produtos/findById/${id}`).then(response => {
+    api.get(PRODUTO_BY_ID + `${id}`).then(response => {
       setProduto(response.data)
       setOpenModal(true)
     })
