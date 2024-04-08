@@ -3,11 +3,11 @@ package com.example.Authentication.Mercadoria.service;
 import com.example.Authentication.MercadoriasCompras.model.ItensCompras;
 import com.example.Authentication.Tipo.repository.TipoRepository;
 import com.example.Authentication.Utils.filtro.Filtro;
-import com.example.Authentication.Utils.pagination.PaginationSimple;
 import com.example.Authentication.Mercadoria.DTO.MercadoriaDTO;
 import com.example.Authentication.Mercadoria.DTO.MercadoriaSelectDTO;
 import com.example.Authentication.Mercadoria.Interface.UnidadeMedidaInterface;
 import com.example.Authentication.Mercadoria.model.Mercadoria;
+import com.example.Authentication.Utils.pagination.Pagination;
 import org.springframework.data.domain.Pageable;
 import com.example.Authentication.Mercadoria.repository.MercadoriaRepository;
 import com.example.Authentication.UnidadeMedida.model.UnidadeMedida;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class MercadoriaService extends PaginationSimple {
+public class MercadoriaService implements Pagination {
 
     private final MercadoriaRepository mercadoriaRepository;
     private final UnidadeMedidaRepository unidadeMedidaRepository;
@@ -32,6 +32,14 @@ public class MercadoriaService extends PaginationSimple {
     private static final Map<String, String> CAMPO_ORDENACAO = new HashMap<>();
     private final MessageSource messageSource;
     Locale locale = new Locale("pt", "BR");
+
+    static {
+        CAMPO_ORDENACAO.put("nome", "nome");
+        CAMPO_ORDENACAO.put("unidadeMedida.nome", "um.nome");
+        CAMPO_ORDENACAO.put("saldoEstoque", "saldo_estoque");
+        CAMPO_ORDENACAO.put("valorVenda", "valor_venda");
+        CAMPO_ORDENACAO.put("dataCadastro", "data_cadastro");
+    }
 
     public void cadastro(MercadoriaDTO mercadoriaDTO) {
         UnidadeMedida unidadeMedida = unidadeMedidaRepository.findById(mercadoriaDTO.getUnidadeMedida().getId()).orElseThrow(() ->
@@ -102,16 +110,13 @@ public class MercadoriaService extends PaginationSimple {
         return valorQuantidade;
     }
 
-
-   static {
-        CAMPO_ORDENACAO.put("nome", "nome");
-        CAMPO_ORDENACAO.put("unidadeMedida.nome", "um.nome");
-        CAMPO_ORDENACAO.put("saldoEstoque", "saldo_estoque");
-        CAMPO_ORDENACAO.put("valorVenda", "valor_venda");
-        CAMPO_ORDENACAO.put("dataCadastro", "data_cadastro");
+    @Override
+    public Pageable createPageableFromFiltro(Filtro filtro, Map<String, String> CAMPO_MAP, String OrderInitial) {
+        return Pagination.super.createPageableFromFiltro(filtro, CAMPO_MAP, OrderInitial);
     }
+
     public Page<Mercadoria> findAllByPage(Filtro filtro) {
-        Pageable pageable = createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "nome");
+        Pageable pageable = this.createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "nome");
         return mercadoriaRepository.findAll(pageable, filtro.getSearch());
     }
 

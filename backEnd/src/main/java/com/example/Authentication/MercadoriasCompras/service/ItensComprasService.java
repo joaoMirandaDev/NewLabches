@@ -2,7 +2,6 @@ package com.example.Authentication.MercadoriasCompras.service;
 
 import com.example.Authentication.Compras.model.Compras;
 import com.example.Authentication.Compras.repository.ComprasRepository;
-import com.example.Authentication.Compras.service.ComprasService;
 import com.example.Authentication.Mercadoria.model.Mercadoria;
 import com.example.Authentication.Mercadoria.repository.MercadoriaRepository;
 import com.example.Authentication.Mercadoria.service.MercadoriaService;
@@ -13,7 +12,7 @@ import com.example.Authentication.MercadoriasCompras.repository.ItensCompraRepos
 import com.example.Authentication.Utils.Interfaces.LocaleInteface;
 import com.example.Authentication.Utils.exceptions.NotFoundException;
 import com.example.Authentication.Utils.filtro.Filtro;
-import com.example.Authentication.Utils.pagination.PaginationSimple;
+import com.example.Authentication.Utils.pagination.Pagination;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
@@ -21,11 +20,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ItensComprasService extends PaginationSimple {
+public class ItensComprasService implements Pagination {
 
     private final MessageSource messageSource;
 
@@ -72,12 +70,17 @@ public class ItensComprasService extends PaginationSimple {
         }
     }
 
+    @Override
+    public Pageable createPageableFromFiltro(Filtro filtro, Map<String, String> CAMPO_MAP, String OrderInitial) {
+        return Pagination.super.createPageableFromFiltro(filtro, CAMPO_MAP, OrderInitial);
+    }
+
     public Page<ItensComprasPageDTO> findAllMercadoriaComprasByIdMercadoria(Integer id, Filtro filtro) {
         if (id == null) {
             throw new NullPointerException(
                     messageSource.getMessage("error.object.isEmpty", null, LocaleInteface.BR));
         }
-        Pageable pageable = createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "data");
+        Pageable pageable = this.createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "data");
         Page<ItensCompras> itensCompras = itensCompraRepository.findIngredienteById(id,pageable,filtro.getSearch());
         if (Objects.nonNull(itensCompras)) {
             return itensCompras.map(ItensComprasPageDTO::new);

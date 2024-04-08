@@ -1,13 +1,11 @@
-package com.example.Authentication.Tipo.repository;
+package com.example.Authentication.saida.repository;
 
 import com.example.Authentication.Tipo.model.Tipo;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.example.Authentication.saida.model.Saida;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TipoRepository extends JpaRepository<Tipo, Integer> {
+public interface SaidaRepository extends JpaRepository<Saida, Integer> {
 
 }

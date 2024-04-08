@@ -7,14 +7,12 @@ import com.example.Authentication.Utils.exceptions.NotFoundException;
 import com.example.Authentication.Utils.filtro.Filtro;
 import com.example.Authentication.Fornecedores.model.Fornecedor;
 import com.example.Authentication.Fornecedores.repository.FornecedorRepository;
-import com.example.Authentication.Utils.pagination.PaginationSimple;
+import com.example.Authentication.Utils.pagination.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,10 +21,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class FornecedorService extends PaginationSimple {
+public class FornecedorService implements Pagination {
 
     private final MessageSource messageSource;
-
     Locale locale = new Locale("pt", "BR");
     @Autowired
     private static FornecedorRepository fornecedorRepository;
@@ -48,7 +45,6 @@ public class FornecedorService extends PaginationSimple {
             Fornecedor fornecedor = new Fornecedor();
             if (fornecedorDto.getCpfCnpj().length() == 11) {
                 fornecedor.setNomeRazaoSocial(fornecedorDto.getNomeRazaoSocial());
-//                fornecedor.setDataNascimento(fornecedorDto.getDataNascimento());
                 fornecedor.setSobrenome(fornecedorDto.getSobrenome());
                 fornecedor.setCpfCnpj(fornecedorDto.getCpfCnpj());
                 fornecedor.setRg(fornecedorDto.getRg());
@@ -63,7 +59,6 @@ public class FornecedorService extends PaginationSimple {
 
             } else {
                 fornecedor.setNomeRazaoSocial(fornecedorDto.getNomeRazaoSocial());
-//                fornecedor.setDataNascimento(fornecedorDto.getDataNascimento());
                 fornecedor.setNomeFantasia(fornecedorDto.getNomeFantasia());
                 fornecedor.setCpfCnpj(fornecedorDto.getCpfCnpj());
                 fornecedor.setNumero(fornecedorDto.getNumero());
@@ -94,8 +89,13 @@ public class FornecedorService extends PaginationSimple {
         return ResponseEntity.ok(messageSource.getMessage("success.delete", null, locale));
     }
 
+    @Override
+    public Pageable createPageableFromFiltro(Filtro filtro, Map<String, String> CAMPO_MAP, String OrderInitial) {
+        return Pagination.super.createPageableFromFiltro(filtro, CAMPO_MAP, OrderInitial);
+    }
+
     public Page<FornecedorListagemDto> findAllfornecedor(Filtro filtro) {
-        Pageable pageable = createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "nome_razao_social");
+        Pageable pageable = this.createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "nome_razao_social");
         Page<Fornecedor> fornecedor =  fornecedorRepository.findAll(pageable, filtro.getSearch());
         return fornecedor.map(FornecedorListagemDto::new);
     }

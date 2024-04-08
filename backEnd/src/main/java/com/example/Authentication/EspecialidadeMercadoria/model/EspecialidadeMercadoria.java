@@ -18,7 +18,7 @@ public class EspecialidadeMercadoria {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "id_especialidade")
+    @JoinColumn(name = "id_especialidade", referencedColumnName = "id")
     private Especialidade especialidade;
 
     @OneToOne

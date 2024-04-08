@@ -1,5 +1,6 @@
-package com.example.Authentication.saida.model;
+package com.example.Authentication.saida.DTO;
 
+import com.example.Authentication.Caixa.DTO.CaixaDTO;
 import com.example.Authentication.Caixa.model.Caixa;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,22 +13,15 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity
-@Table(name = "saida")
-public class Saida {
+public class SaidaDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "valor_saida")
     private Double valorSaida;
 
     private String observacao;
 
-    @ManyToOne
-    @JoinColumn(name = "id_caixa", referencedColumnName = "id")
-    private Caixa caixa;
+    private CaixaDTO caixa;
 
     private Integer ativo;
 }

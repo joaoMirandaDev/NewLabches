@@ -1,6 +1,7 @@
 package com.example.Authentication.Caixa.model;
 
 import com.example.Authentication.Pedido.model.Pedido;
+import com.example.Authentication.saida.model.Saida;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -50,4 +51,6 @@ public class Caixa {
     @OneToMany(mappedBy = "caixa")
     private List<Pedido> pedidos;
 
+    @OneToMany(mappedBy = "caixa")
+    private List<Saida> saida;
 }

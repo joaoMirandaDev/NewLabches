@@ -3,16 +3,13 @@ package com.example.Authentication.Especialidade.service;
 import com.example.Authentication.Categoria.model.Categoria;
 import com.example.Authentication.Categoria.repository.CategoriaRepository;
 import com.example.Authentication.Especialidade.DTO.EspecialidadeDTO;
-import com.example.Authentication.EspecialidadeMercadoria.DTO.EspecialidadeMercadoriaDTO;
-import com.example.Authentication.EspecialidadeMercadoria.model.EspecialidadeMercadoria;
 import com.example.Authentication.EspecialidadeMercadoria.service.EspecialidadeMercadoriaService;
 import com.example.Authentication.Especialidade.model.Especialidade;
 import com.example.Authentication.Especialidade.repository.EspecialidadeRepository;
-import com.example.Authentication.Mercadoria.model.Mercadoria;
 import com.example.Authentication.Mercadoria.repository.MercadoriaRepository;
 import com.example.Authentication.Utils.exceptions.NotFoundException;
 import com.example.Authentication.Utils.filtro.Filtro;
-import com.example.Authentication.Utils.pagination.PaginationSimple;
+import com.example.Authentication.Utils.pagination.Pagination;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
@@ -24,7 +21,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class EspecialidadeService extends PaginationSimple {
+public class EspecialidadeService implements Pagination {
 
     private final MessageSource messageSource;
     Locale locale = new Locale("pt", "BR");
@@ -56,8 +53,13 @@ public class EspecialidadeService extends PaginationSimple {
         });
     }
 
+    @Override
+    public Pageable createPageableFromFiltro(Filtro filtro, Map<String, String> CAMPO_MAP, String OrderInitial) {
+        return Pagination.super.createPageableFromFiltro(filtro, CAMPO_MAP, OrderInitial);
+    }
+
     public Page<EspecialidadeDTO> findAllProdutos(Filtro filtro) {
-        Pageable pageable = createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "nome");
+        Pageable pageable = this.createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "nome");
         Page<Especialidade> produtosPage =  especialidadeRepository.findAll(pageable, filtro.getSearch());
         return produtosPage.map(EspecialidadeDTO::new);
     }

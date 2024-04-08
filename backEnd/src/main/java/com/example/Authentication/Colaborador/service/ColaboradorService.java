@@ -9,14 +9,12 @@ import com.example.Authentication.Colaborador.repository.ColaboradorRepository;
 import com.example.Authentication.Usuario.model.Usuario;
 import com.example.Authentication.Role.repository.RoleRepository;
 import com.example.Authentication.Usuario.repository.UsuarioRepository;
-import com.example.Authentication.Utils.pagination.PaginationSimple;
+import com.example.Authentication.Utils.pagination.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,7 +26,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Service
-public class ColaboradorService extends PaginationSimple {
+public class ColaboradorService implements Pagination {
 
 
     private final UsuarioRepository usuarioRepository;
@@ -97,8 +95,13 @@ public class ColaboradorService extends PaginationSimple {
         return ResponseEntity.ok(messageSource.getMessage("success.delete", null, locale));
     }
 
+    @Override
+    public Pageable createPageableFromFiltro(Filtro filtro, Map<String, String> CAMPO_MAP, String OrderInitial) {
+        return Pagination.super.createPageableFromFiltro(filtro, CAMPO_MAP, OrderInitial);
+    }
+
     public Page<Colaborador> findAllPessoa(Filtro filtro) {
-        Pageable pageable = createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "nome");
+        Pageable pageable = this.createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "nome");
         return colaboradorRepository.findAll(pageable, filtro.getSearch());
     }
 

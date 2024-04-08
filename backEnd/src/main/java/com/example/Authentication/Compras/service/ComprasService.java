@@ -8,13 +8,12 @@ import com.example.Authentication.FormaPagamento.model.FormaPagamento;
 import com.example.Authentication.FormaPagamento.repository.FormaPagamentoRepository;
 import com.example.Authentication.Fornecedores.model.Fornecedor;
 import com.example.Authentication.Fornecedores.repository.FornecedorRepository;
-import com.example.Authentication.Mercadoria.repository.MercadoriaRepository;
 import com.example.Authentication.Mercadoria.service.MercadoriaService;
 import com.example.Authentication.MercadoriasCompras.service.ItensComprasService;
 import com.example.Authentication.Utils.Interfaces.LocaleInteface;
 import com.example.Authentication.Utils.exceptions.NotFoundException;
 import com.example.Authentication.Utils.filtro.Filtro;
-import com.example.Authentication.Utils.pagination.PaginationSimple;
+import com.example.Authentication.Utils.pagination.Pagination;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
@@ -25,7 +24,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class ComprasService extends PaginationSimple {
+public class ComprasService implements Pagination {
     private final ComprasRepository comprasRepository;
     private final FornecedorRepository fornecedorRepository;
     private final FormaPagamentoRepository formaPagamentoRepository;
@@ -105,8 +104,13 @@ public class ComprasService extends PaginationSimple {
         }
     }
 
+    @Override
+    public Pageable createPageableFromFiltro(Filtro filtro, Map<String, String> CAMPO_MAP, String OrderInitial) {
+        return Pagination.super.createPageableFromFiltro(filtro, CAMPO_MAP, OrderInitial);
+    }
+
     public Page<ComprasPageDto> findAllByPage(Filtro filtro) {
-        Pageable pageable = createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "data_compra");
+        Pageable pageable = this.createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "data_compra");
         Page<Compras> comprasPage =  comprasRepository.findAll(pageable, filtro.getSearch());
         return comprasPage.map(ComprasPageDto::new);
     }
