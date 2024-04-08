@@ -6,10 +6,7 @@ import com.example.Authentication.Utils.filtro.Filtro;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,5 +17,15 @@ public class CaixaController {
     @PostMapping("/list")
     public Page<CaixaDTO> findAllByPage(@RequestBody Filtro filtro) {
         return caixaService.findAllByPage(filtro);
+    }
+
+    @PostMapping(value = "/openCaixa", produces = "application/json")
+    public CaixaDTO findAllByPage(@RequestBody CaixaDTO caixaDTO) {
+        return caixaService.openCaixa(caixaDTO);
+    }
+
+    @GetMapping(value = "/findById/{id}", produces = "application/json")
+    public CaixaDTO findById(@PathVariable Integer id ) {
+        return caixaService.findById(id);
     }
 }

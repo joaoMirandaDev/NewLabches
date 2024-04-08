@@ -3,14 +3,20 @@ package com.example.Authentication.Caixa.service;
 import com.example.Authentication.Caixa.DTO.CaixaDTO;
 import com.example.Authentication.Caixa.model.Caixa;
 import com.example.Authentication.Caixa.repository.CaixaRepository;
+import com.example.Authentication.Utils.Interfaces.LocaleInteface;
+import com.example.Authentication.Utils.exceptions.NotFoundException;
 import com.example.Authentication.Utils.filtro.Filtro;
 import com.example.Authentication.Utils.pagination.Pagination;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -18,6 +24,7 @@ import java.util.Map;
 public class CaixaService implements Pagination {
 
     private final CaixaRepository caixaRepository;
+    private final MessageSource messageSource;
     private static final Map<String, String> CAMPO_ORDENACAO = new HashMap<>();
     static {
         CAMPO_ORDENACAO.put("numeroCaixa", "numero_caixa");
@@ -36,5 +43,28 @@ public class CaixaService implements Pagination {
         Pageable pageable = this.createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "numero_caixa");
         Page<Caixa> caixaPage = caixaRepository.findAll(pageable, filtro.getSearch());
         return caixaPage.map(CaixaDTO::new);
+    }
+
+    public CaixaDTO openCaixa(CaixaDTO caixaDTO) {
+        List<Caixa> caixas = caixaRepository.findAll();
+        boolean verifyOpenCaixa = caixas.stream().anyMatch(caixa -> caixa.getCaixaAberto().equals(0));
+        if (!verifyOpenCaixa) {
+            Caixa caixa = new Caixa();
+            caixa.setValorAberturaCaixa(caixaDTO.getValorAberturaCaixa());
+            caixa.setDataAbertura(new Date());
+            caixa.setCaixaAberto(0);
+            caixa.setAtivo(1);
+            return new CaixaDTO(caixaRepository.save(caixa));
+        } else {
+            throw new DataIntegrityViolationException(messageSource.getMessage("error.caixa.open",
+                    null, LocaleInteface.BR));
+        }
+    }
+
+    public CaixaDTO findById(Integer id) {
+        Caixa caixa = caixaRepository.findById(id).orElseThrow(() -> new NotFoundException(
+                messageSource.getMessage("error.isEmpty", null, LocaleInteface.BR)
+        ));
+        return new CaixaDTO(caixa);
     }
 }

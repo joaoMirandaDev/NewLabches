@@ -23,7 +23,7 @@ public class PedidoMercadoria {
     @OneToOne
     @JoinColumn(name = "id_mercadoria", referencedColumnName = "id")
     private Mercadoria mercadoria;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "id_pedido", referencedColumnName = "id")
     private Pedido pedido;
     private Integer quantidade;

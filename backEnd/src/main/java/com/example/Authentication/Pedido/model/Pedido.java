@@ -1,12 +1,15 @@
 package com.example.Authentication.Pedido.model;
 
 import com.example.Authentication.Caixa.model.Caixa;
+import com.example.Authentication.PedidoEspecialidade.model.PedidoEspecialidade;
+import com.example.Authentication.PedidoMercadoria.model.PedidoMercadoria;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -29,5 +32,9 @@ public class Pedido {
     @ManyToOne
     @JoinColumn(name = "id_caixa", referencedColumnName = "id")
     private Caixa caixa;
+    @OneToMany(mappedBy = "pedido")
+    private List<PedidoMercadoria> pedidoMercadoria;
+    @OneToMany(mappedBy = "pedido")
+    private List<PedidoEspecialidade> pedidoEspecialidades;
 
 }

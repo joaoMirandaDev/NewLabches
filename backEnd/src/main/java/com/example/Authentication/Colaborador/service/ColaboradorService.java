@@ -10,6 +10,7 @@ import com.example.Authentication.Usuario.model.Usuario;
 import com.example.Authentication.Role.repository.RoleRepository;
 import com.example.Authentication.Usuario.repository.UsuarioRepository;
 import com.example.Authentication.Utils.pagination.Pagination;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DataAccessException;
@@ -26,6 +27,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Service
+@RequiredArgsConstructor
 public class ColaboradorService implements Pagination {
 
 
@@ -40,15 +42,6 @@ public class ColaboradorService implements Pagination {
         CAMPO_ORDENACAO.put("nome", "nome");
         CAMPO_ORDENACAO.put("cpf", "cpf");
         CAMPO_ORDENACAO.put("telefone", "telefone");
-    }
-
-    @Autowired
-    public ColaboradorService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder, MessageSource messageSource, RoleRepository roleRepository, ColaboradorRepository colaboradorRepository) {
-        this.usuarioRepository = usuarioRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.messageSource = messageSource;
-        this.roleRepository = roleRepository;
-        this.colaboradorRepository = colaboradorRepository;
     }
 
     @Transactional(rollbackFor = Exception.class)
