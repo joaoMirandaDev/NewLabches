@@ -30,5 +30,6 @@ public class PedidoEspecialidade {
     private Integer quantidade;
     @OneToMany(mappedBy = "pedidoEspecialidade")
     private List<AdicionalEspecialidade> adicionalEspecialidades;
+    private Double valorPedidoEspecialidade;
 
 }

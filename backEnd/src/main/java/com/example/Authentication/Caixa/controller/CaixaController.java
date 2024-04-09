@@ -26,6 +26,6 @@ public class CaixaController {
 
     @GetMapping(value = "/findById/{id}", produces = "application/json")
     public CaixaDTO findById(@PathVariable Integer id ) {
-        return caixaService.findById(id);
+        return caixaService.findByIdDto(id);
     }
 }

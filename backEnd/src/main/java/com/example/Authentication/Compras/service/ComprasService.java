@@ -119,7 +119,6 @@ public class ComprasService implements Pagination {
         Compras compras = comprasRepository.findById(id).orElseThrow(() -> new NotFoundException(
                 messageSource.getMessage("error.isEmpty", null, LocaleInteface.BR)));
         return new ComprasDto(compras);
-
     }
 
 }

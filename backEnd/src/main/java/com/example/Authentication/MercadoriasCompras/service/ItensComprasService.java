@@ -1,7 +1,6 @@
 package com.example.Authentication.MercadoriasCompras.service;
 
 import com.example.Authentication.Compras.model.Compras;
-import com.example.Authentication.Compras.repository.ComprasRepository;
 import com.example.Authentication.Mercadoria.model.Mercadoria;
 import com.example.Authentication.Mercadoria.repository.MercadoriaRepository;
 import com.example.Authentication.Mercadoria.service.MercadoriaService;
@@ -29,7 +28,6 @@ public class ItensComprasService implements Pagination {
 
     private final MercadoriaRepository mercadoriaRepository;
     private final MercadoriaService mercadoriaService;
-    private final ComprasRepository comprasRepository;
     private final ItensCompraRepository itensCompraRepository;
     private static final Map<String, String> CAMPO_ORDENACAO = new HashMap<>();
 

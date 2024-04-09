@@ -61,10 +61,15 @@ public class CaixaService implements Pagination {
         }
     }
 
-    public CaixaDTO findById(Integer id) {
+    public Caixa findById(Integer id) {
         Caixa caixa = caixaRepository.findById(id).orElseThrow(() -> new NotFoundException(
                 messageSource.getMessage("error.isEmpty", null, LocaleInteface.BR)
         ));
-        return new CaixaDTO(caixa);
+        return caixa;
+    }
+
+    public CaixaDTO findByIdDto(Integer id) {
+
+        return new CaixaDTO(this. findById(id));
     }
 }

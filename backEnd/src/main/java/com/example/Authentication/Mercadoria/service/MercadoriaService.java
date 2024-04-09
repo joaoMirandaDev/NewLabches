@@ -139,4 +139,9 @@ public class MercadoriaService implements Pagination {
             mercadoriaRepository.save(mercadoria);
         }
     }
+
+    public void reduzSaldo(Mercadoria mercadoria, Integer quantidade) {
+        mercadoria.setSaldoEstoque(mercadoria.getSaldoEstoque() - quantidade);
+        mercadoriaRepository.save(mercadoria);
+    }
 }

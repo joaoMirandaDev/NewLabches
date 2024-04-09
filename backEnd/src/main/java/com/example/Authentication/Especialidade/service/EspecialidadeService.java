@@ -73,14 +73,15 @@ public class EspecialidadeService implements Pagination {
         }
     }
 
-    public EspecialidadeDTO findById(Integer id) {
+    public Especialidade findById(Integer id) {
         Especialidade especialidade = especialidadeRepository.findById(id).orElseThrow(() -> new NotFoundException(
                 messageSource.getMessage("error.isEmpty", null, locale)
         ));
-        if (Objects.nonNull(especialidade)) {
-           return new EspecialidadeDTO(especialidade);
-        }
-        return null;
+        return especialidade;
+    }
+
+    public EspecialidadeDTO findByIdDto(Integer id) {
+        return new EspecialidadeDTO(this.findById(id));
     }
 
     public void editarById(EspecialidadeDTO especialidadeDTO)  {

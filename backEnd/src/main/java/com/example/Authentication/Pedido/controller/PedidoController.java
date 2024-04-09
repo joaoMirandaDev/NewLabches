@@ -22,8 +22,8 @@ public class PedidoController {
      return pedidoService.findAllPageByIdCaixa(id, filtro);
     }
 
-    @PostMapping(value = "/addPedido", produces = "application/json")
-    public void addCompra(@RequestBody ComprasDto comprasDto) {
-        pedidoService.addPedido(comprasDto);
+    @PostMapping(value = "/addPedido/{id}", produces = "application/json")
+    public void addCompra(@RequestBody PedidoDTO pedidoDTO, @PathVariable Integer id) {
+        pedidoService.addPedido(pedidoDTO, id);
     }
 }

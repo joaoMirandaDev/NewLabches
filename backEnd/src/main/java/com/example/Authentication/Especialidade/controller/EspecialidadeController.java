@@ -36,7 +36,7 @@ public class EspecialidadeController {
 
     @GetMapping(value = "/findById/{id}", produces = "application/json")
     public ResponseEntity<EspecialidadeDTO> findAllProdutos(@PathVariable Integer id) {
-        return ResponseEntity.ok(especialidadeService.findById(id));
+        return ResponseEntity.ok(especialidadeService.findByIdDto(id));
     }
 
     @DeleteMapping(value = "delete/{id}")
