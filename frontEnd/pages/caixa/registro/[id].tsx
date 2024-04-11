@@ -20,6 +20,7 @@ export default function RegistroCaixa() {
   const [data, setData] = useState<ICaixa>()
   const [dataPedido, setDataPedido] = useState<IPedido[]>([])
   const [totalElements, setTotalElements] = useState<number>(0)
+  const [totalVendas, setTotalVendas] = useState<number>(0)
   const router = useRouter()
   const [resetPesquisa, setResetPesquisa] = useState<boolean>(false)
   const [sorting, setSorting] = useState<MRT_SortingState>([
@@ -77,6 +78,11 @@ export default function RegistroCaixa() {
         .then(response => {
           setDataPedido(response.data.content)
           setTotalElements(response.data.totalElements)
+          let valor: number = 0
+          for (let i = 0; i < response.data.content.length; i = i + 1) {
+            valor += response.data.content[i].valorTotal
+          }
+          setTotalVendas(valor)
         })
         .catch(() => {
           ErrorNotification({ message: 'Error ao buscar pedidos' })
@@ -254,10 +260,10 @@ export default function RegistroCaixa() {
             </Card>
             <Card shadow="sm" padding="lg" radius="md" withBorder>
               <Flex direction={'column'} p={'1rem'} align="center">
-                <Text>Valor de venda</Text>
+                <Text>Total de vendas</Text>
                 <Text>
-                  {data?.valorFechamentoCaixa
-                    ? data?.valorFechamentoCaixa?.toLocaleString('pt-BR', {
+                  {totalVendas
+                    ? totalVendas.toLocaleString('pt-BR', {
                         style: 'currency',
                         currency: 'BRL',
                       })
