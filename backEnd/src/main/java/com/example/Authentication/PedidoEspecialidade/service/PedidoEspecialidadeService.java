@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -23,23 +24,20 @@ public class PedidoEspecialidadeService {
     private final EspecialidadeService especialidadeService;
     private final AdicionalEspecialidadeService adicionalEspecialidadeService;
 
-    private void create(PedidoEspecialidadeDTO val, Pedido pedido) {
-        Especialidade especialidade = especialidadeService.findById(val.getEspecialidade().getId());
+    public void create(PedidoEspecialidadeDTO val, Pedido pedido) {
+        val.getEspecialidade().getEspecialidadeMercadoria().forEach(obj -> {
+            mercadoriaService.reduzSaldo(mercadoriaService.findById(obj.getMercadoria().getId()), obj.getQuantidade());
+        });
         PedidoEspecialidade pedidoEspecialidade = new PedidoEspecialidade();
-        pedidoEspecialidade.setEspecialidade(especialidade);
+        pedidoEspecialidade.setEspecialidade(especialidadeService.findById(val.getEspecialidade().getId()));
         pedidoEspecialidade.setPedido(pedido);
         pedidoEspecialidade.setQuantidade(val.getQuantidade());
         pedidoEspecialidade.setValorPedidoEspecialidade(val.getValorPedidoEspecialidade());
         pedidoEspecialidadeRepository.save(pedidoEspecialidade);
-        if (val.getAdicionalEspecialidades().size() > 0) {
-            adicionalEspecialidadeService.createList(pedidoEspecialidade, val.getAdicionalEspecialidades());
+        if (Objects.nonNull(val.getAdicionalEspecialidades()) && !val.getAdicionalEspecialidades().isEmpty()) {
+            val.getAdicionalEspecialidades().forEach(obj -> {
+                adicionalEspecialidadeService.create(pedidoEspecialidade, obj);
+            });
         }
     }
-    public void createList(List<PedidoEspecialidadeDTO> pedidoEspecialidade, Pedido pedido) {
-        pedidoEspecialidade.forEach(val -> {
-            this.create(val, pedido);
-        });
-    }
-
-
 }

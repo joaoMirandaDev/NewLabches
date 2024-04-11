@@ -1,6 +1,7 @@
 package com.example.Authentication.Pedido.model;
 
 import com.example.Authentication.Caixa.model.Caixa;
+import com.example.Authentication.FormaPagamento.model.FormaPagamento;
 import com.example.Authentication.PedidoEspecialidade.model.PedidoEspecialidade;
 import com.example.Authentication.PedidoMercadoria.model.PedidoMercadoria;
 import lombok.AllArgsConstructor;
@@ -32,6 +33,9 @@ public class Pedido {
     @ManyToOne
     @JoinColumn(name = "id_caixa", referencedColumnName = "id")
     private Caixa caixa;
+    @OneToOne
+    @JoinColumn(name = "id_forma_pagamento", referencedColumnName = "id")
+    private FormaPagamento formaPagamento;
     @OneToMany(mappedBy = "pedido")
     private List<PedidoMercadoria> pedidoMercadoria;
     @OneToMany(mappedBy = "pedido")

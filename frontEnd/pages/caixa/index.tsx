@@ -1,8 +1,21 @@
 import SearchBar from '@components/common/filtro/filtro-sem-remocao-caracter'
 import PaginationTable from '@components/common/tabela/paginationTable'
-import { Box, Button, Flex, Group, Text, Tooltip } from '@mantine/core'
+import {
+  Box,
+  Button,
+  Flex,
+  Group,
+  Modal,
+  NumberInput,
+  Text,
+  Tooltip,
+} from '@mantine/core'
 import { useTranslate } from '@refinedev/core'
-import { IconAlertTriangle, IconCircleCheck, IconUserPlus } from '@tabler/icons'
+import {
+  IconAlertTriangle,
+  IconChecklist,
+  IconCircleCheck,
+} from '@tabler/icons'
 import {
   MRT_ColumnDef,
   MRT_PaginationState,
@@ -10,19 +23,28 @@ import {
 } from 'mantine-react-table'
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { useRouter } from 'next/router'
 import api from 'src/utils/Api'
 import { useEffect, useMemo, useState } from 'react'
 import ISearch from 'src/interfaces/search'
 import { PAGE_INDEX, PAGE_SIZE } from 'src/utils/Constants'
-import { CAIXA_PAGE } from 'src/utils/Routes'
+import { CAIXA_OPEN, CAIXA_PAGE } from 'src/utils/Routes'
 import ICaixa from 'src/interfaces/Caixa'
-import { IconInfoSquareRounded } from '@tabler/icons-react'
-import Cookies from 'js-cookie'
+import {
+  IconCircleXFilled,
+  IconDatabasePlus,
+  IconInfoSquareRounded,
+} from '@tabler/icons-react'
+import { useDisclosure } from '@mantine/hooks'
+import { useForm, zodResolver } from '@mantine/form'
+import { validaAberturaCaixa } from './validation/schema'
+import { useRouter } from 'next/router'
+import { ErrorNotification } from '@components/common'
 
 export default function Caixa() {
   const t = useTranslate()
   const navigate = useRouter()
+  const [opened, { open, close }] = useDisclosure(false)
+  const [caixaAberto, setCaixaAbero] = useState<boolean>(true)
   const [sorting, setSorting] = useState<MRT_SortingState>([
     { id: 'numeroCaixa', desc: true },
   ])
@@ -39,6 +61,14 @@ export default function Caixa() {
     tamanhoPagina: 10,
     id: 'numero_caixa',
     desc: true,
+  })
+  const form = useForm<{
+    valorAberturaCaixa: number
+  }>({
+    initialValues: {
+      valorAberturaCaixa: 0,
+    },
+    validate: zodResolver(validaAberturaCaixa()),
   })
   useEffect(() => {
     if (
@@ -62,8 +92,37 @@ export default function Caixa() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sorting])
 
+  const resetForm = () => {
+    const dados = {
+      valorAberturaCaixa: 0,
+    }
+    form.setValues(dados)
+  }
+
+  const handleSubmit = () => {
+    if (form.isValid()) {
+      api
+        .post(CAIXA_OPEN, form.values)
+        .then(response => {
+          navigate.push(`caixa/visualizar/${response.data.id}`)
+          resetForm()
+        })
+        .catch(() => {
+          ErrorNotification({ message: 'Erro ao abrir novo caixa' })
+        })
+    }
+  }
+
   const findPageCaixa = async () => {
     const value = await api.post(CAIXA_PAGE, filtro)
+    const caixa = value.data.content.every((val: { caixaAberto: number }) => {
+      if (val.caixaAberto == 0) {
+        return true
+      }
+      return false
+    })
+    console.log(caixa)
+    setCaixaAbero(caixa)
     setData(value.data.content)
     setTotalElements(value.data.totalElements)
   }
@@ -77,10 +136,12 @@ export default function Caixa() {
     setFiltro(prevData => ({ ...prevData, search: value, pagina: 0 }))
   }
 
-  const validatePermissionRole = () => {
-    if (Cookies.get('role') == 'CAIXA') {
-      return true
-    }
+  const openModalCaixa = () => {
+    open()
+  }
+
+  const closeModalCaixa = () => {
+    close()
   }
 
   const columns = useMemo<MRT_ColumnDef<ICaixa>[]>(
@@ -249,9 +310,9 @@ export default function Caixa() {
           </Tooltip>
         </Flex>
         <Button
-          leftIcon={<IconUserPlus size={16} />}
-          disabled={validatePermissionRole()}
-          onClick={() => navigate.push('fornecedor/cadastro')}
+          leftIcon={<IconChecklist size={18} />}
+          disabled={caixaAberto}
+          onClick={() => openModalCaixa()}
         >
           Abrir novo caixa
         </Button>
@@ -285,6 +346,38 @@ export default function Caixa() {
           <Text size={'sm'}> Caixa fechado </Text>
         </Group>
       </Group>
+      <Modal opened={opened} onClose={close} title="Novo caixa">
+        <form onSubmit={form.onSubmit(handleSubmit)}>
+          <NumberInput
+            {...form.getInputProps('valorAberturaCaixa')}
+            mb={'1rem'}
+            precision={2}
+            decimalSeparator=","
+            thousandsSeparator="."
+            defaultValue={form.values.valorAberturaCaixa}
+            placeholder={'Insira o valor de abertura do caixa'}
+            label={'Valor de abertura do caixa'}
+            withAsterisk
+            hideControls
+            onChange={value =>
+              form.setFieldValue('valorAberturaCaixa', Number(value))
+            }
+            required
+          />
+          <Flex align="center" justify={'space-between'}>
+            <Button
+              color="red"
+              leftIcon={<IconCircleXFilled />}
+              onClick={() => closeModalCaixa()}
+            >
+              Cancelar
+            </Button>
+            <Button leftIcon={<IconDatabasePlus />} type="submit" color="green">
+              Salvar
+            </Button>
+          </Flex>
+        </form>
+      </Modal>
     </>
   )
 }

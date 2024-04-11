@@ -16,9 +16,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -48,6 +50,7 @@ public class PedidoService implements Pagination {
         return pedidos.map(PedidoDTO::new);
     }
 
+    @Transactional
     public void addPedido(PedidoDTO pedidoDTO, Integer id) {
         Pedido pedido = new Pedido();
         pedido.setCaixa(caixaService.findById(id));
@@ -56,7 +59,15 @@ public class PedidoService implements Pagination {
         pedido.setMesa(pedidoDTO.getMesa());
         pedido.setAtivo(0);
         pedidoRepository.save(pedido);
-        pedidoMercadoriaService.createList(pedidoDTO.getPedidoMercadoria(), pedido);
-        pedidoEspecialidadeService.createList(pedidoDTO.getPedidoEspecialidade(), pedido);
+        if (Objects.nonNull(pedidoDTO.getPedidoMercadoria()) && !pedidoDTO.getPedidoMercadoria().isEmpty()) {
+            pedidoDTO.getPedidoMercadoria().forEach(obj -> {
+                pedidoMercadoriaService.create(obj, pedido);
+            });
+        }
+        if (Objects.nonNull(pedidoDTO.getPedidoEspecialidade()) && !pedidoDTO.getPedidoEspecialidade().isEmpty()) {
+            pedidoDTO.getPedidoEspecialidade().forEach(obj -> {
+                pedidoEspecialidadeService.create(obj, pedido);
+            });
+        }
     }
 }

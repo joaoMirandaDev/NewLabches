@@ -1,12 +1,15 @@
 package com.example.Authentication.Pedido.controller;
 
-import com.example.Authentication.Compras.DTO.ComprasDto;
 import com.example.Authentication.Pedido.DTO.PedidoDTO;
 import com.example.Authentication.Pedido.service.PedidoService;
+import com.example.Authentication.Utils.Interfaces.LocaleInteface;
 import com.example.Authentication.Utils.filtro.Filtro;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class PedidoController {
 
+    private final MessageSource messageSource;
     private final PedidoService pedidoService;
 
     @PostMapping(value = "/list/{id}", produces = "application/json")
@@ -23,7 +27,9 @@ public class PedidoController {
     }
 
     @PostMapping(value = "/addPedido/{id}", produces = "application/json")
-    public void addCompra(@RequestBody PedidoDTO pedidoDTO, @PathVariable Integer id) {
+    public ResponseEntity<String> addCompra(@RequestBody PedidoDTO pedidoDTO, @PathVariable Integer id) {
         pedidoService.addPedido(pedidoDTO, id);
+        return ResponseEntity.status(HttpStatus.CREATED).body(messageSource.getMessage("success.created",
+                null, LocaleInteface.BR));
     }
 }

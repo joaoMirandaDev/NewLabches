@@ -19,7 +19,7 @@ public class PedidoMercadoriaService {
     private final PedidoMercadoriaRepository pedidoMercadoriaRepository;
     private final MercadoriaService mercadoriaService;
 
-    private void create(PedidoMercadoriaDTO pedidoMercadoria, Pedido pedido) {
+    public void create(PedidoMercadoriaDTO pedidoMercadoria, Pedido pedido) {
         Mercadoria mercadoria = mercadoriaService.findById(pedidoMercadoria.getMercadoria().getId());
         PedidoMercadoria newPedidoMercadoria = new PedidoMercadoria();
         newPedidoMercadoria.setPedido(pedido);
@@ -27,10 +27,5 @@ public class PedidoMercadoriaService {
         newPedidoMercadoria.setQuantidade(pedidoMercadoria.getQuantidade());
         mercadoriaService.reduzSaldo(mercadoria, pedidoMercadoria.getQuantidade());
         pedidoMercadoriaRepository.save(newPedidoMercadoria);
-    }
-    public void createList(List<PedidoMercadoriaDTO> pedidoMercadoria, Pedido pedido) {
-        pedidoMercadoria.forEach(val -> {
-            this.create(val, pedido);
-        });
     }
 }

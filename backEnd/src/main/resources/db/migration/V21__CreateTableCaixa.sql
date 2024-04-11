@@ -17,7 +17,7 @@ CREATE TABLE pedido (
   ativo INTEGER,
   valor_total DOUBLE,
   id_caixa INTEGER NOT NULL,
-  id_forma_pagamento SMALLINT NOT NULL,
+  id_forma_pagamento SMALLINT,
   FOREIGN KEY (id_caixa) REFERENCES caixa(id) ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (id_forma_pagamento) REFERENCES forma_pagamento(id) ON UPDATE CASCADE ON DELETE CASCADE,
   PRIMARY KEY (id)
@@ -43,7 +43,7 @@ CREATE TABLE pedidos_especialidade (
   PRIMARY KEY (id)
 );
 
-CREATE TABLE adicional_especialidade (
+CREATE TABLE adicional_pedido_especialidade (
   id SMALLINT NOT NULL AUTO_INCREMENT,
   id_mercadoria SMALLINT NOT NULL,
   id_pedidos_especialidade SMALLINT NOT NULL,

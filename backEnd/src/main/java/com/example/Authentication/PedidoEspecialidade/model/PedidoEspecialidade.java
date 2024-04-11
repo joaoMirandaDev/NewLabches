@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "pedido_especialidade")
+@Table(name = "pedidos_especialidade")
 @AllArgsConstructor
 @NoArgsConstructor
 public class PedidoEspecialidade {

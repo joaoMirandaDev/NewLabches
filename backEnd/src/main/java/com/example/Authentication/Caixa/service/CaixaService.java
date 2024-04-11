@@ -69,7 +69,6 @@ public class CaixaService implements Pagination {
     }
 
     public CaixaDTO findByIdDto(Integer id) {
-
-        return new CaixaDTO(this. findById(id));
+        return new CaixaDTO(this.findById(id));
     }
 }

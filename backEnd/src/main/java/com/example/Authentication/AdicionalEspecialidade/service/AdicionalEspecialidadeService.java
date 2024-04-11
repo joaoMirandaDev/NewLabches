@@ -17,7 +17,7 @@ public class AdicionalEspecialidadeService {
 
     private final AdicionalEspecialidadeRepository adicionalEspecialidadeRepository;
     private final MercadoriaService mercadoriaService;
-    private void create(PedidoEspecialidade pedidoEspecialidade, AdicionalEspecialidadeDTO val) {
+    public void create(PedidoEspecialidade pedidoEspecialidade, AdicionalEspecialidadeDTO val) {
         Mercadoria mercadoria = mercadoriaService.findById(val.getMercadoria().getId());
         AdicionalEspecialidade adicionalEspecialidade = new AdicionalEspecialidade();
         adicionalEspecialidade.setMercadoria(mercadoria);
@@ -26,13 +26,5 @@ public class AdicionalEspecialidadeService {
         adicionalEspecialidadeRepository.save(adicionalEspecialidade);
         mercadoriaService.reduzSaldo(mercadoria, val.getQuantidade());
     }
-
-    public void createList(PedidoEspecialidade pedidoEspecialidade,
-                           List<AdicionalEspecialidadeDTO> adicionalEspecialidades) {
-        adicionalEspecialidades.forEach(val -> {
-            this.create(pedidoEspecialidade, val);
-        });
-    }
-
 
 }
