@@ -249,10 +249,8 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
                 resources={[
                   {
                     name: 'caixa',
-                    show: '/caixa/visualizar/:id',
                     list: '/caixa',
-                    create: '/caixa/cadastro',
-                    edit: '/caixa/editar/:id',
+                    edit: '/caixa/registro/:id',
                     meta: {
                       canDelete: false,
                       label: 'Caixa',

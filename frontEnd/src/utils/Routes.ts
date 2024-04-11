@@ -40,6 +40,9 @@ export const PRODUTO_ADD: string = 'api/produtos/adicionar'
 export const PRODUTO_DELETE_BY_ID: string = '/api/produtos/delete/'
 export const PRODUTO_EDIT: string = 'api/produtos/editar'
 
+/* Rotas pedido */
+export const PEDIDO_PAGE: string = '/api/pedido/list/'
+
 /* Rotas unidade medida */
 export const FIND_ALL_UNIDADE_MEDIDA: string = 'api/unidadeMedida/findAll'
 

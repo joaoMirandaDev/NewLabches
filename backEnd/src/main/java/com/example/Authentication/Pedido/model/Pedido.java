@@ -4,6 +4,8 @@ import com.example.Authentication.Caixa.model.Caixa;
 import com.example.Authentication.FormaPagamento.model.FormaPagamento;
 import com.example.Authentication.PedidoEspecialidade.model.PedidoEspecialidade;
 import com.example.Authentication.PedidoMercadoria.model.PedidoMercadoria;
+import com.example.Authentication.TipoPedido.DTO.TipoPedidoDTO;
+import com.example.Authentication.TipoPedido.model.TipoPedido;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,7 +31,6 @@ public class Pedido {
     private Integer mesa;
     @Column(name = "valor_total")
     private Double valorTotal;
-    private Integer ativo;
     @ManyToOne
     @JoinColumn(name = "id_caixa", referencedColumnName = "id")
     private Caixa caixa;
@@ -40,5 +41,9 @@ public class Pedido {
     private List<PedidoMercadoria> pedidoMercadoria;
     @OneToMany(mappedBy = "pedido")
     private List<PedidoEspecialidade> pedidoEspecialidades;
-
+    private String numeroPedido;
+    private Integer pago;
+    @OneToOne
+    @JoinColumn(name = "id_tipo_pedido", referencedColumnName = "id")
+    private TipoPedido tipoPedido;
 }

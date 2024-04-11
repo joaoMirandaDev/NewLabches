@@ -10,6 +10,7 @@ import com.example.Authentication.Pedido.model.Pedido;
 import com.example.Authentication.Pedido.repository.PedidoRepository;
 import com.example.Authentication.PedidoEspecialidade.service.PedidoEspecialidadeService;
 import com.example.Authentication.PedidoMercadoria.service.PedidoMercadoriaService;
+import com.example.Authentication.TipoPedido.service.TipoPedidoService;
 import com.example.Authentication.Utils.filtro.Filtro;
 import com.example.Authentication.Utils.pagination.Pagination;
 import lombok.RequiredArgsConstructor;
@@ -29,14 +30,15 @@ public class PedidoService implements Pagination {
     private static final Map<String, String> CAMPO_ORDENACAO = new HashMap<>();
     private final CaixaService caixaService;
     private final PedidoMercadoriaService pedidoMercadoriaService;
+    private final TipoPedidoService tipoPedidoService;
     private final PedidoEspecialidadeService pedidoEspecialidadeService;
     private final PedidoRepository pedidoRepository;
     static {
         CAMPO_ORDENACAO.put("nomeCliente", "nome_cliente");
         CAMPO_ORDENACAO.put("mesa", "mesa");
         CAMPO_ORDENACAO.put("numeroPedido", "numero_pedido");
-        CAMPO_ORDENACAO.put("formaPagamento", "id_forma_pagamento");
         CAMPO_ORDENACAO.put("valorTotal", "valor_total");
+        CAMPO_ORDENACAO.put("tipoPedido.name", "tp.name");
     }
 
     @Override
@@ -56,8 +58,8 @@ public class PedidoService implements Pagination {
         pedido.setCaixa(caixaService.findById(id));
         pedido.setNomeCliente(pedidoDTO.getNomeCliente());
         pedido.setObservacao(pedidoDTO.getObservacao());
+        pedido.setTipoPedido(tipoPedidoService.findById(pedidoDTO.getTipoPedido().getId()));
         pedido.setMesa(pedidoDTO.getMesa());
-        pedido.setAtivo(0);
         pedidoRepository.save(pedido);
         if (Objects.nonNull(pedidoDTO.getPedidoMercadoria()) && !pedidoDTO.getPedidoMercadoria().isEmpty()) {
             pedidoDTO.getPedidoMercadoria().forEach(obj -> {

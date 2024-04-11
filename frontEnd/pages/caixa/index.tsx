@@ -1,6 +1,7 @@
 import SearchBar from '@components/common/filtro/filtro-sem-remocao-caracter'
 import PaginationTable from '@components/common/tabela/paginationTable'
 import {
+  ActionIcon,
   Box,
   Button,
   Flex,
@@ -15,10 +16,12 @@ import {
   IconAlertTriangle,
   IconChecklist,
   IconCircleCheck,
+  IconEdit,
 } from '@tabler/icons'
 import {
   MRT_ColumnDef,
   MRT_PaginationState,
+  MRT_Row,
   MRT_SortingState,
 } from 'mantine-react-table'
 import { GetServerSideProps } from 'next'
@@ -44,7 +47,7 @@ export default function Caixa() {
   const t = useTranslate()
   const navigate = useRouter()
   const [opened, { open, close }] = useDisclosure(false)
-  const [caixaAberto, setCaixaAbero] = useState<boolean>(true)
+  const [caixaAberto, setCaixaAberto] = useState<boolean>(false)
   const [sorting, setSorting] = useState<MRT_SortingState>([
     { id: 'numeroCaixa', desc: true },
   ])
@@ -104,7 +107,7 @@ export default function Caixa() {
       api
         .post(CAIXA_OPEN, form.values)
         .then(response => {
-          navigate.push(`caixa/visualizar/${response.data.id}`)
+          navigate.push(`/caixa/registro/${response.data.id}`)
           resetForm()
         })
         .catch(() => {
@@ -116,13 +119,12 @@ export default function Caixa() {
   const findPageCaixa = async () => {
     const value = await api.post(CAIXA_PAGE, filtro)
     const caixa = value.data.content.every((val: { caixaAberto: number }) => {
-      if (val.caixaAberto == 0) {
+      if (val.caixaAberto == 1) {
         return true
       }
       return false
     })
-    console.log(caixa)
-    setCaixaAbero(caixa)
+    setCaixaAberto(caixa)
     setData(value.data.content)
     setTotalElements(value.data.totalElements)
   }
@@ -287,6 +289,25 @@ export default function Caixa() {
     []
   )
 
+  const editar = (id: number) => {
+    navigate.push(`/caixa/registro/${id}`)
+  }
+
+  const rowActions = ({ row }: { row: MRT_Row<ICaixa> }) => (
+    <Flex>
+      <Tooltip label="Editar">
+        <ActionIcon
+          size="sm"
+          variant="transparent"
+          aria-label="Settings"
+          onClick={() => editar(row.original.id!)}
+        >
+          <IconEdit />
+        </ActionIcon>
+      </Tooltip>
+    </Flex>
+  )
+
   return (
     <>
       <SearchBar
@@ -311,7 +332,7 @@ export default function Caixa() {
         </Flex>
         <Button
           leftIcon={<IconChecklist size={18} />}
-          disabled={caixaAberto}
+          disabled={!caixaAberto}
           onClick={() => openModalCaixa()}
         >
           Abrir novo caixa
@@ -320,7 +341,7 @@ export default function Caixa() {
       <PaginationTable
         setSorting={setSorting}
         columns={columns}
-        // rowActions={rowActions}
+        rowActions={rowActions}
         setPagination={setPagination}
         enableRowActions
         enableSorting
