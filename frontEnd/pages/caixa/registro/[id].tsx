@@ -15,7 +15,11 @@ import IPedido from 'src/interfaces/pedido'
 import ISearch from 'src/interfaces/search'
 import api from 'src/utils/Api'
 import { PAGE_INDEX, PAGE_SIZE } from 'src/utils/Constants'
-import { CAIXA_BY_ID, PEDIDO_PAGE } from 'src/utils/Routes'
+import {
+  CAIXA_BY_ID,
+  GET_VALOR_TOTAL_BY_CAIXA,
+  PEDIDO_PAGE,
+} from 'src/utils/Routes'
 export default function RegistroCaixa() {
   const [data, setData] = useState<ICaixa>()
   const [dataPedido, setDataPedido] = useState<IPedido[]>([])
@@ -45,9 +49,9 @@ export default function RegistroCaixa() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sorting])
   useEffect(() => {
-    findAllPagePedido()
+    caixaById()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id])
+  }, [])
   useEffect(() => {
     if (
       pagination.pageIndex !== filtro.pagina ||
@@ -62,27 +66,34 @@ export default function RegistroCaixa() {
     }
     findAllPagePedido()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pagination, filtro, id])
+  }, [pagination, filtro])
+  const caixaById = async () => {
+    await api
+      .get(CAIXA_BY_ID + id)
+      .then(response => {
+        setData(response.data)
+      })
+      .catch(() => {
+        ErrorNotification({ message: 'Error ao buscar caixa' })
+      })
+    await api
+      .get(GET_VALOR_TOTAL_BY_CAIXA + id)
+      .then(response => {
+        setTotalVendas(response.data)
+      })
+      .catch(() => {
+        ErrorNotification({
+          message: 'Error ao buscar valor total de vendas',
+        })
+      })
+  }
   const findAllPagePedido = async () => {
     if (id && id != undefined) {
-      await api
-        .get(CAIXA_BY_ID + id)
-        .then(response => {
-          setData(response.data)
-        })
-        .catch(() => {
-          ErrorNotification({ message: 'Error ao buscar caixa' })
-        })
       await api
         .post(PEDIDO_PAGE + id, filtro)
         .then(response => {
           setDataPedido(response.data.content)
           setTotalElements(response.data.totalElements)
-          let valor: number = 0
-          for (let i = 0; i < response.data.content.length; i = i + 1) {
-            valor += response.data.content[i].valorTotal
-          }
-          setTotalVendas(valor)
         })
         .catch(() => {
           ErrorNotification({ message: 'Error ao buscar pedidos' })
@@ -235,19 +246,19 @@ export default function RegistroCaixa() {
       <Card shadow="sm" radius="md" withBorder>
         <Card.Section>
           <Flex justify={'space-around'} mt={'1rem'}>
-            <Card shadow="sm" padding="lg" radius="md" withBorder>
+            <Card shadow="sm" padding="lg" m={'0.5rem'} radius="md" withBorder>
               <Flex direction={'column'} p={'1rem'} align="center">
                 <Text>Número do caixa</Text>
                 <Text>{data?.numeroCaixa}</Text>
               </Flex>
             </Card>
-            <Card shadow="sm" padding="lg" radius="md" withBorder>
+            <Card shadow="sm" padding="lg" m={'0.5rem'} radius="md" withBorder>
               <Flex direction={'column'} p={'1rem'} align="center">
                 <Text>Data de abertura</Text>
                 <Text>{data?.dataAbertura}</Text>
               </Flex>
             </Card>
-            <Card shadow="sm" padding="lg" radius="md" withBorder>
+            <Card shadow="sm" padding="lg" m={'0.5rem'} radius="md" withBorder>
               <Flex direction={'column'} p={'1rem'} align="center">
                 <Text>Valor de abertura</Text>
                 <Text>
@@ -258,7 +269,7 @@ export default function RegistroCaixa() {
                 </Text>
               </Flex>
             </Card>
-            <Card shadow="sm" padding="lg" radius="md" withBorder>
+            <Card shadow="sm" padding="lg" m={'0.5rem'} radius="md" withBorder>
               <Flex direction={'column'} p={'1rem'} align="center">
                 <Text>Total de vendas</Text>
                 <Text>

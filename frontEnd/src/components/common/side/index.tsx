@@ -259,7 +259,7 @@ export const Menu: React.FC<RefineLayoutSiderProps> = ({ render, meta }) => {
         >
           <Navbar.Section>
             <Flex align={'center'} m={'1rem'}>
-              <Avatar alt={name} radius="xl" color="orange" />
+              <Avatar alt={name} radius="xl" color="blue" />
               <Title order={4} ml={'0.5rem'}>
                 {name}
               </Title>

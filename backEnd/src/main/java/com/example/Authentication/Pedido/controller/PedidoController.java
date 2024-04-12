@@ -32,4 +32,9 @@ public class PedidoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(messageSource.getMessage("success.created",
                 null, LocaleInteface.BR));
     }
+
+    @GetMapping(value = "/getValorTotal/{id}", produces = "application/json")
+    public Double getValorTotal(@PathVariable Integer id) {
+      return pedidoService.getValorTotalByCaixa(id);
+    }
 }

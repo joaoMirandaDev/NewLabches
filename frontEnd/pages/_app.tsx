@@ -169,7 +169,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             //@ts-ignore
             theme={{
-              ...RefineThemes.Yellow,
+              ...RefineThemes.Blue,
               colorScheme: colorScheme,
               fontFamily: "'Plus Jakarta Sans', sans-serif",
               fontFamilyMonospace: 'Monaco, Courier, monospace',

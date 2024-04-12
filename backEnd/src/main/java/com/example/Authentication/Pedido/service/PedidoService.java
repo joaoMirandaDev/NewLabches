@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -50,6 +51,15 @@ public class PedidoService implements Pagination {
         Pageable pageable = this.createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "numero_pedido");
         Page<Pedido> pedidos = pedidoRepository.findAll(pageable ,id, filtro.getSearch());
         return pedidos.map(PedidoDTO::new);
+    }
+
+    public Double getValorTotalByCaixa(Integer id) {
+        List<Pedido> pedidos = pedidoRepository.findByCaixaId(id);
+        Double valor = 0.0;
+        for (Pedido obj : pedidos) {
+            valor += obj.getValorTotal();
+        }
+        return valor;
     }
 
     @Transactional

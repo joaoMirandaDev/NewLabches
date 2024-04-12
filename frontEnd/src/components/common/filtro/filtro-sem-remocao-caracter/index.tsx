@@ -90,7 +90,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
           variant="filled"
           color="red"
           ml={'10px'}
-          radius="md"
           onClick={() => handleFilter('')}
         >
           {icone && (

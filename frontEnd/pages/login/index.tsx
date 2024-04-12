@@ -38,8 +38,7 @@ export default function Login() {
         <Card radius="md" shadow="sm" withBorder w={450}>
           <Card.Section px={80} py={30}>
             <Text
-              variant="gradient"
-              gradient={{ from: 'yellow', to: 'orange', deg: 45 }}
+              color="blue"
               sx={{ fontFamily: 'Greycliff CF, sans-serif' }}
               ta="center"
               fz="xl"

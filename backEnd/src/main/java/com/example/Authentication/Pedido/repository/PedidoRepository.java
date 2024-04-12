@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
 
     @Query(nativeQuery = true, value = "SELECT * FROM pedido p INNER JOIN tipo_pedido tp ON p.id_tipo_pedido = tp.id " +
@@ -16,4 +18,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
             " OR p.id_forma_pagamento LIKE CONCAT('%', :search, '%') " +
             " OR p.valor_total = :search)")
     Page<Pedido> findAll(Pageable pageable, Integer id, String search);
+
+
+    List<Pedido> findByCaixaId(Integer id);
 }

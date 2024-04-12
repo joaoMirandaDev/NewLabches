@@ -42,6 +42,7 @@ export const PRODUTO_EDIT: string = 'api/produtos/editar'
 
 /* Rotas pedido */
 export const PEDIDO_PAGE: string = '/api/pedido/list/'
+export const GET_VALOR_TOTAL_BY_CAIXA: string = '/api/pedido/getValorTotal/'
 
 /* Rotas unidade medida */
 export const FIND_ALL_UNIDADE_MEDIDA: string = 'api/unidadeMedida/findAll'
