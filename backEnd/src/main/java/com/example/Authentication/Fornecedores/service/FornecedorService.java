@@ -89,13 +89,9 @@ public class FornecedorService implements Pagination {
         return ResponseEntity.ok(messageSource.getMessage("success.delete", null, locale));
     }
 
-    @Override
-    public Pageable createPageableFromFiltro(Filtro filtro, Map<String, String> CAMPO_MAP, String OrderInitial) {
-        return Pagination.super.createPageableFromFiltro(filtro, CAMPO_MAP, OrderInitial);
-    }
 
     public Page<FornecedorListagemDto> findAllfornecedor(Filtro filtro) {
-        Pageable pageable = this.createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "nome_razao_social");
+        Pageable pageable = Pagination.createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "nome_razao_social");
         Page<Fornecedor> fornecedor =  fornecedorRepository.findAll(pageable, filtro.getSearch());
         return fornecedor.map(FornecedorListagemDto::new);
     }

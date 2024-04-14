@@ -187,13 +187,15 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
 
   const objetoModal = (event: IEspecialidadeMercadoria) => {
     const index = data.findIndex(
-      val => val.mercadoria?.nome == event.mercadoria?.nome
+      val => val.mercadoria?.nome === event.mercadoria?.nome
     )
-    if (index != -1) {
-      data.splice(index, 1)
+    if (index !== -1) {
+      data[index] = event
+    } else {
+      data.push(event)
     }
+    setData([...data])
     setItemSelecionado(null)
-    setData(prev => [...prev, event])
   }
 
   const handleClose = () => {

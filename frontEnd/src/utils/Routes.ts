@@ -50,6 +50,9 @@ export const FIND_ALL_UNIDADE_MEDIDA: string = 'api/unidadeMedida/findAll'
 /* Rotas tipo */
 export const FIND_ALL_TIPO: string = 'api/tipo'
 
+/* Rotas tipoPedido */
+export const FIND_ALL_TIPO_PEDIDO: string = 'api/tipoPedido'
+
 /* Rotas usuario */
 export const FIND_BY_USUARIO_LOGIN: string = '/api/usuarios/findByLogin/'
 export const VALIDATOR_USUARIO: string = '/api/usuarios/validatorUser/'

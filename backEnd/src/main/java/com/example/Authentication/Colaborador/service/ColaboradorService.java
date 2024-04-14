@@ -28,7 +28,7 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-public class ColaboradorService implements Pagination {
+public class ColaboradorService {
 
 
     private final UsuarioRepository usuarioRepository;
@@ -88,13 +88,8 @@ public class ColaboradorService implements Pagination {
         return ResponseEntity.ok(messageSource.getMessage("success.delete", null, locale));
     }
 
-    @Override
-    public Pageable createPageableFromFiltro(Filtro filtro, Map<String, String> CAMPO_MAP, String OrderInitial) {
-        return Pagination.super.createPageableFromFiltro(filtro, CAMPO_MAP, OrderInitial);
-    }
-
     public Page<Colaborador> findAllPessoa(Filtro filtro) {
-        Pageable pageable = this.createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "nome");
+        Pageable pageable = Pagination.createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "nome");
         return colaboradorRepository.findAll(pageable, filtro.getSearch());
     }
 

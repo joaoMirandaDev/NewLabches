@@ -21,7 +21,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class CaixaService implements Pagination {
+public class CaixaService {
 
     private final CaixaRepository caixaRepository;
     private final MessageSource messageSource;
@@ -34,13 +34,8 @@ public class CaixaService implements Pagination {
         CAMPO_ORDENACAO.put("valorFechamentoCaixa", "valor_fechamento_caixa");
     }
 
-    @Override
-    public Pageable createPageableFromFiltro(Filtro filtro, Map<String, String> CAMPO_MAP, String OrderInitial) {
-        return Pagination.super.createPageableFromFiltro(filtro, CAMPO_MAP, OrderInitial);
-    }
-
     public Page<CaixaDTO> findAllByPage(Filtro filtro) {
-        Pageable pageable = this.createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "numero_caixa");
+        Pageable pageable = Pagination.createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "numero_caixa");
         Page<Caixa> caixaPage = caixaRepository.findAll(pageable, filtro.getSearch());
         return caixaPage.map(CaixaDTO::new);
     }

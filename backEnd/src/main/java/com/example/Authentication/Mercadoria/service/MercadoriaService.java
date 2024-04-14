@@ -110,13 +110,9 @@ public class MercadoriaService implements Pagination {
         return valorQuantidade;
     }
 
-    @Override
-    public Pageable createPageableFromFiltro(Filtro filtro, Map<String, String> CAMPO_MAP, String OrderInitial) {
-        return Pagination.super.createPageableFromFiltro(filtro, CAMPO_MAP, OrderInitial);
-    }
 
     public Page<Mercadoria> findAllByPage(Filtro filtro) {
-        Pageable pageable = this.createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "nome");
+        Pageable pageable = Pagination.createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "nome");
         return mercadoriaRepository.findAll(pageable, filtro.getSearch());
     }
 

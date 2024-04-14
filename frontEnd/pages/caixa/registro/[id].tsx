@@ -1,7 +1,9 @@
 import { ErrorNotification } from '@components/common'
 import SearchBar from '@components/common/filtro/filtro-sem-remocao-caracter'
 import PaginationTable from '@components/common/tabela/paginationTable'
+import DrawerPedido from '@components/pages/caixa/modal/drawer'
 import { Box, Button, Card, Divider, Flex, Space, Text } from '@mantine/core'
+import { useDisclosure } from '@mantine/hooks'
 import { IconAlertTriangle, IconCircleCheck, IconEdit } from '@tabler/icons'
 import {
   MRT_ColumnDef,
@@ -24,6 +26,7 @@ export default function RegistroCaixa() {
   const [data, setData] = useState<ICaixa>()
   const [dataPedido, setDataPedido] = useState<IPedido[]>([])
   const [totalElements, setTotalElements] = useState<number>(0)
+  const [opened, { open, close }] = useDisclosure(false)
   const [totalVendas, setTotalVendas] = useState<number>(0)
   const router = useRouter()
   const [resetPesquisa, setResetPesquisa] = useState<boolean>(false)
@@ -100,6 +103,9 @@ export default function RegistroCaixa() {
         })
     }
   }
+  const closeModal = () => {
+    close()
+  }
   const filter = (value: string) => {
     if (value.length > 0) {
       setResetPesquisa(true)
@@ -107,6 +113,9 @@ export default function RegistroCaixa() {
       setResetPesquisa(false)
     }
     setFiltro(prevData => ({ ...prevData, search: value, pagina: 0 }))
+  }
+  const openModal = () => {
+    open()
   }
   const columns = useMemo<MRT_ColumnDef<IPedido>[]>(
     () => [
@@ -301,7 +310,7 @@ export default function RegistroCaixa() {
             leftIcon={<IconEdit size={18} />}
             mb={'1rem'}
             // disabled={!caixaAberto}
-            // onClick={() => openModalCaixa()}
+            onClick={() => openModal()}
           >
             Inserir pedido
           </Button>
@@ -326,6 +335,11 @@ export default function RegistroCaixa() {
           rowCount={totalElements}
         />
       </Card>
+      <DrawerPedido
+        openModal={opened}
+        idCaixa={Number(id)}
+        closeModal={closeModal}
+      />
     </>
   )
 }

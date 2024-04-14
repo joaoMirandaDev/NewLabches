@@ -21,7 +21,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class EspecialidadeService implements Pagination {
+public class EspecialidadeService {
 
     private final MessageSource messageSource;
     Locale locale = new Locale("pt", "BR");
@@ -53,13 +53,9 @@ public class EspecialidadeService implements Pagination {
         });
     }
 
-    @Override
-    public Pageable createPageableFromFiltro(Filtro filtro, Map<String, String> CAMPO_MAP, String OrderInitial) {
-        return Pagination.super.createPageableFromFiltro(filtro, CAMPO_MAP, OrderInitial);
-    }
 
     public Page<EspecialidadeDTO> findAllProdutos(Filtro filtro) {
-        Pageable pageable = this.createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "nome");
+        Pageable pageable = Pagination.createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "nome");
         Page<Especialidade> produtosPage =  especialidadeRepository.findAll(pageable, filtro.getSearch());
         return produtosPage.map(EspecialidadeDTO::new);
     }

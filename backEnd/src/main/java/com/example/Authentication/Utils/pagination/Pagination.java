@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public interface Pagination {
-    default Pageable createPageableFromFiltro(Filtro filtro, Map<String, String> CAMPO_MAP, String OrderInitial) {
+    static Pageable createPageableFromFiltro(Filtro filtro, Map<String, String> CAMPO_MAP, String OrderInitial) {
         if (Objects.isNull(filtro.getId())) {
             filtro.setId(OrderInitial);
             filtro.setDesc(true);

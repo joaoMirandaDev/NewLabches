@@ -22,7 +22,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class ItensComprasService implements Pagination {
+public class ItensComprasService{
 
     private final MessageSource messageSource;
 
@@ -68,17 +68,12 @@ public class ItensComprasService implements Pagination {
         }
     }
 
-    @Override
-    public Pageable createPageableFromFiltro(Filtro filtro, Map<String, String> CAMPO_MAP, String OrderInitial) {
-        return Pagination.super.createPageableFromFiltro(filtro, CAMPO_MAP, OrderInitial);
-    }
-
     public Page<ItensComprasPageDTO> findAllMercadoriaComprasByIdMercadoria(Integer id, Filtro filtro) {
         if (id == null) {
             throw new NullPointerException(
                     messageSource.getMessage("error.object.isEmpty", null, LocaleInteface.BR));
         }
-        Pageable pageable = this.createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "data");
+        Pageable pageable = Pagination.createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "data");
         Page<ItensCompras> itensCompras = itensCompraRepository.findIngredienteById(id,pageable,filtro.getSearch());
         if (Objects.nonNull(itensCompras)) {
             return itensCompras.map(ItensComprasPageDTO::new);

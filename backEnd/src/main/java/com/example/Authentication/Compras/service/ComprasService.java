@@ -104,13 +104,9 @@ public class ComprasService implements Pagination {
         }
     }
 
-    @Override
-    public Pageable createPageableFromFiltro(Filtro filtro, Map<String, String> CAMPO_MAP, String OrderInitial) {
-        return Pagination.super.createPageableFromFiltro(filtro, CAMPO_MAP, OrderInitial);
-    }
 
     public Page<ComprasPageDto> findAllByPage(Filtro filtro) {
-        Pageable pageable = this.createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "data_compra");
+        Pageable pageable = Pagination.createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "data_compra");
         Page<Compras> comprasPage =  comprasRepository.findAll(pageable, filtro.getSearch());
         return comprasPage.map(ComprasPageDto::new);
     }

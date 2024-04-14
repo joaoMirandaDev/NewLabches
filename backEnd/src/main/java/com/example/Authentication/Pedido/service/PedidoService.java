@@ -26,7 +26,7 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-public class PedidoService implements Pagination {
+public class PedidoService  {
 
     private static final Map<String, String> CAMPO_ORDENACAO = new HashMap<>();
     private final CaixaService caixaService;
@@ -42,13 +42,9 @@ public class PedidoService implements Pagination {
         CAMPO_ORDENACAO.put("tipoPedido.name", "tp.name");
     }
 
-    @Override
-    public Pageable createPageableFromFiltro(Filtro filtro, Map<String, String> CAMPO_MAP, String OrderInitial) {
-        return Pagination.super.createPageableFromFiltro(filtro, CAMPO_MAP, OrderInitial);
-    }
 
     public Page<PedidoDTO> findAllPageByIdCaixa(Integer id, Filtro filtro) {
-        Pageable pageable = this.createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "numero_pedido");
+        Pageable pageable = Pagination.createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "numero_pedido");
         Page<Pedido> pedidos = pedidoRepository.findAll(pageable ,id, filtro.getSearch());
         return pedidos.map(PedidoDTO::new);
     }
