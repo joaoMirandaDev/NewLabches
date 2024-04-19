@@ -3,6 +3,7 @@ package com.example.Authentication.Especialidade.service;
 import com.example.Authentication.Categoria.model.Categoria;
 import com.example.Authentication.Categoria.repository.CategoriaRepository;
 import com.example.Authentication.Especialidade.DTO.EspecialidadeDTO;
+import com.example.Authentication.Especialidade.DTO.EspecialidadeSelectDTO;
 import com.example.Authentication.EspecialidadeMercadoria.service.EspecialidadeMercadoriaService;
 import com.example.Authentication.Especialidade.model.Especialidade;
 import com.example.Authentication.Especialidade.repository.EspecialidadeRepository;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -98,4 +100,8 @@ public class EspecialidadeService {
 
     }
 
+    public List<EspecialidadeSelectDTO> findAll() {
+        List<Especialidade> especialidades = especialidadeRepository.findAll();
+        return especialidades.stream().map(EspecialidadeSelectDTO::new).collect(Collectors.toList());
+    }
 }

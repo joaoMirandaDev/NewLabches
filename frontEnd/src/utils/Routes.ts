@@ -34,11 +34,12 @@ export const MERCADORIA_EDITAR_BY_ID: string = 'api/mercadoria/editar'
 export const MERCADORIA_COMPRAS_BY_ID_PAGE: string = 'api/merdoriasCompra/list/'
 
 /* Rotas produtos */
-export const PRODUTO_PAGE: string = '/api/produtos/list'
-export const PRODUTO_BY_ID: string = 'api/produtos/findById/'
-export const PRODUTO_ADD: string = 'api/produtos/adicionar'
-export const PRODUTO_DELETE_BY_ID: string = '/api/produtos/delete/'
-export const PRODUTO_EDIT: string = 'api/produtos/editar'
+export const PRODUTO_PAGE: string = '/api/especialidade/list'
+export const PRODUTO_BY_ID: string = 'api/especialidade/findById/'
+export const PRODUTO_ADD: string = 'api/especialidade/adicionar'
+export const PRODUTO_DELETE_BY_ID: string = '/api/especialidade/delete/'
+export const PRODUTO_EDIT: string = 'api/especialidade/editar'
+export const FIND_ALL_ESPECIALIDADE: string = 'api/especialidade/findAll'
 
 /* Rotas pedido */
 export const PEDIDO_PAGE: string = '/api/pedido/list/'

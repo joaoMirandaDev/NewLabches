@@ -25,6 +25,7 @@ import { FIND_ALL_TIPO_PEDIDO } from 'src/utils/Routes'
 import ITipoPedido from 'src/interfaces/tipoPedido'
 import PedidoMercadoria from './mercadoria'
 import IEspecialidadeMercadoria from 'src/interfaces/especialidadeCompra'
+import PedidoEspecialidade from './especialidade'
 interface DrawerPedido {
   openModal: boolean
   idCaixa: number
@@ -85,7 +86,7 @@ const DrawerPedido: React.FC<DrawerPedido> = ({
 
   const renderTabs = () => {
     return (
-      <Tabs defaultValue="mercadorias">
+      <Tabs defaultValue="especialidades">
         <Tabs.List>
           <Tabs.Tab icon={<IconPizza size="0.8rem" />} value="especialidades">
             Especialidades
@@ -94,6 +95,9 @@ const DrawerPedido: React.FC<DrawerPedido> = ({
             Mercadoria
           </Tabs.Tab>
         </Tabs.List>
+        <Tabs.Panel value="especialidades" pt="xs">
+          <PedidoEspecialidade listMercadoria={listMercadoria} />
+        </Tabs.Panel>
         <Tabs.Panel value="mercadorias" pt="xs">
           <PedidoMercadoria listMercadoria={listMercadoria} />
         </Tabs.Panel>

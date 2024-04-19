@@ -1,7 +1,7 @@
 import { ErrorNotification } from '@components/common'
 import SearchBar from '@components/common/filtro/filtro-sem-remocao-caracter'
 import PaginationTable from '@components/common/tabela/paginationTable'
-import DrawerPedido from '@components/pages/caixa/modal/drawer'
+import DrawerPedido from '@components/pages/caixa/drawer'
 import { Box, Button, Card, Divider, Flex, Space, Text } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { IconAlertTriangle, IconCircleCheck, IconEdit } from '@tabler/icons'

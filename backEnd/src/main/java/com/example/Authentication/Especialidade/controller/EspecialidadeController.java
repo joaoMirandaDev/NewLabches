@@ -1,6 +1,7 @@
 package com.example.Authentication.Especialidade.controller;
 
 import com.example.Authentication.Especialidade.DTO.EspecialidadeDTO;
+import com.example.Authentication.Especialidade.DTO.EspecialidadeSelectDTO;
 import com.example.Authentication.Especialidade.service.EspecialidadeService;
 import com.example.Authentication.Utils.filtro.Filtro;
 import lombok.RequiredArgsConstructor;
@@ -10,10 +11,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/produtos")
+@RequestMapping("/api/especialidade")
 @Slf4j
 public class EspecialidadeController {
 
@@ -37,6 +39,11 @@ public class EspecialidadeController {
     @GetMapping(value = "/findById/{id}", produces = "application/json")
     public ResponseEntity<EspecialidadeDTO> findAllProdutos(@PathVariable Integer id) {
         return ResponseEntity.ok(especialidadeService.findByIdDto(id));
+    }
+
+    @GetMapping(value = "/findAll", produces = "application/json")
+    public List<EspecialidadeSelectDTO> findAll() {
+        return especialidadeService.findAll();
     }
 
     @DeleteMapping(value = "delete/{id}")

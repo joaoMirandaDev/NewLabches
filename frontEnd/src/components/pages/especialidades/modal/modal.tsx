@@ -63,7 +63,7 @@ const ModalInsertMercadoria: React.FC<ModalInsertMercadoria> = ({
     <Modal
       opened={opened}
       shadow={'xl'}
-      zIndex={100000}
+      zIndex={120000}
       onClose={close}
       centered
       size={400}
