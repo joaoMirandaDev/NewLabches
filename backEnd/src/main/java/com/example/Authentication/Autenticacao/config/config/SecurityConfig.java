@@ -52,6 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and().csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/usuarios/**").permitAll()
+                .antMatchers(AUTH_LIST).permitAll()
                 .antMatchers("/api/**/list", "/api/**/list/**").hasAnyRole("ADMIN","PROPRIETARIO","CAIXA")
                 .antMatchers(HttpMethod.GET,"/api/**").hasAnyRole("ADMIN","PROPRIETARIO","CAIXA")
                 .antMatchers("/api/**").hasAnyRole("ADMIN", "PROPRIETARIO")
@@ -62,6 +63,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
     }
+
+    private static final String[] AUTH_LIST = {
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/v3/api-docs/**",
+            "/v3/api-docs.yaml",
+            "/javainuse-openapi/**"
+    };
 
 
     //Libera o cors para as rotas
