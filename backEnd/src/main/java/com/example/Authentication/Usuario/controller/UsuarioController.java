@@ -7,6 +7,7 @@ import com.example.Authentication.Usuario.DTO.UsuarioDTO;
 import com.example.Authentication.Usuario.model.Usuario;
 import com.example.Authentication.Autenticacao.config.securityJwt.JwtService;
 import com.example.Authentication.Usuario.services.UsuarioService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -30,16 +31,19 @@ public class UsuarioController {
     }
 
     @GetMapping("/findById/{id}")
+    @Operation(summary = "FindById", description = "Resgastar os usuarios por ID", tags = "Usuario")
     public Optional<Usuario> findById(@PathVariable Short id) {
         return usuarioService.findById(id);
     }
 
     @GetMapping("/findByLogin/{login}")
+    @Operation(summary = "FindByLogin", description = "Resgastar os usuarios por login", tags = "Usuario")
     public UsuarioDTO findByLogin(@PathVariable String login) {
         return usuarioService.findByLogin(login);
     }
 
     @PostMapping("/auth")
+    @Operation(summary = "Autenticação", description = "autenticas os usuarios", tags = "Usuario")
     public TokenDTO autenticar(@RequestBody CredenciaisDTO credenciais){
         try{
             Usuario usuario = Usuario.builder()
@@ -54,6 +58,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/validatorUser/{token}")
+    @Operation(summary = "Validar Token", description = "Metodo utilizado para validar Token", tags = "Usuario")
     public boolean userValidator(@PathVariable String token) {
         return  jwtService.tokenValido(token);
     }

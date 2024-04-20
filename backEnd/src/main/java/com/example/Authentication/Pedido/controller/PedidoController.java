@@ -4,6 +4,7 @@ import com.example.Authentication.Pedido.DTO.PedidoDTO;
 import com.example.Authentication.Pedido.service.PedidoService;
 import com.example.Authentication.Utils.Interfaces.LocaleInteface;
 import com.example.Authentication.Utils.filtro.Filtro;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
@@ -22,11 +23,13 @@ public class PedidoController {
     private final PedidoService pedidoService;
 
     @PostMapping(value = "/list/{id}", produces = "application/json")
+    @Operation(summary = "Paginação dos pedidos", description = "Metodo utilizado para paginar os pedidos", tags = "Pedido")
     public Page<PedidoDTO> findAllPageByIdCaixa(@PathVariable Integer id, @RequestBody Filtro filtro) {
      return pedidoService.findAllPageByIdCaixa(id, filtro);
     }
 
     @PostMapping(value = "/addPedido/{id}", produces = "application/json")
+    @Operation(summary = "Adicionar dos novos pedidos", description = "Metodo utilizado para adicionar os pedidos", tags = "Pedido")
     public ResponseEntity<String> addCompra(@RequestBody PedidoDTO pedidoDTO, @PathVariable Integer id) {
         pedidoService.addPedido(pedidoDTO, id);
         return ResponseEntity.status(HttpStatus.CREATED).body(messageSource.getMessage("success.created",
@@ -34,6 +37,7 @@ public class PedidoController {
     }
 
     @GetMapping(value = "/getValorTotal/{id}", produces = "application/json")
+    @Operation(summary = "Valor total dos pedidos", description = "Metodo utilizado para buscar os valores totais dos pedidos", tags = "Pedido")
     public Double getValorTotal(@PathVariable Integer id) {
       return pedidoService.getValorTotalByCaixa(id);
     }

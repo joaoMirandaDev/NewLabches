@@ -1,6 +1,7 @@
 package com.example.Authentication.Utils.controller;
 
 import com.example.Authentication.Utils.service.EnderecoService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ public class EnderecoController {
     }
 
     @GetMapping("findByRegiao/{cep}")
+    @Operation(summary = "Busca CEP", description = "Metodo utilizado para buscar via CEP", tags = "Endereco")
     public Object findByRegiao(@PathVariable String cep) throws IOException {
         return enderecoService.findByRegiao(cep);
     }

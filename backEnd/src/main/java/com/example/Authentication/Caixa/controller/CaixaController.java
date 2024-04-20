@@ -1,6 +1,7 @@
 package com.example.Authentication.Caixa.controller;
 
 import com.example.Authentication.Caixa.DTO.CaixaDTO;
+import com.example.Authentication.Caixa.DTO.CaixaOpenDTO;
 import com.example.Authentication.Caixa.service.CaixaService;
 import com.example.Authentication.Utils.filtro.Filtro;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,7 +25,7 @@ public class CaixaController {
 
     @PostMapping(value = "/openCaixa", produces = "application/json")
     @Operation(summary = "Abertura de caixa", description = "Metodo utilizado para abertura do caixa", tags = "Caixa")
-    public CaixaDTO findAllByPage(@RequestBody CaixaDTO caixaDTO) {
+    public CaixaDTO findAllByPage(@RequestBody CaixaOpenDTO caixaDTO) {
         return caixaService.openCaixa(caixaDTO);
     }
 

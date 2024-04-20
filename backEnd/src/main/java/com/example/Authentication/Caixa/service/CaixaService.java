@@ -1,6 +1,7 @@
 package com.example.Authentication.Caixa.service;
 
 import com.example.Authentication.Caixa.DTO.CaixaDTO;
+import com.example.Authentication.Caixa.DTO.CaixaOpenDTO;
 import com.example.Authentication.Caixa.model.Caixa;
 import com.example.Authentication.Caixa.repository.CaixaRepository;
 import com.example.Authentication.Utils.Interfaces.LocaleInteface;
@@ -40,7 +41,7 @@ public class CaixaService {
         return caixaPage.map(CaixaDTO::new);
     }
 
-    public CaixaDTO openCaixa(CaixaDTO caixaDTO) {
+    public CaixaDTO openCaixa(CaixaOpenDTO caixaDTO) {
         List<Caixa> caixas = caixaRepository.findAll();
         boolean verifyOpenCaixa = caixas.stream().anyMatch(caixa -> caixa.getCaixaAberto().equals(0));
         if (!verifyOpenCaixa) {
