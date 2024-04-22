@@ -27,6 +27,7 @@ public class Pedido {
     private Integer id;
     @Column(name = "nome_cliente")
     private String nomeCliente;
+    @Column(name = "observacao", columnDefinition = "TEXT")
     private String observacao;
     private Integer mesa;
     @Column(name = "valor_total")
@@ -41,6 +42,7 @@ public class Pedido {
     private List<PedidoMercadoria> pedidoMercadoria;
     @OneToMany(mappedBy = "pedido")
     private List<PedidoEspecialidade> pedidoEspecialidades;
+    @Column(name = "numeroPedido", columnDefinition = "TEXT")
     private String numeroPedido;
     private Integer pago;
     @OneToOne

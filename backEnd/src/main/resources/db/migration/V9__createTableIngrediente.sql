@@ -1,5 +1,5 @@
 CREATE TABLE unidade_medida (
-  id SMALLINT NOT NULL AUTO_INCREMENT,
+  id INTEGER NOT NULL AUTO_INCREMENT,
   nome VARCHAR(100),
   ativo INTEGER,
   PRIMARY KEY (id)
@@ -11,9 +11,9 @@ VALUES
 ('UN', 0);
 
 CREATE TABLE ingrediente (
-  id SMALLINT NOT NULL AUTO_INCREMENT,
+  id INTEGER NOT NULL AUTO_INCREMENT,
   nome TEXT,
-  id_unidade_medida SMALLINT,
+  id_unidade_medida INTEGER,
   valor_compra DOUBLE,
   valor_venda DOUBLE,
   saldo_estoque DOUBLE,

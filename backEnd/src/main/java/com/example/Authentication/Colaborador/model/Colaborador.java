@@ -19,7 +19,7 @@ public class Colaborador {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Short id;
+    private Integer id;
     private String sobrenome;
     private String nome;
     private Date data_nascimento;

@@ -1,5 +1,5 @@
 CREATE TABLE categoria (
-  id SMALLINT NOT NULL AUTO_INCREMENT,
+  id INTEGER NOT NULL AUTO_INCREMENT,
   nome VARCHAR(100),
   data_cadastro DATE,
   ativo INTEGER,
@@ -7,9 +7,9 @@ CREATE TABLE categoria (
 );
 
 CREATE TABLE especialidade (
-  id SMALLINT NOT NULL AUTO_INCREMENT,
+  id INTEGER NOT NULL AUTO_INCREMENT,
   nome VARCHAR(100),
-  categoria_id SMALLINT,
+  categoria_id INTEGER,
   ingrediente TEXT,
   data_cadastro DATE,
   ativo INTEGER,

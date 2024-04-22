@@ -12,12 +12,12 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 @Component
 public class UsuarioDTO {
-    private Short id;
+    private Integer id;
     private String login;
     private String senha;
     private RoleDTO role;
 
-    public UsuarioDTO(Short id, Role role) {
+    public UsuarioDTO(Integer id, Role role) {
         this.id = id;
         this.role = new RoleDTO(role.getId(), role.getName());
     }

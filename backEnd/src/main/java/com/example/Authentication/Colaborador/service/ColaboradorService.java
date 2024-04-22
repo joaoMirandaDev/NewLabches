@@ -75,7 +75,7 @@ public class ColaboradorService {
         }
     }
 
-    public ColaboradorDto findById(Short id) {
+    public ColaboradorDto findById(Integer id) {
         Colaborador colaborador =  colaboradorRepository.findById(id).orElseThrow(() -> new NotFoundException(
                 messageSource.getMessage("error.isEmpty", null, locale)
         ));
@@ -83,7 +83,7 @@ public class ColaboradorService {
     }
 
 
-    public ResponseEntity<String> deleteById(Short id) {
+    public ResponseEntity<String> deleteById(Integer id) {
         colaboradorRepository.deleteById(id);
         return ResponseEntity.ok(messageSource.getMessage("success.delete", null, locale));
     }

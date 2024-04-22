@@ -15,7 +15,7 @@ import java.util.Date;
 @Data
 public class FormaPagamentoDTO {
 
-    private Short id;
+    private Integer id;
     private String nome;
     private Integer ativo;
 

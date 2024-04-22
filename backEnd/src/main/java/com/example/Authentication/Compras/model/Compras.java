@@ -35,6 +35,7 @@ public class  Compras {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone="GMT-3")
     @Column(name = "data_pagamento")
     private Date dataPagamento;
+    @Column(name = "observacao", columnDefinition = "TEXT")
     private String observacao;
     @Column(name = "valor_total_compra")
     private Double valorTotalCompra;

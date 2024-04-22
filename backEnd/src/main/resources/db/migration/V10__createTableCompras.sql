@@ -1,5 +1,5 @@
 CREATE TABLE forma_pagamento (
-  id SMALLINT NOT NULL AUTO_INCREMENT,
+  id INTEGER NOT NULL AUTO_INCREMENT,
   nome VARCHAR(100),
   ativo INTEGER,
   PRIMARY KEY (id)
@@ -13,10 +13,10 @@ VALUES
 ('DINHEIRO', 0);
 
 CREATE TABLE registro_compras (
-  id SMALLINT NOT NULL AUTO_INCREMENT,
+  id INTEGER NOT NULL AUTO_INCREMENT,
   nome VARCHAR(100),
-  id_forma_pagamento SMALLINT,
-  id_fornecedor SMALLINT,
+  id_forma_pagamento INTEGER,
+  id_fornecedor INTEGER,
   data_compra DATE,
   data_pagamento DATE,
   observacao TEXT,
@@ -29,11 +29,11 @@ CREATE TABLE registro_compras (
 );
 
 CREATE TABLE ingredientes_compra (
-  id SMALLINT NOT NULL AUTO_INCREMENT,
-  id_ingrediente SMALLINT NOT NULL,
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  id_ingrediente INTEGER NOT NULL,
   valor_compra DOUBLE NOT NULL,
   data DATE,
-  id_registro_compra SMALLINT NOT NULL,
+  id_registro_compra INTEGER NOT NULL,
   quantidade DOUBLE NOT NULL,
   FOREIGN KEY (id_ingrediente) REFERENCES ingrediente(id) ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (id_registro_compra) REFERENCES registro_compras(id) ON UPDATE CASCADE ON DELETE CASCADE,

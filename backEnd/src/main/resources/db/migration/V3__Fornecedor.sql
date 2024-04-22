@@ -1,5 +1,5 @@
 CREATE TABLE fornecedor (
-  id SMALLINT NOT NULL AUTO_INCREMENT,
+  id INTEGER NOT NULL AUTO_INCREMENT,
   nome_razao_social VARCHAR(100),
   sobrenome VARCHAR(100),
   nome_fantasia VARCHAR(100),

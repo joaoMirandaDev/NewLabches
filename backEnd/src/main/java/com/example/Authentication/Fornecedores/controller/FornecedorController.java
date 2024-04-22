@@ -31,13 +31,13 @@ public class FornecedorController {
     }
     @GetMapping(value = "/findById/{id}", produces = "application/json")
     @Operation(summary = "FindById", description = "Metodo utilizado para resgatar os fornecedores por ID", tags = "Fornecedor")
-    public Fornecedor findById(@PathVariable Short id) {
+    public Fornecedor findById(@PathVariable Integer id) {
         return fornecedorService.findById(id);
     }
 
     @DeleteMapping(value = "/deleteById/{id}", produces = "application/json")
     @Operation(summary = "DeleteById", description = "Metodo utilizado para deletar os fornecedores por ID", tags = "Fornecedor")
-    public ResponseEntity<String> deleteById(@PathVariable Short id) {
+    public ResponseEntity<String> deleteById(@PathVariable Integer id) {
         return fornecedorService.deleteById(id);
     }
 

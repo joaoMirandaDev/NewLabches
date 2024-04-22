@@ -22,7 +22,8 @@ public class Saida {
 
     @Column(name = "valor_saida")
     private Double valorSaida;
-
+    
+    @Column(name = "observacao", columnDefinition = "TEXT")
     private String observacao;
 
     @ManyToOne

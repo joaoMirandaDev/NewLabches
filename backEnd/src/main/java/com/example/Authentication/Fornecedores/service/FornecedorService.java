@@ -77,14 +77,14 @@ public class FornecedorService implements Pagination {
         }
     }
 
-    public Fornecedor findById(Short id) {
+    public Fornecedor findById(Integer id) {
         return fornecedorRepository.findById(id).orElseThrow(() -> new NotFoundException(
                 messageSource.getMessage("error.find", null, locale)
         ));
     }
 
 
-    public ResponseEntity<String> deleteById(Short id) {
+    public ResponseEntity<String> deleteById(Integer id) {
         fornecedorRepository.deleteById(id);
         return ResponseEntity.ok(messageSource.getMessage("success.delete", null, locale));
     }

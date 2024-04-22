@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Data
 public class RoleDTO {
 
-  private Short id;
+  private Integer id;
   private String name;
 
 }

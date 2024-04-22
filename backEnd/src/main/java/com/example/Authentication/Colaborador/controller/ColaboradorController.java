@@ -29,13 +29,13 @@ public class ColaboradorController {
     }
     @GetMapping(value = "/findById/{id}", produces = "application/json")
     @Operation(summary = "FindById", description = "Metodo utilizado para resgatar o colaborador por ID", tags = "Colaborador")
-    public ColaboradorDto findById(@PathVariable Short id) {
+    public ColaboradorDto findById(@PathVariable Integer id) {
         return colaboradorService.findById(id);
     }
 
     @DeleteMapping(value = "/deleteById/{id}", produces = "application/json")
     @Operation(summary = "Deletar colaborador", description = "Metodo utilizado para deletar os colaboradores", tags = "Colaborador")
-    public ResponseEntity<String> deleteById(@PathVariable Short id) {
+    public ResponseEntity<String> deleteById(@PathVariable Integer id) {
         return colaboradorService.deleteById(id);
     }
 

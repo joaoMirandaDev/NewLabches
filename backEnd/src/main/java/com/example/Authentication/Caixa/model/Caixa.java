@@ -24,7 +24,7 @@ public class Caixa {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "numero_caixa")
+    @Column(name = "numero_caixa", columnDefinition = "TEXT")
     private String numeroCaixa;
 
     @Column(name = "valor_abertura_caixa")
@@ -41,6 +41,7 @@ public class Caixa {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone="GMT-3")
     private Date dataFechamento;
 
+    @Column(name = "observacao", columnDefinition = "TEXT")
     private String observacao;
 
     private Integer ativo;

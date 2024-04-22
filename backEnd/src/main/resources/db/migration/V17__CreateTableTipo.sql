@@ -1,5 +1,5 @@
 CREATE TABLE tipo (
-  id SMALLINT NOT NULL AUTO_INCREMENT,
+  id INTEGER NOT NULL AUTO_INCREMENT,
   nome VARCHAR(100),
   ativo INTEGER,
   PRIMARY KEY (id)
@@ -14,7 +14,7 @@ VALUES
 
 
 ALTER TABLE lanchonete.mercadoria
-ADD COLUMN id_tipo SMALLINT;
+ADD COLUMN id_tipo INTEGER;
 
 ALTER TABLE lanchonete.mercadoria
 ADD CONSTRAINT id_tipo

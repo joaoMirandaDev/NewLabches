@@ -14,7 +14,7 @@ import java.util.Date;
 @Data
 public class ColaboradorDto {
 
-    private Short id;
+    private Integer id;
     private String sobrenome;
     private String nome;
     private Date data_nascimento;
@@ -30,7 +30,7 @@ public class ColaboradorDto {
     private String email;
     private Usuario usuario;
     private String senha;
-    private Short role;
+    private Integer role;
 
 
     public ColaboradorDto(Colaborador colaborador) {

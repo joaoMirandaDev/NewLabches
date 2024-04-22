@@ -1,15 +1,21 @@
 import {
+  ActionIcon,
   Button,
   Checkbox,
   Divider,
   Flex,
   Modal,
   NumberInput,
+  Tooltip,
 } from '@mantine/core'
 
 import { useDisclosure } from '@mantine/hooks'
 import { useEffect, useMemo, useState } from 'react'
-import { IconCircleXFilled, IconDatabasePlus } from '@tabler/icons-react'
+import {
+  IconCircleXFilled,
+  IconDatabasePlus,
+  IconTrash,
+} from '@tabler/icons-react'
 import { useForm, zodResolver } from '@mantine/form'
 import IMercadoria from 'src/interfaces/mercadoria'
 import api from 'src/utils/Api'
@@ -17,7 +23,7 @@ import IEspecialidadeMercadoria from 'src/interfaces/especialidadeCompra'
 import { ValidateAddPedidoEspecialidade } from '../../validation/schemaModalEspecialidade'
 import SimpleTable from '@components/common/tabela/simpleTable'
 import { PRODUTO_BY_ID } from 'src/utils/Routes'
-import { MRT_ColumnDef } from 'mantine-react-table'
+import { MRT_ColumnDef, MRT_Row } from 'mantine-react-table'
 import PedidoMercadoria from '../mercadoria'
 interface ModalPedidoEspecialidade {
   openModal: boolean
@@ -92,6 +98,25 @@ const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
   const listMercadoria = (value: IEspecialidadeMercadoria[]) => {
     console.log(value, 'dados no drawer')
   }
+  const remove = (row: MRT_Row) => {
+    const newData = [...dataIngrediente]
+    newData.splice(row.index, 1)
+    setDataIngrediente(newData)
+  }
+  const rowActions = ({ row }: { row: MRT_Row<IEspecialidadeMercadoria> }) => (
+    <Flex>
+      <Tooltip label={'Remover'}>
+        <ActionIcon
+          size="sm"
+          variant="transparent"
+          aria-label="Settings"
+          onClick={() => remove(row)}
+        >
+          <IconTrash style={{ cursor: 'pointer' }} />
+        </ActionIcon>
+      </Tooltip>
+    </Flex>
+  )
   const columns = useMemo<MRT_ColumnDef<IEspecialidadeMercadoria>[]>(
     () => [
       {
@@ -140,7 +165,12 @@ const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
       title={form.values.nome}
     >
       <Divider mb={'1rem'} />
-      <SimpleTable enableRowActions columns={columns} data={dataIngrediente} />
+      <SimpleTable
+        rowActions={rowActions}
+        enableRowActions
+        columns={columns}
+        data={dataIngrediente}
+      />
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Checkbox
           mt={'0.5rem'}

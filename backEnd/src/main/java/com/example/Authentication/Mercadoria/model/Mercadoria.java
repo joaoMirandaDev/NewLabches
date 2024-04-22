@@ -23,6 +23,7 @@ public class Mercadoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(name = "nome", columnDefinition = "TEXT")
     private String nome;
     @OneToOne
     @JoinColumn(name = "id_unidade_medida", referencedColumnName = "id")

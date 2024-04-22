@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 @Data
 public class FornecedorDto {
 
-    private Short id;
+    private Integer id;
 
     private String nomeRazaoSocial;
 

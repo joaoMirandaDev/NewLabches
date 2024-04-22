@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FornecedorListagemDto {
-    private Short id;
+    private Integer id;
     private String nomeRazaoSocial;
     private String telefone;
     private String cpfCnpj;

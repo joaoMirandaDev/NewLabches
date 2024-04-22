@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ColaboradorRepository extends JpaRepository<Colaborador, Short> {
+public interface ColaboradorRepository extends JpaRepository<Colaborador, Integer> {
 
     @Query(nativeQuery = true, value = "SELECT * FROM colaborador p WHERE p.cpf != '13226726609' AND " +
             "(:search IS NULL OR :search = '' OR " +
