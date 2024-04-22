@@ -1,7 +1,7 @@
 DROP TABLE rel_especialidades_mercadorias;
 
 CREATE TABLE especialidade_mercadoria(
-    id INTEGER NOT NULL PRIMARY KEY,
+    id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
     id_especialidade INTEGER NOT NULL,
     id_mercadoria INTEGER NOT NULL,
     quantidade INTEGER,

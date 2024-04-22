@@ -1,6 +1,7 @@
 import {
   ActionIcon,
   Button,
+  Card,
   Checkbox,
   Divider,
   Flex,
@@ -20,11 +21,11 @@ import { useForm, zodResolver } from '@mantine/form'
 import IMercadoria from 'src/interfaces/mercadoria'
 import api from 'src/utils/Api'
 import IEspecialidadeMercadoria from 'src/interfaces/especialidadeCompra'
-import { ValidateAddPedidoEspecialidade } from '../../validation/schemaModalEspecialidade'
+import { ValidateAddPedidoEspecialidade } from '../validation/schemaModalEspecialidade'
 import SimpleTable from '@components/common/tabela/simpleTable'
 import { PRODUTO_BY_ID } from 'src/utils/Routes'
 import { MRT_ColumnDef, MRT_Row } from 'mantine-react-table'
-import PedidoMercadoria from '../mercadoria'
+import Adicional from '../adicional'
 interface ModalPedidoEspecialidade {
   openModal: boolean
   closeModal: (value: boolean) => void
@@ -69,12 +70,12 @@ const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, openModal])
-  useEffect(() => {
-    if (checkAdicional) {
-      api
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [checkAdicional])
+  // useEffect(() => {
+  //   if (checkAdicional) {
+
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [checkAdicional])
   const resetForm = () => {
     const dados = {
       quantidade: 0,
@@ -84,19 +85,18 @@ const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
   }
   const fecharModal = () => {
     closeModal(false)
+    setCheckAdicional(false)
     resetForm()
     close()
   }
   const handleSubmit = async () => {
     if (form.isValid()) {
       dataModal(form.values)
-      resetForm()
-      closeModal(false)
-      close()
+      fecharModal()
     }
   }
   const listMercadoria = (value: IEspecialidadeMercadoria[]) => {
-    console.log(value, 'dados no drawer')
+    console.log(value)
   }
   const remove = (row: MRT_Row) => {
     const newData = [...dataIngrediente]
@@ -171,15 +171,19 @@ const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
         columns={columns}
         data={dataIngrediente}
       />
+      <Checkbox
+        mt={'0.5rem'}
+        label="Inserir adicional"
+        defaultChecked={false}
+        onChange={event => setCheckAdicional(event.target.checked)}
+        color="green"
+      />
+      {checkAdicional && (
+        <Card mt={'0.5rem'} shadow="sm" padding="lg" radius="md" withBorder>
+          <Adicional listMercadoria={listMercadoria} />
+        </Card>
+      )}
       <form onSubmit={form.onSubmit(handleSubmit)}>
-        <Checkbox
-          mt={'0.5rem'}
-          label="Inserir adicional"
-          defaultChecked={false}
-          onChange={event => setCheckAdicional(event.target.checked)}
-          color="green"
-        />
-        {checkAdicional && <PedidoMercadoria listMercadoria={listMercadoria} />}
         <Flex align={'center'} justify={'space-around'}>
           <NumberInput
             {...form.getInputProps('quantidade')}

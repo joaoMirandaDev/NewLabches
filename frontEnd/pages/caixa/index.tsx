@@ -41,7 +41,7 @@ import { useDisclosure } from '@mantine/hooks'
 import { useForm, zodResolver } from '@mantine/form'
 import { validaAberturaCaixa } from './validation/schema'
 import { useRouter } from 'next/router'
-import { ErrorNotification } from '@components/common'
+import { ErrorNotification, SuccessNotification } from '@components/common'
 
 export default function Caixa() {
   const t = useTranslate()
@@ -107,7 +107,9 @@ export default function Caixa() {
       api
         .post(CAIXA_OPEN, form.values)
         .then(response => {
+          closeModalCaixa()
           navigate.push(`/caixa/registro/${response.data.id}`)
+          SuccessNotification({ message: 'Caixa aberto com sucesso!' })
           resetForm()
         })
         .catch(() => {

@@ -7,12 +7,12 @@ CREATE TABLE categoria (
 );
 
 CREATE TABLE especialidade (
-  id INTEGER NOT NULL AUTO_INCREMENT,
+  id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(100),
   categoria_id INTEGER,
   ingrediente TEXT,
   data_cadastro DATE,
   ativo INTEGER,
-  FOREIGN KEY (categoria_id) REFERENCES categoria(id) ON UPDATE CASCADE ON DELETE CASCADE,
-  PRIMARY KEY (id)
+  FOREIGN KEY (categoria_id) REFERENCES categoria(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
+

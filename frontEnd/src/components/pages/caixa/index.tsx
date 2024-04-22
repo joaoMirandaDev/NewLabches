@@ -20,7 +20,7 @@ import {
 } from '@tabler/icons-react'
 import api from 'src/utils/Api'
 import { useForm, zodResolver } from '@mantine/form'
-import { ValidateAddPedido } from '../validation/schema'
+import { ValidateAddPedido } from './validation/schema'
 import { FIND_ALL_TIPO_PEDIDO } from 'src/utils/Routes'
 import ITipoPedido from 'src/interfaces/tipoPedido'
 import PedidoMercadoria from './mercadoria'
