@@ -93,7 +93,9 @@ const PedidoEspecialidade: React.FC<PedidoEspecialidade> = ({
     ],
     []
   )
-  const objetoModal = (event: IEspecialidadeMercadoria) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const objetoModal = (event: any) => {
+    console.log(event)
     const index = data.findIndex(
       val => val.mercadoria?.nome === event.mercadoria?.nome
     )

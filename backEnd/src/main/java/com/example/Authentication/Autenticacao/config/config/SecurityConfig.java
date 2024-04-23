@@ -51,7 +51,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .cors().and().csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/usuarios/**").permitAll()
                 .antMatchers(AUTH_LIST).permitAll()
                 .antMatchers("/api/**/list", "/api/**/list/**").hasAnyRole("ADMIN","PROPRIETARIO","CAIXA")
                 .antMatchers(HttpMethod.GET,"/api/**").hasAnyRole("ADMIN","PROPRIETARIO","CAIXA")
@@ -69,7 +68,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-ui.html",
             "/v3/api-docs/**",
             "/v3/api-docs.yaml",
-            "/javainuse-openapi/**"
+            "/javainuse-openapi/**",
+            "/api/usuarios/**"
     };
 
 

@@ -18,7 +18,6 @@ import {
   IconTrash,
 } from '@tabler/icons-react'
 import { useForm, zodResolver } from '@mantine/form'
-import IMercadoria from 'src/interfaces/mercadoria'
 import api from 'src/utils/Api'
 import IEspecialidadeMercadoria from 'src/interfaces/especialidadeCompra'
 import { ValidateAddPedidoEspecialidade } from '../validation/schemaModalEspecialidade'
@@ -49,14 +48,14 @@ const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
     quantidade: number
     preco: number
     especialidadeMercadoria: IEspecialidadeMercadoria[]
-    mercadoria: IMercadoria | null
+    adicionalEspecialidades: IEspecialidadeMercadoria[]
   }>({
     initialValues: {
       nome: '',
       quantidade: 0,
       especialidadeMercadoria: [],
       preco: 0,
-      mercadoria: null,
+      adicionalEspecialidades: [],
     },
     validate: zodResolver(ValidateAddPedidoEspecialidade()),
   })
@@ -96,7 +95,8 @@ const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
     }
   }
   const listMercadoria = (value: IEspecialidadeMercadoria[]) => {
-    console.log(value)
+    form.setFieldValue('adicionalEspecialidades', value)
+    console.log(form.values)
   }
   const remove = (row: MRT_Row) => {
     const newData = [...dataIngrediente]
