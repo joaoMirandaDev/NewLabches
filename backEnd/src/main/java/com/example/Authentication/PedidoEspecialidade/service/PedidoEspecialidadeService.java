@@ -25,9 +25,6 @@ public class PedidoEspecialidadeService {
     private final AdicionalEspecialidadeService adicionalEspecialidadeService;
 
     public void create(PedidoEspecialidadeDTO val, Pedido pedido) {
-        val.getEspecialidade().getEspecialidadeMercadoria().forEach(obj -> {
-            mercadoriaService.reduzSaldo(mercadoriaService.findById(obj.getMercadoria().getId()), obj.getQuantidade());
-        });
         PedidoEspecialidade pedidoEspecialidade = new PedidoEspecialidade();
         pedidoEspecialidade.setEspecialidade(especialidadeService.findById(val.getEspecialidade().getId()));
         pedidoEspecialidade.setPedido(pedido);
@@ -39,5 +36,8 @@ public class PedidoEspecialidadeService {
                 adicionalEspecialidadeService.create(pedidoEspecialidade, obj);
             });
         }
+        val.getEspecialidade().getEspecialidadeMercadoria().forEach(obj -> {
+            mercadoriaService.reduzSaldo(mercadoriaService.findById(obj.getMercadoria().getId()), obj.getQuantidade());
+        });
     }
 }

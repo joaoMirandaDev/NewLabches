@@ -51,21 +51,26 @@ public class PedidoService  {
 
     public Double getValorTotalByCaixa(Integer id) {
         List<Pedido> pedidos = pedidoRepository.findByCaixaId(id);
-        Double valor = 0.0;
-        for (Pedido obj : pedidos) {
-            valor += obj.getValorTotal();
+        if (!pedidos.isEmpty() && Objects.nonNull(pedidos)) {
+            Double valor = 0.0;
+            for (Pedido obj : pedidos) {
+                valor += obj.getValorTotal();
+            }
+            return valor;
         }
-        return valor;
+        return 0.0;
     }
 
     @Transactional
     public void addPedido(PedidoDTO pedidoDTO, Integer id) {
         Pedido pedido = new Pedido();
         pedido.setCaixa(caixaService.findById(id));
+        pedido.setPago(pedidoDTO.getPago());
         pedido.setNomeCliente(pedidoDTO.getNomeCliente());
         pedido.setObservacao(pedidoDTO.getObservacao());
         pedido.setTipoPedido(tipoPedidoService.findById(pedidoDTO.getTipoPedido().getId()));
         pedido.setMesa(pedidoDTO.getMesa());
+        pedido.setValorTotal(pedidoDTO.getValorTotal());
         pedidoRepository.save(pedido);
         if (Objects.nonNull(pedidoDTO.getPedidoMercadoria()) && !pedidoDTO.getPedidoMercadoria().isEmpty()) {
             pedidoDTO.getPedidoMercadoria().forEach(obj -> {
