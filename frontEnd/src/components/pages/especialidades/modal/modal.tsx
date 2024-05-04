@@ -6,12 +6,12 @@ import { IconCircleXFilled, IconDatabasePlus } from '@tabler/icons-react'
 import { useForm, zodResolver } from '@mantine/form'
 import { ModalCadastoMercadoria } from '../validation/schemaModal'
 import IMercadoria from 'src/interfaces/mercadoria'
-import IEspecialidadeMercadoria from 'src/interfaces/especialidadeCompra'
+import IPedidoMercadoria from 'src/interfaces/PedidoMercadoria'
 interface ModalInsertMercadoria {
   openModal: boolean
-  data: IEspecialidadeMercadoria | null
+  data: IPedidoMercadoria | null
   closeModal: (value: boolean) => void
-  dataModal: (value: IEspecialidadeMercadoria) => void
+  dataModal: (value: IPedidoMercadoria) => void
 }
 
 const ModalInsertMercadoria: React.FC<ModalInsertMercadoria> = ({

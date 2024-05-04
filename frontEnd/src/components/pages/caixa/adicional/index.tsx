@@ -19,19 +19,20 @@ import { FIND_ALL_MERCADORIA, MERCADORIA_BY_ID } from 'src/utils/Routes'
 import { IconDatabasePlus } from '@tabler/icons-react'
 import SimpleTable from '@components/common/tabela/simpleTable'
 import ModalAdicional from './modal'
+import IAdicional from 'src/interfaces/IAdicional'
 
 interface AdiocionalEspecialidade {
-  // openModal: boolean
+  clear: boolean
   // idCaixa: number
-  listMercadoria: (value: IEspecialidadeMercadoria[]) => void
+  adicional: (value: IAdicional[]) => void
 }
-const Adicional: React.FC<AdiocionalEspecialidade> = ({ listMercadoria }) => {
+const Adicional: React.FC<AdiocionalEspecialidade> = ({ adicional, clear }) => {
   const [mercadoria, setMercadoria] = useState<SelectItem[]>([])
   const [idMercadoria, setIdMercadoria] = useState<number | null>(null)
   const [itemSelecionado, setItemSelecionado] =
     useState<IEspecialidadeMercadoria | null>(null)
   const [opened, { open, close }] = useDisclosure(false)
-  const [data, setData] = useState<IEspecialidadeMercadoria[]>([])
+  const [data, setData] = useState<IAdicional[]>([])
   const getMethods = async () => {
     const mercadoria = await api.get(FIND_ALL_MERCADORIA)
     const dataMercadoria = mercadoria.data.map((data: IMercadoria) => ({
@@ -41,6 +42,12 @@ const Adicional: React.FC<AdiocionalEspecialidade> = ({ listMercadoria }) => {
     }))
     setMercadoria(dataMercadoria)
   }
+  useEffect(() => {
+    if (clear) {
+      setData([])
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clear])
   const columns = useMemo<MRT_ColumnDef<IEspecialidadeMercadoria>[]>(
     () => [
       {
@@ -144,11 +151,11 @@ const Adicional: React.FC<AdiocionalEspecialidade> = ({ listMercadoria }) => {
   }, [])
 
   useEffect(() => {
-    listMercadoria(data)
+    adicional(data)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 
-  const itemAdicional = (value: IEspecialidadeMercadoria) => {
+  const itemAdicional = (value: IAdicional) => {
     const index = data.findIndex(
       val => val.mercadoria?.nome === value.mercadoria?.nome
     )

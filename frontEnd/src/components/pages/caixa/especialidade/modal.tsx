@@ -25,6 +25,8 @@ import SimpleTable from '@components/common/tabela/simpleTable'
 import { PRODUTO_BY_ID } from 'src/utils/Routes'
 import { MRT_ColumnDef, MRT_Row } from 'mantine-react-table'
 import Adicional from '../adicional'
+import IEspecialidade from 'src/interfaces/Especialidade'
+import IAdicional from 'src/interfaces/IAdicional'
 interface ModalPedidoEspecialidade {
   openModal: boolean
   closeModal: (value: boolean) => void
@@ -40,21 +42,20 @@ const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
 }) => {
   const [opened, { open, close }] = useDisclosure(false)
   const [checkAdicional, setCheckAdicional] = useState<boolean>(false)
+  const [clearAdicional, setClearAdicional] = useState<boolean>(false)
   const [dataIngrediente, setDataIngrediente] = useState<
     IEspecialidadeMercadoria[]
   >([])
   const form = useForm<{
-    nome: string
+    especialidade: IEspecialidade
     quantidade: number
-    preco: number
-    especialidadeMercadoria: IEspecialidadeMercadoria[]
-    adicionalEspecialidades: IEspecialidadeMercadoria[]
+    valorPedidoEspecialidade: number
+    adicionalEspecialidades: IAdicional[]
   }>({
     initialValues: {
-      nome: '',
+      especialidade: {},
       quantidade: 0,
-      especialidadeMercadoria: [],
-      preco: 0,
+      valorPedidoEspecialidade: 0,
       adicionalEspecialidades: [],
     },
     validate: zodResolver(ValidateAddPedidoEspecialidade()),
@@ -64,17 +65,12 @@ const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
       open()
       api.get(PRODUTO_BY_ID + `${idEspecialidade}`).then(response => {
         setDataIngrediente(response.data.especialidadeMercadoria)
-        form.setValues(response.data)
+        form.setFieldValue('especialidade', response.data)
+        form.setFieldValue('valorPedidoEspecialidade', response.data.preco)
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, openModal])
-  // useEffect(() => {
-  //   if (checkAdicional) {
-
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [checkAdicional])
   const resetForm = () => {
     const dados = {
       quantidade: 0,
@@ -92,16 +88,31 @@ const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
     if (form.isValid()) {
       dataModal(form.values)
       fecharModal()
+      setClearAdicional(true)
     }
   }
-  const listMercadoria = (value: IEspecialidadeMercadoria[]) => {
+  const insertAdicional = (value: IAdicional[]) => {
     form.setFieldValue('adicionalEspecialidades', value)
-    console.log(form.values)
+    if (value.length > 0) {
+      const valor = value.reduce((total, obj) => {
+        return total + obj.mercadoria!.valorVenda! * obj.quantidade!
+      }, 0)
+      form.setFieldValue(
+        'valorPedidoEspecialidade',
+        form.values.especialidade.preco! + valor
+      )
+    } else {
+      form.setFieldValue(
+        'valorPedidoEspecialidade',
+        form.values.especialidade.preco!
+      )
+    }
   }
   const remove = (row: MRT_Row) => {
     const newData = [...dataIngrediente]
     newData.splice(row.index, 1)
     setDataIngrediente(newData)
+    form.setFieldValue('especialidade.especialidadeMercadoria', newData)
   }
   const rowActions = ({ row }: { row: MRT_Row<IEspecialidadeMercadoria> }) => (
     <Flex>
@@ -162,7 +173,7 @@ const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
       radius={'md'}
       closeOnEscape={false}
       trapFocus={true}
-      title={form.values.nome}
+      title={form.values.especialidade.nome}
     >
       <Divider mb={'1rem'} />
       <SimpleTable
@@ -180,7 +191,7 @@ const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
       />
       {checkAdicional && (
         <Card mt={'0.5rem'} shadow="sm" padding="lg" radius="md" withBorder>
-          <Adicional listMercadoria={listMercadoria} />
+          <Adicional clear={clearAdicional} adicional={insertAdicional} />
         </Card>
       )}
       <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -200,12 +211,12 @@ const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
             required
           />
           <NumberInput
-            {...form.getInputProps('preco')}
+            {...form.getInputProps('valorPedidoEspecialidade')}
             mt={'1rem'}
             precision={2}
             decimalSeparator=","
             thousandsSeparator="."
-            defaultValue={form.values.quantidade}
+            defaultValue={form.values.valorPedidoEspecialidade}
             placeholder={'Insira o valor'}
             label={'Valor'}
             withAsterisk

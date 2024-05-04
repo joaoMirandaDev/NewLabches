@@ -106,6 +106,12 @@ export default function RegistroCaixa() {
   const closeModal = () => {
     close()
   }
+  const refresh = (val: boolean) => {
+    if (val) {
+      caixaById()
+      findAllPagePedido()
+    }
+  }
   const filter = (value: string) => {
     if (value.length > 0) {
       setResetPesquisa(true)
@@ -338,6 +344,7 @@ export default function RegistroCaixa() {
       <DrawerPedido
         openModal={opened}
         idCaixa={Number(id)}
+        refresh={refresh}
         closeModal={closeModal}
       />
     </>

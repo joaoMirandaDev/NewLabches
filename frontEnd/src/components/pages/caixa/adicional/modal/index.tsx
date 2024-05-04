@@ -4,13 +4,14 @@ import { useForm, zodResolver } from '@mantine/form'
 import { useDisclosure } from '@mantine/hooks'
 import { IconCircleXFilled, IconDatabasePlus } from '@tabler/icons-react'
 import { useEffect } from 'react'
+import IAdicional from 'src/interfaces/IAdicional'
 import IEspecialidadeMercadoria from 'src/interfaces/especialidadeCompra'
 import IMercadoria from 'src/interfaces/mercadoria'
 interface AdiocionalEspecialidade {
   openModal: boolean
   closeModal: (value: boolean) => void
   data: IEspecialidadeMercadoria | null
-  adional: (value: IEspecialidadeMercadoria) => void
+  adional: (value: IAdicional) => void
 }
 const ModalAdicional: React.FC<AdiocionalEspecialidade> = ({
   openModal,

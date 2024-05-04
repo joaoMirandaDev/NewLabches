@@ -1,11 +1,14 @@
-import { useTranslation } from 'next-i18next'
 import z from 'zod'
 
 const ValidateAddPedido = () => {
-  const { t } = useTranslation()
-  const requiredField = t('components.general.campoObrigatorio')
+  const requiredField = 'Campo obrigatório'
   return z.object({
-    nome: z.string().nonempty({ message: requiredField }),
+    nomeCliente: z.string().nonempty({ message: requiredField }),
+    tipoPedido: z
+      .object({
+        id: z.number().positive({ message: requiredField }),
+      })
+      .required(),
   })
 }
 

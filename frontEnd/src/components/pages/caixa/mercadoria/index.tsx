@@ -18,20 +18,21 @@ import { MRT_ColumnDef, MRT_Row } from 'mantine-react-table'
 import IEspecialidadeMercadoria from 'src/interfaces/especialidadeCompra'
 import ModalInsertMercadoria from '@components/pages/especialidades/modal/modal'
 import { useDisclosure } from '@mantine/hooks'
+import IPedidoMercadoria from 'src/interfaces/PedidoMercadoria'
 
 interface PedidoMercadoria {
   // openModal: boolean
   // idCaixa: number
-  listMercadoria: (value: IEspecialidadeMercadoria[]) => void
+  listMercadoria: (value: IPedidoMercadoria[]) => void
 }
 
 const PedidoMercadoria: React.FC<PedidoMercadoria> = ({ listMercadoria }) => {
   const [mercadoria, setMercadoria] = useState<SelectItem[]>([])
   const [idMercadoria, setIdMercadoria] = useState<number | null>(null)
   const [itemSelecionado, setItemSelecionado] =
-    useState<IEspecialidadeMercadoria | null>(null)
+    useState<IPedidoMercadoria | null>(null)
   const [opened, { open, close }] = useDisclosure(false)
-  const [data, setData] = useState<IEspecialidadeMercadoria[]>([])
+  const [data, setData] = useState<IPedidoMercadoria[]>([])
   const getMethods = async () => {
     const mercadoria = await api.get(FIND_ALL_MERCADORIA)
     const dataMercadoria = mercadoria.data.map((data: IMercadoria) => ({
@@ -93,7 +94,7 @@ const PedidoMercadoria: React.FC<PedidoMercadoria> = ({ listMercadoria }) => {
     ],
     []
   )
-  const objetoModal = (event: IEspecialidadeMercadoria) => {
+  const objetoModal = (event: IPedidoMercadoria) => {
     const index = data.findIndex(
       val => val.mercadoria?.nome === event.mercadoria?.nome
     )

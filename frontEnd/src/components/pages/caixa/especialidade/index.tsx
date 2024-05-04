@@ -18,15 +18,16 @@ import { MRT_ColumnDef, MRT_Row } from 'mantine-react-table'
 import IEspecialidadeMercadoria from 'src/interfaces/especialidadeCompra'
 import { useDisclosure } from '@mantine/hooks'
 import ModalPedidoEspecialidade from './modal'
+import IPedidoEspecialidade from 'src/interfaces/PedidoEspecialidade'
 
 interface PedidoEspecialidade {
   // openModal: boolean
   // idCaixa: number
-  listMercadoria: (value: IEspecialidadeMercadoria[]) => void
+  listEspecialidade: (value: IPedidoEspecialidade[]) => void
 }
 
 const PedidoEspecialidade: React.FC<PedidoEspecialidade> = ({
-  listMercadoria,
+  listEspecialidade,
 }) => {
   const [especialidade, setEspecialidade] = useState<SelectItem[]>([])
   const [idEspecialidade, setIdEspecialidade] = useState<number | null>(null)
@@ -44,7 +45,7 @@ const PedidoEspecialidade: React.FC<PedidoEspecialidade> = ({
   const columns = useMemo<MRT_ColumnDef<IEspecialidadeMercadoria>[]>(
     () => [
       {
-        accessorKey: 'mercadoria.nome',
+        accessorKey: 'especialidade.nome',
         header: 'Nome',
         size: 15,
         minSize: 10,
@@ -57,7 +58,7 @@ const PedidoEspecialidade: React.FC<PedidoEspecialidade> = ({
         },
       },
       {
-        accessorKey: 'mercadoria.valorVenda',
+        accessorKey: 'valorPedidoEspecialidade',
         header: 'Valor',
         size: 15,
         minSize: 10,
@@ -93,18 +94,9 @@ const PedidoEspecialidade: React.FC<PedidoEspecialidade> = ({
     ],
     []
   )
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const objetoModal = (event: any) => {
-    console.log(event)
-    const index = data.findIndex(
-      val => val.mercadoria?.nome === event.mercadoria?.nome
-    )
-    if (index !== -1) {
-      data[index] = event
-    } else {
-      data.push(event)
-    }
-    setData([...data])
+  const objetoModal = (event: IEspecialidadeMercadoria) => {
+    const newData = [...data, event]
+    setData(newData)
   }
 
   const handleChangeMercadoria = () => {
@@ -150,7 +142,7 @@ const PedidoEspecialidade: React.FC<PedidoEspecialidade> = ({
   }, [])
 
   useEffect(() => {
-    listMercadoria(data)
+    listEspecialidade(data)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 

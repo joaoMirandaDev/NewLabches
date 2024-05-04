@@ -21,22 +21,28 @@ import {
 import api from 'src/utils/Api'
 import { useForm, zodResolver } from '@mantine/form'
 import { ValidateAddPedido } from './validation/schema'
-import { FIND_ALL_TIPO_PEDIDO } from 'src/utils/Routes'
+import { FIND_ALL_TIPO_PEDIDO, PEDIDO_ADD } from 'src/utils/Routes'
 import ITipoPedido from 'src/interfaces/tipoPedido'
 import PedidoMercadoria from './mercadoria'
-import IEspecialidadeMercadoria from 'src/interfaces/especialidadeCompra'
 import PedidoEspecialidade from './especialidade'
+import IPedidoMercadoria from 'src/interfaces/PedidoMercadoria'
+import IPedidoEspecialidade from 'src/interfaces/PedidoEspecialidade'
+import { ErrorNotification, SuccessNotification } from '@components/common'
 interface DrawerPedido {
   openModal: boolean
   idCaixa: number
   closeModal: (value: boolean) => void
+  refresh: (value: boolean) => void
 }
 
 const DrawerPedido: React.FC<DrawerPedido> = ({
   openModal,
   idCaixa,
   closeModal,
+  refresh,
 }) => {
+  const [totalEspecialidade, setTotalEspecialidade] = useState<number>(0)
+  const [totalMercadoria, setTotalMercadoria] = useState<number>(0)
   const [tipoPedido, setTipoPedido] = useState<SelectItem[]>([])
   useEffect(() => {
     if (openModal) {
@@ -44,21 +50,37 @@ const DrawerPedido: React.FC<DrawerPedido> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openModal, idCaixa])
+
+  useEffect(() => {
+    form.setFieldValue('valorTotal', totalEspecialidade + totalMercadoria)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [totalEspecialidade, totalMercadoria])
+
   const form = useForm<{
     id: number | null
-    nome: string
-    mesa: number
+    nomeCliente: string
     tipoPedido: {
       id: number | null
     }
+    mesa: number
+    observacao: string
+    pago: number
+    valorTotal: number
+    pedidoMercadoria: IPedidoMercadoria[]
+    pedidoEspecialidade: IPedidoEspecialidade[]
   }>({
     initialValues: {
       id: null,
-      nome: '',
+      valorTotal: 0.0,
+      nomeCliente: '',
+      observacao: '',
+      pago: 0,
       mesa: 0,
       tipoPedido: {
-        id: null,
+        id: 0,
       },
+      pedidoMercadoria: [],
+      pedidoEspecialidade: [],
     },
     validate: zodResolver(ValidateAddPedido()),
   })
@@ -72,12 +94,61 @@ const DrawerPedido: React.FC<DrawerPedido> = ({
     })
   }
 
-  const setConfirmacao = () => {
-    closeModal(false)
+  const resetForm = () => {
+    const value = {
+      id: null,
+      valorTotal: 0.0,
+      nomeCliente: '',
+      observacao: '',
+      pago: 0,
+      mesa: 0,
+      tipoPedido: {
+        id: 0,
+      },
+      pedidoMercadoria: [],
+      pedidoEspecialidade: [],
+    }
+    form.setValues(value)
   }
 
-  const listMercadoria = (value: IEspecialidadeMercadoria[]) => {
-    console.log(value, 'dados no drawer')
+  const handleSubmit = async () => {
+    if (form.values.valorTotal > 0) {
+      await api
+        .post(PEDIDO_ADD + `${idCaixa}`, form.values)
+        .then(() => {
+          SuccessNotification({
+            message: 'Pedido registrado com sucesso',
+          })
+          closeModal(true)
+          resetForm()
+          refresh(true)
+        })
+        .catch(() => {
+          ErrorNotification({ message: 'Erro ao salvar pedido' })
+        })
+    }
+  }
+
+  const listEspecialidade = (value: IPedidoEspecialidade[]) => {
+    const especialidade = value.reduce((total, obj) => {
+      if (obj) {
+        return total + obj.valorPedidoEspecialidade! * obj.quantidade!
+      }
+      return 0
+    }, 0)
+    setTotalEspecialidade(especialidade)
+    form.setFieldValue('pedidoEspecialidade', value)
+  }
+
+  const listMercadoria = (value: IPedidoMercadoria[]) => {
+    const mercadoria = value.reduce((total, obj) => {
+      if (obj) {
+        return total + obj.mercadoria!.valorVenda! * obj.quantidade!
+      }
+      return 0
+    }, 0)
+    setTotalMercadoria(mercadoria)
+    form.setFieldValue('pedidoMercadoria', value)
   }
 
   const cancelarPedido = () => {
@@ -96,7 +167,7 @@ const DrawerPedido: React.FC<DrawerPedido> = ({
           </Tabs.Tab>
         </Tabs.List>
         <Tabs.Panel value="especialidades" pt="xs">
-          <PedidoEspecialidade listMercadoria={listMercadoria} />
+          <PedidoEspecialidade listEspecialidade={listEspecialidade} />
         </Tabs.Panel>
         <Tabs.Panel value="mercadorias" pt="xs">
           <PedidoMercadoria listMercadoria={listMercadoria} />
@@ -119,60 +190,69 @@ const DrawerPedido: React.FC<DrawerPedido> = ({
       title={'Cadastro de pedidos'}
     >
       <Divider />
-      <Flex align={'center'} wrap={'wrap'} gap="sm" mt={'1rem'}>
-        <TextInput
-          {...form.getInputProps('nome')}
-          value={form.values.nome}
-          w={'calc(33.33% - 0.5rem)'}
-          placeholder="Digite o nome do cliente"
-          label="Nome do cliente"
-          onChange={values => form.setFieldValue('nome', values.target.value)}
-          withAsterisk
+      <form onSubmit={form.onSubmit(handleSubmit)}>
+        <Flex align={'center'} wrap={'wrap'} gap="sm" mt={'1rem'}>
+          <TextInput
+            {...form.getInputProps('nomeCliente')}
+            value={form.values.nomeCliente}
+            w={'calc(33.33% - 0.5rem)'}
+            placeholder="Digite o nome do cliente"
+            label="Nome do cliente"
+            onChange={values =>
+              form.setFieldValue('nomeCliente', values.target.value)
+            }
+            withAsterisk
+          />
+          <NumberInput
+            {...form.getInputProps('mesa')}
+            w={'calc(33.33% - 0.5rem)'}
+            defaultValue={form.values.mesa}
+            placeholder="Digite o número da mesa"
+            label="Número da mesa"
+            hideControls
+            onChange={value => form.setFieldValue('mesa', Number(value))}
+          />
+          <Select
+            withAsterisk
+            {...form.getInputProps('tipoPedido.id')}
+            label="Tipo de pedido"
+            w={'calc(33.33% - 0.5rem)'}
+            placeholder="Selecione o tipo de pedido"
+            onChange={event =>
+              form.setFieldValue('tipoPedido.id', Number(event))
+            }
+            withinPortal
+            data={tipoPedido}
+          />
+        </Flex>
+        <Textarea
+          mt={'1rem'}
+          {...form.getInputProps('observação')}
+          mb={'1rem'}
+          onChange={event =>
+            form.setFieldValue('observação', event.target.value)
+          }
+          placeholder="observação"
+          label="Observação"
         />
-        <NumberInput
-          {...form.getInputProps('mesa')}
-          w={'calc(33.33% - 0.5rem)'}
-          defaultValue={form.values.mesa}
-          placeholder="Digite o número da mesa"
-          label="Número da mesa"
-          hideControls
-          onChange={value => form.setFieldValue('mesa', Number(value))}
-        />
-        <Select
-          withAsterisk
-          label="Tipo de pedido"
-          w={'calc(33.33% - 0.5rem)'}
-          placeholder="Selecione o tipo de pedido"
-          onChange={event => form.setFieldValue('tipoPedido.id', Number(event))}
-          withinPortal
-          data={tipoPedido}
-        />
-      </Flex>
-      <Textarea
-        mt={'1rem'}
-        mb={'1rem'}
-        placeholder="observação"
-        label="Observação"
-      />
+      </form>
       <Card mt={'1rem'} shadow="sm" radius="md" withBorder>
         {renderTabs()}
       </Card>
-      <Flex mt={20} justify={'space-between'}>
-        <Button
-          leftIcon={<IconCircleXFilled />}
-          color="red"
-          onClick={cancelarPedido}
-        >
-          Cancelar
-        </Button>
-        <Button
-          leftIcon={<IconDatabasePlus />}
-          color="green"
-          onClick={setConfirmacao}
-        >
-          Salvar
-        </Button>
-      </Flex>
+      <form onSubmit={form.onSubmit(handleSubmit)}>
+        <Flex mt={20} justify={'space-between'}>
+          <Button
+            leftIcon={<IconCircleXFilled />}
+            color="red"
+            onClick={cancelarPedido}
+          >
+            Cancelar
+          </Button>
+          <Button leftIcon={<IconDatabasePlus />} color="green" type="submit">
+            Salvar
+          </Button>
+        </Flex>
+      </form>
     </Drawer>
   )
 }
