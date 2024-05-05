@@ -297,6 +297,7 @@ export default function RegistroCaixa() {
       <Tooltip label={'Pagamento'}>
         <ActionIcon
           size="sm"
+          disabled={row.original.pago === 1}
           variant="transparent"
           aria-label="Settings"
           onClick={() => payment(row.original)}

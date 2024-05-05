@@ -16,7 +16,7 @@ BEGIN
         SET nova_string = CONCAT('0001/', ano_atual);
     ELSE
         SET contador = contador + 1;
-        SET nova_string = CONCAT(LPAD(contador, 4, '0'), '/', ano_atual);
+        SET nova_string = CONCAT(LPAD(NEW.id, 4, '0'), '/', ano_atual);
     END IF;
 
     SET NEW.numero_pedido = nova_string;
