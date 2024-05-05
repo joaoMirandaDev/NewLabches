@@ -111,4 +111,9 @@ public class PedidoService  {
         Pedido pedido = findById(id);
         return new PedidoDTO(pedido);
     }
+
+    public void deleteById(Integer id) {
+        Pedido pedido = findById(id);
+        pedidoRepository.delete(pedido);
+    }
 }

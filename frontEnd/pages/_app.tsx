@@ -203,11 +203,6 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
                     zIndex: 100000,
                   },
                 },
-                Text: {
-                  defaultProps: {
-                    fw: 'bold',
-                  },
-                },
                 Button: {
                   defaultProps: {
                     fw: 'bold',

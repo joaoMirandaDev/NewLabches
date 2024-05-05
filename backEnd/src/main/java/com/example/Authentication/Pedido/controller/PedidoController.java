@@ -45,6 +45,14 @@ public class PedidoController {
                 null, LocaleInteface.BR));
     }
 
+    @DeleteMapping(value = "/delete/{id}", produces = "application/json")
+    @Operation(summary = "Deletar pedido", description = "Metodo utilizado para deletar pedidos por ID", tags = "Pedido")
+    public ResponseEntity<String> payment(@PathVariable Integer id) {
+        pedidoService.deleteById(id);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(messageSource.getMessage("success.delete",
+                null, LocaleInteface.BR));
+    }
+
     @GetMapping(value = "/getValorTotal/{id}", produces = "application/json")
     @Operation(summary = "Valor total dos pedidos", description = "Metodo utilizado para buscar os valores totais dos pedidos", tags = "Pedido")
     public Double getValorTotal(@PathVariable Integer id) {

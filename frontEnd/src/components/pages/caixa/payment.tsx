@@ -119,7 +119,7 @@ const PaymentPedido: React.FC<PaymentPedido> = ({
       </Group>
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Select
-          mt={'1rem'}
+          mt={'0,5rem'}
           {...form.getInputProps('formaPagamento.id')}
           withinPortal
           onChange={event => form.setFieldValue('id', Number(event))}

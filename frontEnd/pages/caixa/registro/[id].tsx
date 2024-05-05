@@ -2,6 +2,7 @@ import { ErrorNotification } from '@components/common'
 import SearchBar from '@components/common/filtro/filtro-sem-remocao-caracter'
 import PaginationTable from '@components/common/tabela/paginationTable'
 import DrawerPedido from '@components/pages/caixa'
+import DeletePedido from '@components/pages/caixa/deletePedido'
 import PaymentPedido from '@components/pages/caixa/payment'
 import {
   ActionIcon,
@@ -15,7 +16,12 @@ import {
   Tooltip,
 } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
-import { IconAlertTriangle, IconCircleCheck, IconEdit } from '@tabler/icons'
+import {
+  IconAlertTriangle,
+  IconCircleCheck,
+  IconEdit,
+  IconTrash,
+} from '@tabler/icons'
 import { IconCash } from '@tabler/icons-react'
 import {
   MRT_ColumnDef,
@@ -45,6 +51,7 @@ export default function RegistroCaixa() {
   const router = useRouter()
   const [resetPesquisa, setResetPesquisa] = useState<boolean>(false)
   const [modalPedido, setModalPedido] = useState<boolean>(false)
+  const [modalDeletePedido, setModalDeletePedido] = useState<boolean>(false)
   const [sorting, setSorting] = useState<MRT_SortingState>([
     { id: 'numeroPedido', desc: true },
   ])
@@ -120,6 +127,9 @@ export default function RegistroCaixa() {
   }
   const closeModalPedido = () => {
     setModalPedido(false)
+  }
+  const closeModalDeletePedido = () => {
+    setModalDeletePedido(false)
   }
   const closeModal = () => {
     close()
@@ -278,6 +288,10 @@ export default function RegistroCaixa() {
     setIdPedido(Number(value.id))
     setModalPedido(true)
   }
+  const deletePedido = (value: IPedido) => {
+    setModalDeletePedido(true)
+    setIdPedido(Number(value.id))
+  }
   const rowActions = ({ row }: { row: MRT_Row<IPedido> }) => (
     <Flex>
       <Tooltip label={'Pagamento'}>
@@ -288,6 +302,16 @@ export default function RegistroCaixa() {
           onClick={() => payment(row.original)}
         >
           <IconCash style={{ cursor: 'pointer' }} />
+        </ActionIcon>
+      </Tooltip>
+      <Tooltip label={'Deletar pedido'}>
+        <ActionIcon
+          size="sm"
+          variant="transparent"
+          aria-label="Settings"
+          onClick={() => deletePedido(row.original)}
+        >
+          <IconTrash style={{ cursor: 'pointer' }} />
         </ActionIcon>
       </Tooltip>
     </Flex>
@@ -388,6 +412,12 @@ export default function RegistroCaixa() {
         idPedido={idPedido}
         refresh={refresh}
         closeModalPedido={closeModalPedido}
+      />
+      <DeletePedido
+        openModal={modalDeletePedido}
+        idPedido={idPedido}
+        refresh={refresh}
+        closeModalPedido={closeModalDeletePedido}
       />
     </>
   )
