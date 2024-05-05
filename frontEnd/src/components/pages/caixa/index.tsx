@@ -132,7 +132,7 @@ const DrawerPedido: React.FC<DrawerPedido> = ({
   const listEspecialidade = (value: IPedidoEspecialidade[]) => {
     const especialidade = value.reduce((total, obj) => {
       if (obj) {
-        return total + obj.valorPedidoEspecialidade! * obj.quantidade!
+        return total + obj.valor! * obj.quantidade!
       }
       return 0
     }, 0)
@@ -153,6 +153,7 @@ const DrawerPedido: React.FC<DrawerPedido> = ({
 
   const cancelarPedido = () => {
     closeModal(false)
+    resetForm()
   }
 
   const renderTabs = () => {
@@ -227,10 +228,10 @@ const DrawerPedido: React.FC<DrawerPedido> = ({
         </Flex>
         <Textarea
           mt={'1rem'}
-          {...form.getInputProps('observação')}
+          {...form.getInputProps('observacao')}
           mb={'1rem'}
           onChange={event =>
-            form.setFieldValue('observação', event.target.value)
+            form.setFieldValue('observacao', event.target.value)
           }
           placeholder="observação"
           label="Observação"

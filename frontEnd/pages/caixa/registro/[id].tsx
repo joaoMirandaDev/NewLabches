@@ -2,12 +2,25 @@ import { ErrorNotification } from '@components/common'
 import SearchBar from '@components/common/filtro/filtro-sem-remocao-caracter'
 import PaginationTable from '@components/common/tabela/paginationTable'
 import DrawerPedido from '@components/pages/caixa'
-import { Box, Button, Card, Divider, Flex, Space, Text } from '@mantine/core'
+import PaymentPedido from '@components/pages/caixa/payment'
+import {
+  ActionIcon,
+  Box,
+  Button,
+  Card,
+  Divider,
+  Flex,
+  Space,
+  Text,
+  Tooltip,
+} from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { IconAlertTriangle, IconCircleCheck, IconEdit } from '@tabler/icons'
+import { IconCash } from '@tabler/icons-react'
 import {
   MRT_ColumnDef,
   MRT_PaginationState,
+  MRT_Row,
   MRT_SortingState,
 } from 'mantine-react-table'
 import { useRouter } from 'next/router'
@@ -25,11 +38,13 @@ import {
 export default function RegistroCaixa() {
   const [data, setData] = useState<ICaixa>()
   const [dataPedido, setDataPedido] = useState<IPedido[]>([])
+  const [idPedido, setIdPedido] = useState<number | null>(null)
   const [totalElements, setTotalElements] = useState<number>(0)
   const [opened, { open, close }] = useDisclosure(false)
   const [totalVendas, setTotalVendas] = useState<number>(0)
   const router = useRouter()
   const [resetPesquisa, setResetPesquisa] = useState<boolean>(false)
+  const [modalPedido, setModalPedido] = useState<boolean>(false)
   const [sorting, setSorting] = useState<MRT_SortingState>([
     { id: 'numeroPedido', desc: true },
   ])
@@ -102,6 +117,9 @@ export default function RegistroCaixa() {
           ErrorNotification({ message: 'Error ao buscar pedidos' })
         })
     }
+  }
+  const closeModalPedido = () => {
+    setModalPedido(false)
   }
   const closeModal = () => {
     close()
@@ -256,6 +274,24 @@ export default function RegistroCaixa() {
     ],
     []
   )
+  const payment = (value: IPedido) => {
+    setIdPedido(Number(value.id))
+    setModalPedido(true)
+  }
+  const rowActions = ({ row }: { row: MRT_Row<IPedido> }) => (
+    <Flex>
+      <Tooltip label={'Pagamento'}>
+        <ActionIcon
+          size="sm"
+          variant="transparent"
+          aria-label="Settings"
+          onClick={() => payment(row.original)}
+        >
+          <IconCash style={{ cursor: 'pointer' }} />
+        </ActionIcon>
+      </Tooltip>
+    </Flex>
+  )
   return (
     <>
       <Card shadow="sm" radius="md" withBorder>
@@ -324,7 +360,7 @@ export default function RegistroCaixa() {
         <PaginationTable
           setSorting={setSorting}
           columns={columns}
-          // rowActions={rowActions}
+          rowActions={rowActions}
           setPagination={setPagination}
           enableRowActions
           enableSorting
@@ -346,6 +382,12 @@ export default function RegistroCaixa() {
         idCaixa={Number(id)}
         refresh={refresh}
         closeModal={closeModal}
+      />
+      <PaymentPedido
+        openModal={modalPedido}
+        idPedido={idPedido}
+        refresh={refresh}
+        closeModalPedido={closeModalPedido}
       />
     </>
   )

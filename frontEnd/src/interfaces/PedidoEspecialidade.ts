@@ -13,6 +13,6 @@ interface IEspecialidade {
 export default interface IPedidoEspecialidade {
   id?: number
   quantidade?: number
-  valorPedidoEspecialidade?: number
+  valor?: number
   especialidade?: IEspecialidade
 }

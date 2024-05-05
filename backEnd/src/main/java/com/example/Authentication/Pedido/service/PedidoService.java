@@ -3,17 +3,24 @@ package com.example.Authentication.Pedido.service;
 import com.example.Authentication.Caixa.DTO.CaixaDTO;
 import com.example.Authentication.Caixa.model.Caixa;
 import com.example.Authentication.Caixa.service.CaixaService;
+import com.example.Authentication.Categoria.model.Categoria;
 import com.example.Authentication.Compras.DTO.ComprasDto;
 import com.example.Authentication.Compras.service.ComprasService;
+import com.example.Authentication.FormaPagamento.DTO.FormaPagamentoDTO;
+import com.example.Authentication.FormaPagamento.model.FormaPagamento;
+import com.example.Authentication.FormaPagamento.service.FormaPagamentoService;
 import com.example.Authentication.Pedido.DTO.PedidoDTO;
 import com.example.Authentication.Pedido.model.Pedido;
 import com.example.Authentication.Pedido.repository.PedidoRepository;
 import com.example.Authentication.PedidoEspecialidade.service.PedidoEspecialidadeService;
 import com.example.Authentication.PedidoMercadoria.service.PedidoMercadoriaService;
 import com.example.Authentication.TipoPedido.service.TipoPedidoService;
+import com.example.Authentication.Utils.Interfaces.LocaleInteface;
+import com.example.Authentication.Utils.exceptions.NotFoundException;
 import com.example.Authentication.Utils.filtro.Filtro;
 import com.example.Authentication.Utils.pagination.Pagination;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,8 +38,10 @@ public class PedidoService  {
     private static final Map<String, String> CAMPO_ORDENACAO = new HashMap<>();
     private final CaixaService caixaService;
     private final PedidoMercadoriaService pedidoMercadoriaService;
+    private final FormaPagamentoService formaPagamentoService;
     private final TipoPedidoService tipoPedidoService;
     private final PedidoEspecialidadeService pedidoEspecialidadeService;
+    private final MessageSource messageSource;
     private final PedidoRepository pedidoRepository;
     static {
         CAMPO_ORDENACAO.put("nomeCliente", "nome_cliente");
@@ -82,5 +91,24 @@ public class PedidoService  {
                 pedidoEspecialidadeService.create(obj, pedido);
             });
         }
+    }
+
+    public void paymentPedido(Integer id, FormaPagamentoDTO formaPagamentoDTO) {
+        FormaPagamento pagamento = formaPagamentoService.findById(formaPagamentoDTO.getId());
+        Pedido pedido = findById(id);
+        pedido.setFormaPagamento(pagamento);
+        pedido.setPago(1);
+        pedidoRepository.save(pedido);
+    }
+
+    private Pedido findById(Integer id) {
+        Pedido pedido = pedidoRepository.findById(id).orElseThrow(() ->
+                new NotFoundException(messageSource.getMessage("error.isEmpty", null, LocaleInteface.BR)));
+        return pedido;
+    }
+
+    public PedidoDTO findDtoById(Integer id) {
+        Pedido pedido = findById(id);
+        return new PedidoDTO(pedido);
     }
 }

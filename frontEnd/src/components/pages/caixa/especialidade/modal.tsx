@@ -49,13 +49,13 @@ const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
   const form = useForm<{
     especialidade: IEspecialidade
     quantidade: number
-    valorPedidoEspecialidade: number
+    valor: number
     adicionalEspecialidades: IAdicional[]
   }>({
     initialValues: {
       especialidade: {},
       quantidade: 0,
-      valorPedidoEspecialidade: 0,
+      valor: 0,
       adicionalEspecialidades: [],
     },
     validate: zodResolver(ValidateAddPedidoEspecialidade()),
@@ -66,7 +66,7 @@ const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
       api.get(PRODUTO_BY_ID + `${idEspecialidade}`).then(response => {
         setDataIngrediente(response.data.especialidadeMercadoria)
         form.setFieldValue('especialidade', response.data)
-        form.setFieldValue('valorPedidoEspecialidade', response.data.preco)
+        form.setFieldValue('valor', response.data.preco)
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -97,15 +97,9 @@ const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
       const valor = value.reduce((total, obj) => {
         return total + obj.mercadoria!.valorVenda! * obj.quantidade!
       }, 0)
-      form.setFieldValue(
-        'valorPedidoEspecialidade',
-        form.values.especialidade.preco! + valor
-      )
+      form.setFieldValue('valor', form.values.especialidade.preco! + valor)
     } else {
-      form.setFieldValue(
-        'valorPedidoEspecialidade',
-        form.values.especialidade.preco!
-      )
+      form.setFieldValue('valor', form.values.especialidade.preco!)
     }
   }
   const remove = (row: MRT_Row) => {
@@ -211,12 +205,12 @@ const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
             required
           />
           <NumberInput
-            {...form.getInputProps('valorPedidoEspecialidade')}
+            {...form.getInputProps('valor')}
             mt={'1rem'}
             precision={2}
             decimalSeparator=","
             thousandsSeparator="."
-            defaultValue={form.values.valorPedidoEspecialidade}
+            defaultValue={form.values.valor}
             placeholder={'Insira o valor'}
             label={'Valor'}
             withAsterisk

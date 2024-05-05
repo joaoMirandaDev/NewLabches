@@ -43,6 +43,8 @@ export const FIND_ALL_ESPECIALIDADE: string = 'api/especialidade/findAll'
 
 /* Rotas pedido */
 export const PEDIDO_PAGE: string = '/api/pedido/list/'
+export const PEDIDO_BY_ID: string = '/api/pedido/findDtoById/'
+export const PEDIDO_PAYMENT: string = '/api/pedido/payment/'
 export const PEDIDO_ADD: string = '/api/pedido/addPedido/'
 export const GET_VALOR_TOTAL_BY_CAIXA: string = '/api/pedido/getValorTotal/'
 

@@ -29,7 +29,7 @@ public class PedidoEspecialidadeService {
         pedidoEspecialidade.setEspecialidade(especialidadeService.findById(val.getEspecialidade().getId()));
         pedidoEspecialidade.setPedido(pedido);
         pedidoEspecialidade.setQuantidade(val.getQuantidade());
-        pedidoEspecialidade.setValorPedidoEspecialidade(val.getValorPedidoEspecialidade());
+        pedidoEspecialidade.setValor(val.getValor());
         pedidoEspecialidadeRepository.save(pedidoEspecialidade);
         if (Objects.nonNull(val.getAdicionalEspecialidades()) && !val.getAdicionalEspecialidades().isEmpty()) {
             val.getAdicionalEspecialidades().forEach(obj -> {

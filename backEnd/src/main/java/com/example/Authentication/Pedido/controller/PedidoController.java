@@ -1,5 +1,6 @@
 package com.example.Authentication.Pedido.controller;
 
+import com.example.Authentication.FormaPagamento.DTO.FormaPagamentoDTO;
 import com.example.Authentication.Pedido.DTO.PedidoDTO;
 import com.example.Authentication.Pedido.service.PedidoService;
 import com.example.Authentication.Utils.Interfaces.LocaleInteface;
@@ -36,9 +37,23 @@ public class PedidoController {
                 null, LocaleInteface.BR));
     }
 
+    @PutMapping(value = "/payment/{id}", produces = "application/json")
+    @Operation(summary = "Pagamento dos pedidos", description = "Metodo utilizado para realizar pagamento dos pedidos", tags = "Pedido")
+    public ResponseEntity<String> payment(@PathVariable Integer id, @RequestBody FormaPagamentoDTO formaPagamentoDTO) {
+        pedidoService.paymentPedido(id, formaPagamentoDTO);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(messageSource.getMessage("success.payment",
+                null, LocaleInteface.BR));
+    }
+
     @GetMapping(value = "/getValorTotal/{id}", produces = "application/json")
     @Operation(summary = "Valor total dos pedidos", description = "Metodo utilizado para buscar os valores totais dos pedidos", tags = "Pedido")
     public Double getValorTotal(@PathVariable Integer id) {
       return pedidoService.getValorTotalByCaixa(id);
+    }
+
+    @GetMapping(value = "/findDtoById/{id}", produces = "application/json")
+    @Operation(summary = "FindDtoById", description = "Metodo utilizado para buscar o pedido por ID", tags = "Pedido")
+    public PedidoDTO findDtoById(@PathVariable Integer id) {
+        return pedidoService.findDtoById(id);
     }
 }

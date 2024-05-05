@@ -22,6 +22,6 @@ public class PedidoEspecialidadeDTO {
     private EspecialidadeDTO especialidade;
     private PedidoDTO pedido;
     private Integer quantidade;
-    private Double valorPedidoEspecialidade;
+    private Double valor;
     private List<AdicionalEspecialidadeDTO> adicionalEspecialidades;
 }

@@ -5,5 +5,5 @@ export default interface IEspecialidadeMercadoria {
   idMercadoria?: number
   mercadoria?: IMercadoria | null
   quantidade?: number
-  valorPedidoEspecialidade?: number
+  valor?: number
 }

@@ -46,8 +46,8 @@ const ModalAdicional: React.FC<AdiocionalEspecialidade> = ({
   }
   const fecharModal = () => {
     close()
-    closeModal(false)
     resetForm()
+    closeModal(false)
   }
   const submit = async () => {
     if (form.isValid()) {

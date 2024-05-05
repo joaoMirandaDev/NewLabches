@@ -58,7 +58,7 @@ const PedidoEspecialidade: React.FC<PedidoEspecialidade> = ({
         },
       },
       {
-        accessorKey: 'valorPedidoEspecialidade',
+        accessorKey: 'valor',
         header: 'Valor',
         size: 15,
         minSize: 10,
