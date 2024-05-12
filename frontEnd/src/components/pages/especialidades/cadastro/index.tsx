@@ -304,6 +304,7 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
           clearButtonProps={{ 'aria-label': 'Clear selection' }}
           nothingFound="Nenhuma categoria encontrada"
           withinPortal
+          searchable
           withAsterisk
           required
           label={t('pages.produtos.cadastro.categoria')}
@@ -335,6 +336,8 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
             data={mercadoria}
             withinPortal
             w={'100%'}
+            searchable
+            clearable
             withAsterisk
             label="Selecione as mercadorias"
             placeholder="Selecione as mercadorias"

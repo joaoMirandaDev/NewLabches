@@ -14,6 +14,7 @@ import {
 import { useTranslate } from '@refinedev/core'
 import {
   IconAlertTriangle,
+  IconCash,
   IconChecklist,
   IconCircleCheck,
   IconEdit,
@@ -30,7 +31,7 @@ import api from 'src/utils/Api'
 import { useEffect, useMemo, useState } from 'react'
 import ISearch from 'src/interfaces/search'
 import { PAGE_INDEX, PAGE_SIZE } from 'src/utils/Constants'
-import { CAIXA_OPEN, CAIXA_PAGE } from 'src/utils/Routes'
+import { CAIXA_CLOSE, CAIXA_OPEN, CAIXA_PAGE } from 'src/utils/Routes'
 import ICaixa from 'src/interfaces/Caixa'
 import {
   IconCircleXFilled,
@@ -189,7 +190,7 @@ export default function Caixa() {
       },
       {
         accessorKey: 'valorAberturaCaixa',
-        header: 'Saldo de Abertura',
+        header: 'Valor de Abertura',
         enableSorting: true,
         enableColumnFilter: true,
         size: 15,
@@ -228,7 +229,7 @@ export default function Caixa() {
       },
       {
         accessorKey: 'valorFechamentoCaixa',
-        header: 'Saldo de fechamento',
+        header: 'Valor de fechamento',
         enableSorting: true,
         enableColumnFilter: true,
         size: 15,
@@ -291,20 +292,39 @@ export default function Caixa() {
     []
   )
 
-  const editar = (id: number) => {
+  const openCaixaExistente = (id: number) => {
     navigate.push(`/caixa/registro/${id}`)
+  }
+
+  const closeBox = (id: number) => {
+    api.put(CAIXA_CLOSE + id).then(response => {
+      SuccessNotification({ message: response.data })
+      findPageCaixa()
+    })
   }
 
   const rowActions = ({ row }: { row: MRT_Row<ICaixa> }) => (
     <Flex>
-      <Tooltip label="Editar">
+      <Tooltip label="Acessar o caixa">
+        <ActionIcon
+          size="sm"
+          variant="transparent"
+          disabled={row.original.caixaAberto == 1}
+          aria-label="Settings"
+          onClick={() => openCaixaExistente(row.original.id!)}
+        >
+          <IconEdit />
+        </ActionIcon>
+      </Tooltip>
+      <Tooltip label="Fechar caixa">
         <ActionIcon
           size="sm"
           variant="transparent"
           aria-label="Settings"
-          onClick={() => editar(row.original.id!)}
+          disabled={row.original.caixaAberto == 1}
+          onClick={() => closeBox(row.original.id!)}
         >
-          <IconEdit />
+          <IconCash />
         </ActionIcon>
       </Tooltip>
     </Flex>

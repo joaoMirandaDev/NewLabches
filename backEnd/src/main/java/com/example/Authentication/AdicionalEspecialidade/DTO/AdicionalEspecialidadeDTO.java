@@ -1,5 +1,6 @@
 package com.example.Authentication.AdicionalEspecialidade.DTO;
 
+import com.example.Authentication.Mercadoria.DTO.MercadoriaDTO;
 import com.example.Authentication.Mercadoria.model.Mercadoria;
 import com.example.Authentication.PedidoEspecialidade.model.PedidoEspecialidade;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,7 @@ import javax.persistence.*;
 public class AdicionalEspecialidadeDTO {
 
     private Integer id;
-    private Mercadoria mercadoria;
+    private MercadoriaDTO mercadoria;
     private PedidoEspecialidade pedidoEspecialidade;
     private Integer quantidade;
 }

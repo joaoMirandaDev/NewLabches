@@ -12,7 +12,7 @@ import { useEffect, useMemo, useState } from 'react'
 import IMercadoria from 'src/interfaces/mercadoria'
 import { FIND_ALL_ESPECIALIDADE } from 'src/utils/Routes'
 import api from 'src/utils/Api'
-import { IconDatabasePlus, IconEdit, IconTrash } from '@tabler/icons-react'
+import { IconDatabasePlus, IconTrash } from '@tabler/icons-react'
 import SimpleTable from '@components/common/tabela/simpleTable'
 import { MRT_ColumnDef, MRT_Row } from 'mantine-react-table'
 import IEspecialidadeMercadoria from 'src/interfaces/especialidadeCompra'
@@ -114,7 +114,7 @@ const PedidoEspecialidade: React.FC<PedidoEspecialidade> = ({
           <IconTrash style={{ cursor: 'pointer' }} />
         </ActionIcon>
       </Tooltip>
-      <Tooltip label={'Editar'}>
+      {/* <Tooltip label={'Editar'}>
         <ActionIcon
           size="sm"
           variant="transparent"
@@ -123,7 +123,7 @@ const PedidoEspecialidade: React.FC<PedidoEspecialidade> = ({
         >
           <IconEdit style={{ cursor: 'pointer' }} />
         </ActionIcon>
-      </Tooltip>
+      </Tooltip> */}
     </Flex>
   )
 
@@ -133,9 +133,6 @@ const PedidoEspecialidade: React.FC<PedidoEspecialidade> = ({
     setData(newData)
   }
 
-  const editar = () => {
-    open()
-  }
   useEffect(() => {
     getMethods()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -153,6 +150,7 @@ const PedidoEspecialidade: React.FC<PedidoEspecialidade> = ({
           onChange={value => setIdEspecialidade(Number(value))}
           data={especialidade}
           withinPortal
+          searchable
           w={'100%'}
           withAsterisk
           label="Selecione a especialidade"

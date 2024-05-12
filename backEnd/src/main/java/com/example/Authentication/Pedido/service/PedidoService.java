@@ -9,9 +9,12 @@ import com.example.Authentication.Compras.service.ComprasService;
 import com.example.Authentication.FormaPagamento.DTO.FormaPagamentoDTO;
 import com.example.Authentication.FormaPagamento.model.FormaPagamento;
 import com.example.Authentication.FormaPagamento.service.FormaPagamentoService;
+import com.example.Authentication.Mercadoria.service.MercadoriaService;
 import com.example.Authentication.Pedido.DTO.PedidoDTO;
 import com.example.Authentication.Pedido.model.Pedido;
 import com.example.Authentication.Pedido.repository.PedidoRepository;
+import com.example.Authentication.PedidoEspecialidade.DTO.PedidoEspecialidadeDTO;
+import com.example.Authentication.PedidoEspecialidade.model.PedidoEspecialidade;
 import com.example.Authentication.PedidoEspecialidade.service.PedidoEspecialidadeService;
 import com.example.Authentication.PedidoMercadoria.service.PedidoMercadoriaService;
 import com.example.Authentication.TipoPedido.service.TipoPedidoService;
@@ -38,6 +41,7 @@ public class PedidoService  {
     private static final Map<String, String> CAMPO_ORDENACAO = new HashMap<>();
     private final CaixaService caixaService;
     private final PedidoMercadoriaService pedidoMercadoriaService;
+    private final MercadoriaService mercadoriaService;
     private final FormaPagamentoService formaPagamentoService;
     private final TipoPedidoService tipoPedidoService;
     private final PedidoEspecialidadeService pedidoEspecialidadeService;
@@ -50,7 +54,6 @@ public class PedidoService  {
         CAMPO_ORDENACAO.put("valorTotal", "valor_total");
         CAMPO_ORDENACAO.put("tipoPedido.name", "tp.name");
     }
-
 
     public Page<PedidoDTO> findAllPageByIdCaixa(Integer id, Filtro filtro) {
         Pageable pageable = Pagination.createPageableFromFiltro(filtro, CAMPO_ORDENACAO, "numero_pedido");
@@ -114,6 +117,29 @@ public class PedidoService  {
 
     public void deleteById(Integer id) {
         Pedido pedido = findById(id);
+        if (!pedido.getPedidoEspecialidades().isEmpty() && Objects.nonNull(pedido.getPedidoEspecialidades())) {
+            pedido.getPedidoEspecialidades().forEach(obj -> {
+                obj.getEspecialidade().getEspecialidadeMercadorias().forEach(val -> {
+                    mercadoriaService.aumentaSaldo(val.getMercadoria(), val.getQuantidade());
+                });
+            });
+        }
+        if (!pedido.getPedidoMercadoria().isEmpty() && Objects.nonNull(pedido.getPedidoMercadoria())) {
+            pedido.getPedidoMercadoria().forEach(obj -> {
+                mercadoriaService.aumentaSaldo(obj.getMercadoria(), obj.getQuantidade());
+            });
+        }
         pedidoRepository.delete(pedido);
+    }
+
+    public void editPedido(Integer id, PedidoDTO pedidoDTO) {
+        Pedido pedido = this.findById(id);
+        pedido.setFormaPagamento(formaPagamentoService.findById(pedidoDTO.getFormaPagamento().getId()));
+        pedido.setMesa(pedidoDTO.getMesa());
+        pedido.setObservacao(pedidoDTO.getObservacao());
+        pedido.setNomeCliente(pedidoDTO.getNomeCliente());
+        pedido.setPago(pedidoDTO.getPago());
+        pedido.setValorTotal(pedidoDTO.getValorTotal());
+        pedidoEspecialidadeService.createUpdateDelete(pedido,pedido.getPedidoEspecialidades(), pedidoDTO.getPedidoEspecialidade());
     }
 }

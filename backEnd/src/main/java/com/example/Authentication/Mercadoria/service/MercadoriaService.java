@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -123,7 +124,8 @@ public class MercadoriaService implements Pagination {
     }
 
     public List<MercadoriaSelectDTO> findAll() {
-        return  mercadoriaRepository.findAll().stream().map(MercadoriaSelectDTO::new).collect(Collectors.toList());
+        List<Mercadoria> mercadoriaList = mercadoriaRepository.findAll(Sort.by("nome"));
+        return mercadoriaList.stream().map(MercadoriaSelectDTO::new).collect(Collectors.toList());
     }
 
     public void revertValues(List<ItensCompras> ingredientesList) {
@@ -138,6 +140,11 @@ public class MercadoriaService implements Pagination {
 
     public void reduzSaldo(Mercadoria mercadoria, Integer quantidade) {
         mercadoria.setSaldoEstoque(mercadoria.getSaldoEstoque() - quantidade);
+        mercadoriaRepository.save(mercadoria);
+    }
+
+    public void aumentaSaldo(Mercadoria mercadoria, Integer quantidade) {
+        mercadoria.setSaldoEstoque(mercadoria.getSaldoEstoque() + quantidade);
         mercadoriaRepository.save(mercadoria);
     }
 }

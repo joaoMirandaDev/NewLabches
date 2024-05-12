@@ -1,11 +1,14 @@
 package com.example.Authentication.Mercadoria.repository;
 
 import com.example.Authentication.Mercadoria.model.Mercadoria;
+import io.micrometer.core.instrument.Tags;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface MercadoriaRepository extends JpaRepository<Mercadoria, Integer> {
@@ -18,4 +21,5 @@ public interface MercadoriaRepository extends JpaRepository<Mercadoria, Integer>
             "(:search IS NULL OR :search = '' OR m.nome LIKE %:search% OR um.nome " +
             "LIKE %:search% OR m.saldo_estoque LIKE CONCAT('%', :search, '%') OR m.valor_venda LIKE CONCAT('%', :search, '%') OR DATE_FORMAT(m.data_cadastro, '%d/%m/%Y') LIKE %:search%)")
     Page<Mercadoria> findAll(Pageable pageable, String search);
+
 }

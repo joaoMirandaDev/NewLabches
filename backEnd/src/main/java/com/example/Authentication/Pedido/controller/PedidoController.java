@@ -41,7 +41,15 @@ public class PedidoController {
     @Operation(summary = "Pagamento dos pedidos", description = "Metodo utilizado para realizar pagamento dos pedidos", tags = "Pedido")
     public ResponseEntity<String> payment(@PathVariable Integer id, @RequestBody FormaPagamentoDTO formaPagamentoDTO) {
         pedidoService.paymentPedido(id, formaPagamentoDTO);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(messageSource.getMessage("success.payment",
+        return ResponseEntity.status(HttpStatus.OK).body(messageSource.getMessage("success.payment",
+                null, LocaleInteface.BR));
+    }
+
+    @PutMapping(value = "/editPedido/{id}", produces = "application/json")
+    @Operation(summary = "Edição dos pedidos", description = "Metodo utilizado para editar os pedidos", tags = "Pedido")
+    public ResponseEntity<String> editPedido(@PathVariable Integer id, @RequestBody PedidoDTO pedidoDTO) {
+        pedidoService.editPedido(id, pedidoDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(messageSource.getMessage("success.edit",
                 null, LocaleInteface.BR));
     }
 
@@ -49,7 +57,7 @@ public class PedidoController {
     @Operation(summary = "Deletar pedido", description = "Metodo utilizado para deletar pedidos por ID", tags = "Pedido")
     public ResponseEntity<String> payment(@PathVariable Integer id) {
         pedidoService.deleteById(id);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(messageSource.getMessage("success.delete",
+        return ResponseEntity.status(HttpStatus.OK).body(messageSource.getMessage("success.delete",
                 null, LocaleInteface.BR));
     }
 

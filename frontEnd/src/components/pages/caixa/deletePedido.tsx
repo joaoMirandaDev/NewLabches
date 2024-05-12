@@ -57,6 +57,7 @@ const DeletePedido: React.FC<DeletePedido> = ({
     close()
     closeModalPedido(true)
     resetForm()
+    refresh(true)
   }
   const deleteById = () => {
     api
@@ -66,7 +67,6 @@ const DeletePedido: React.FC<DeletePedido> = ({
           message: response.data,
         })
         closeModalPagamento()
-        refresh(true)
       })
       .catch(() => {
         ErrorNotification({
@@ -82,7 +82,7 @@ const DeletePedido: React.FC<DeletePedido> = ({
       title="Deletar pedido"
     >
       <Group>
-        <Text fz="md">Deseja deletar este pedido: {pedido?.numeroPedido}</Text>
+        <Text fz="md">Deseja excluir este pedido: {pedido?.numeroPedido}</Text>
       </Group>
       <Flex mt={20} justify={'space-between'}>
         <Button

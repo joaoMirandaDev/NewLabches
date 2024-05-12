@@ -11,6 +11,7 @@ import {
   Card,
   Divider,
   Flex,
+  Group,
   Space,
   Text,
   Tooltip,
@@ -247,6 +248,25 @@ export default function RegistroCaixa() {
               }),
       },
       {
+        accessorKey: 'formaPagamento.nome',
+        header: 'Forma de pagamento',
+        enableSorting: false,
+        enableColumnFilter: true,
+        size: 15,
+        minSize: 10,
+        maxSize: 30,
+        mantineTableBodyCellProps: {
+          align: 'center',
+        },
+        mantineTableHeadCellProps: {
+          align: 'center',
+        },
+        Cell: ({ cell }) =>
+          cell.getValue<string>() == null || cell.getValue<string>() == ''
+            ? '-'
+            : cell.getValue<string>(),
+      },
+      {
         accessorKey: 'pago',
         header: 'Status',
         enableSorting: true,
@@ -310,6 +330,7 @@ export default function RegistroCaixa() {
           size="sm"
           variant="transparent"
           aria-label="Settings"
+          disabled={row.original.pago === 1}
           onClick={() => deletePedido(row.original)}
         >
           <IconTrash style={{ cursor: 'pointer' }} />
@@ -401,6 +422,16 @@ export default function RegistroCaixa() {
           }}
           rowCount={totalElements}
         />
+        <Group>
+          <Group position="left" align="center" mt={20} spacing={10}>
+            <IconAlertTriangle style={{ color: 'red' }} />
+            <Text size={'sm'}>Pedido em aberto |</Text>
+          </Group>
+          <Group position="left" align="center" mt={20} spacing={10}>
+            <IconCircleCheck style={{ color: 'green' }} />
+            <Text size={'sm'}> Pedido pago </Text>
+          </Group>
+        </Group>
       </Card>
       <DrawerPedido
         openModal={opened}

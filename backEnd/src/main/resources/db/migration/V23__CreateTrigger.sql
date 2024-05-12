@@ -10,8 +10,6 @@ BEGIN
 
      SET ano_atual = YEAR(NOW());
 
-    SELECT COUNT(*) INTO contador FROM pedido;
-
     IF contador = 0 THEN
         SET nova_string = CONCAT('0001/', ano_atual);
     ELSE

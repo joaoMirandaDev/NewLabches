@@ -4,11 +4,13 @@ import com.example.Authentication.Caixa.DTO.CaixaDTO;
 import com.example.Authentication.Caixa.DTO.CaixaOpenDTO;
 import com.example.Authentication.Caixa.model.Caixa;
 import com.example.Authentication.Caixa.repository.CaixaRepository;
+import com.example.Authentication.Pedido.service.PedidoService;
 import com.example.Authentication.Utils.Interfaces.LocaleInteface;
 import com.example.Authentication.Utils.exceptions.NotFoundException;
 import com.example.Authentication.Utils.filtro.Filtro;
 import com.example.Authentication.Utils.pagination.Pagination;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -26,6 +28,8 @@ public class CaixaService {
 
     private final CaixaRepository caixaRepository;
     private final MessageSource messageSource;
+    @Autowired
+    private PedidoService pedidoService;
     private static final Map<String, String> CAMPO_ORDENACAO = new HashMap<>();
     static {
         CAMPO_ORDENACAO.put("numeroCaixa", "numero_caixa");
@@ -66,5 +70,14 @@ public class CaixaService {
 
     public CaixaDTO findByIdDto(Integer id) {
         return new CaixaDTO(this.findById(id));
+    }
+
+    public void close(Integer id) {
+        Caixa caixa = caixaRepository.findById(id).orElseThrow(() -> new NotFoundException(
+                messageSource.getMessage("error.isEmpty", null, LocaleInteface.BR)));
+        caixa.setDataFechamento(new Date());
+        caixa.setValorFechamentoCaixa(pedidoService.getValorTotalByCaixa(id));
+        caixa.setCaixaAberto(1);
+        caixaRepository.save(caixa);
     }
 }
