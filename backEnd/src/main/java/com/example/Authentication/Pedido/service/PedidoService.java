@@ -10,7 +10,9 @@ import com.example.Authentication.FormaPagamento.DTO.FormaPagamentoDTO;
 import com.example.Authentication.FormaPagamento.model.FormaPagamento;
 import com.example.Authentication.FormaPagamento.service.FormaPagamentoService;
 import com.example.Authentication.Mercadoria.service.MercadoriaService;
+import com.example.Authentication.Pedido.DTO.PedidoCompletoDTO;
 import com.example.Authentication.Pedido.DTO.PedidoDTO;
+import com.example.Authentication.Pedido.DTO.PedidoListagemDTO;
 import com.example.Authentication.Pedido.model.Pedido;
 import com.example.Authentication.Pedido.repository.PedidoRepository;
 import com.example.Authentication.PedidoEspecialidade.DTO.PedidoEspecialidadeDTO;
@@ -110,9 +112,14 @@ public class PedidoService  {
         return pedido;
     }
 
-    public PedidoDTO findDtoById(Integer id) {
+    public PedidoCompletoDTO findDtoByCompleto(Integer id) {
         Pedido pedido = findById(id);
-        return new PedidoDTO(pedido);
+        return new PedidoCompletoDTO(pedido);
+    }
+
+    public PedidoListagemDTO findDtoById(Integer id) {
+        Pedido pedido = findById(id);
+        return new PedidoListagemDTO(pedido);
     }
 
     public void deleteById(Integer id) {

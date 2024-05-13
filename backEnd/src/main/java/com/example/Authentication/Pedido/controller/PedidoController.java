@@ -1,7 +1,10 @@
 package com.example.Authentication.Pedido.controller;
 
 import com.example.Authentication.FormaPagamento.DTO.FormaPagamentoDTO;
+import com.example.Authentication.Pedido.DTO.PedidoCompletoDTO;
 import com.example.Authentication.Pedido.DTO.PedidoDTO;
+import com.example.Authentication.Pedido.DTO.PedidoListagemDTO;
+import com.example.Authentication.Pedido.model.Pedido;
 import com.example.Authentication.Pedido.service.PedidoService;
 import com.example.Authentication.Utils.Interfaces.LocaleInteface;
 import com.example.Authentication.Utils.filtro.Filtro;
@@ -13,6 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -68,8 +73,14 @@ public class PedidoController {
     }
 
     @GetMapping(value = "/findDtoById/{id}", produces = "application/json")
-    @Operation(summary = "FindDtoById", description = "Metodo utilizado para buscar o pedido por ID", tags = "Pedido")
-    public PedidoDTO findDtoById(@PathVariable Integer id) {
+    @Operation(summary = "FindDtoById", description = "Metodo utilizado para buscar o pedidoDTO por ID", tags = "Pedido")
+    public PedidoListagemDTO findDtoByIdDto(@PathVariable Integer id) {
         return pedidoService.findDtoById(id);
+    }
+
+    @GetMapping(value = "/findById/{id}", produces = "application/json")
+    @Operation(summary = "FindById", description = "Metodo utilizado para buscar o pedido por ID", tags = "Pedido")
+    public PedidoCompletoDTO findById(@PathVariable Integer id) {
+        return pedidoService.findDtoByCompleto(id);
     }
 }

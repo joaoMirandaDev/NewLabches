@@ -4,6 +4,7 @@ import PaginationTable from '@components/common/tabela/paginationTable'
 import DrawerPedido from '@components/pages/caixa'
 import DeletePedido from '@components/pages/caixa/deletePedido'
 import PaymentPedido from '@components/pages/caixa/payment'
+import VisualizarPedidoById from '@components/pages/pedido/visualizar'
 import {
   ActionIcon,
   Box,
@@ -21,6 +22,7 @@ import {
   IconAlertTriangle,
   IconCircleCheck,
   IconEdit,
+  IconEye,
   IconTrash,
 } from '@tabler/icons'
 import { IconCash } from '@tabler/icons-react'
@@ -46,6 +48,8 @@ export default function RegistroCaixa() {
   const [data, setData] = useState<ICaixa>()
   const [dataPedido, setDataPedido] = useState<IPedido[]>([])
   const [idPedido, setIdPedido] = useState<number | null>(null)
+  const [openModalVisualizarPedido, setOpenModalVisualizarPedido] =
+    useState<boolean>(false)
   const [totalElements, setTotalElements] = useState<number>(0)
   const [opened, { open, close }] = useDisclosure(false)
   const [totalVendas, setTotalVendas] = useState<number>(0)
@@ -331,8 +335,25 @@ export default function RegistroCaixa() {
     setModalDeletePedido(true)
     setIdPedido(Number(value.id))
   }
+  const closeModalVisualizarPedido = () => {
+    setOpenModalVisualizarPedido(false)
+  }
+  const visualizarPedido = (id: number) => {
+    setOpenModalVisualizarPedido(true)
+    setIdPedido(id)
+  }
   const rowActions = ({ row }: { row: MRT_Row<IPedido> }) => (
     <Flex>
+      <Tooltip label={'Visualizar pedido'}>
+        <ActionIcon
+          size="sm"
+          variant="transparent"
+          aria-label="Settings"
+          onClick={() => visualizarPedido(row.original.id!)}
+        >
+          <IconEye style={{ cursor: 'pointer' }} />
+        </ActionIcon>
+      </Tooltip>
       <Tooltip label={'Pagamento'}>
         <ActionIcon
           size="sm"
@@ -416,7 +437,7 @@ export default function RegistroCaixa() {
           <Button
             leftIcon={<IconEdit size={18} />}
             mb={'1rem'}
-            // disabled={!caixaAberto}
+            disabled={data?.caixaAberto == 1}
             onClick={() => openModal()}
           >
             Inserir pedido
@@ -469,6 +490,11 @@ export default function RegistroCaixa() {
         idPedido={idPedido}
         refresh={refresh}
         closeModalPedido={closeModalDeletePedido}
+      />
+      <VisualizarPedidoById
+        closed={closeModalVisualizarPedido}
+        openModal={openModalVisualizarPedido}
+        id={idPedido!}
       />
     </>
   )

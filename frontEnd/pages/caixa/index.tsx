@@ -322,7 +322,6 @@ export default function Caixa() {
         <ActionIcon
           size="sm"
           variant="transparent"
-          disabled={row.original.caixaAberto == 1}
           aria-label="Settings"
           onClick={() => openCaixaExistente(row.original.id!)}
         >

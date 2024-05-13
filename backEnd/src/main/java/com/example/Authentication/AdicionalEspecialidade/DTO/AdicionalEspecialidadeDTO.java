@@ -1,5 +1,6 @@
 package com.example.Authentication.AdicionalEspecialidade.DTO;
 
+import com.example.Authentication.AdicionalEspecialidade.model.AdicionalEspecialidade;
 import com.example.Authentication.Mercadoria.DTO.MercadoriaDTO;
 import com.example.Authentication.Mercadoria.model.Mercadoria;
 import com.example.Authentication.PedidoEspecialidade.model.PedidoEspecialidade;
@@ -20,4 +21,10 @@ public class AdicionalEspecialidadeDTO {
     private MercadoriaDTO mercadoria;
     private PedidoEspecialidade pedidoEspecialidade;
     private Integer quantidade;
+
+    public AdicionalEspecialidadeDTO(AdicionalEspecialidade adicionalEspecialidade) {
+        this.id = adicionalEspecialidade.getId();
+        this.mercadoria = new MercadoriaDTO(adicionalEspecialidade.getMercadoria());
+        this.quantidade = adicionalEspecialidade.getQuantidade();
+    }
 }
