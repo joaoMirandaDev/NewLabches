@@ -166,6 +166,8 @@ const PedidoMercadoria: React.FC<PedidoMercadoria> = ({ listMercadoria }) => {
         <Select
           onChange={value => setIdMercadoria(Number(value))}
           data={mercadoria}
+          searchable
+          clearable
           withinPortal
           w={'100%'}
           withAsterisk

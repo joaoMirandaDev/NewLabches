@@ -17,6 +17,7 @@ import {
   IconCash,
   IconChecklist,
   IconCircleCheck,
+  IconDatabaseExport,
   IconEdit,
 } from '@tabler/icons'
 import {
@@ -49,6 +50,8 @@ export default function Caixa() {
   const navigate = useRouter()
   const [opened, { open, close }] = useDisclosure(false)
   const [caixaAberto, setCaixaAberto] = useState<boolean>(false)
+  const [idCaixa, setIdCaixa] = useState<number | null>(null)
+  const [modalCloseCaixa, setModalCloseCaixa] = useState<boolean>(false)
   const [sorting, setSorting] = useState<MRT_SortingState>([
     { id: 'numeroCaixa', desc: true },
   ])
@@ -296,11 +299,21 @@ export default function Caixa() {
     navigate.push(`/caixa/registro/${id}`)
   }
 
-  const closeBox = (id: number) => {
-    api.put(CAIXA_CLOSE + id).then(response => {
+  const openModalCloseCaixa = (id: number) => {
+    setModalCloseCaixa(true)
+    setIdCaixa(id)
+  }
+
+  const fechamentoCaixa = () => {
+    api.put(CAIXA_CLOSE + idCaixa).then(response => {
       SuccessNotification({ message: response.data })
       findPageCaixa()
+      closeModal()
     })
+  }
+
+  const closeModal = () => {
+    setModalCloseCaixa(false)
   }
 
   const rowActions = ({ row }: { row: MRT_Row<ICaixa> }) => (
@@ -322,7 +335,7 @@ export default function Caixa() {
           variant="transparent"
           aria-label="Settings"
           disabled={row.original.caixaAberto == 1}
-          onClick={() => closeBox(row.original.id!)}
+          onClick={() => openModalCloseCaixa(row.original.id!)}
         >
           <IconCash />
         </ActionIcon>
@@ -420,6 +433,40 @@ export default function Caixa() {
             </Button>
           </Flex>
         </form>
+      </Modal>
+      <Modal
+        centered
+        closeOnEscape={true}
+        closeOnClickOutside={false}
+        withCloseButton={false}
+        opened={modalCloseCaixa}
+        onClose={closeModal}
+      >
+        <Flex
+          mt={'1rem'}
+          align={'center'}
+          justify={'center'}
+          direction={'column'}
+        >
+          <IconAlertTriangle size={48} color="orange" />
+          <Text>Deseja realmente fazer o fechamento deste caixa ?</Text>
+        </Flex>
+        <Flex mt={20} justify={'space-between'}>
+          <Button
+            color="red"
+            leftIcon={<IconCircleXFilled />}
+            onClick={() => closeModal()}
+          >
+            Não
+          </Button>
+          <Button
+            leftIcon={<IconDatabaseExport />}
+            onClick={fechamentoCaixa}
+            color="green"
+          >
+            Sim
+          </Button>
+        </Flex>
       </Modal>
     </>
   )

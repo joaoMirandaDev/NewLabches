@@ -267,6 +267,25 @@ export default function RegistroCaixa() {
             : cell.getValue<string>(),
       },
       {
+        accessorKey: 'tipoPedido.name',
+        header: 'Tipo de pedido',
+        enableSorting: false,
+        enableColumnFilter: true,
+        size: 15,
+        minSize: 10,
+        maxSize: 30,
+        mantineTableBodyCellProps: {
+          align: 'center',
+        },
+        mantineTableHeadCellProps: {
+          align: 'center',
+        },
+        Cell: ({ cell }) =>
+          cell.getValue<string>() == null || cell.getValue<string>() == ''
+            ? '-'
+            : cell.getValue<string>(),
+      },
+      {
         accessorKey: 'pago',
         header: 'Status',
         enableSorting: true,
