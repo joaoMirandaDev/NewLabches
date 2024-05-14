@@ -103,6 +103,7 @@ const PaymentPedido: React.FC<PaymentPedido> = ({
   return (
     <Modal
       opened={opened}
+      centered
       onClose={close}
       withCloseButton={false}
       title={'N° pedido: ' + pedido?.numeroPedido}

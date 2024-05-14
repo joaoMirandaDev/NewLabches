@@ -34,5 +34,7 @@ public class MercadoriaDTO {
     public MercadoriaDTO(Mercadoria mercadoria) {
         this.id = mercadoria.getId();
         this.nome = mercadoria.getNome();
+        this.valorVenda = mercadoria.getValorVenda();
+        this.tipo = new TipoDTO(mercadoria.getTipo());
     }
 }

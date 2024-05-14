@@ -20,6 +20,7 @@ import {
 import { useDisclosure } from '@mantine/hooks'
 import {
   IconAlertTriangle,
+  IconArrowBarLeft,
   IconCircleCheck,
   IconEdit,
   IconEye,
@@ -45,6 +46,7 @@ import {
   PEDIDO_PAGE,
 } from 'src/utils/Routes'
 export default function RegistroCaixa() {
+  const navigate = useRouter()
   const [data, setData] = useState<ICaixa>()
   const [dataPedido, setDataPedido] = useState<IPedido[]>([])
   const [idPedido, setIdPedido] = useState<number | null>(null)
@@ -342,6 +344,9 @@ export default function RegistroCaixa() {
     setOpenModalVisualizarPedido(true)
     setIdPedido(id)
   }
+  const retornListPedido = () => {
+    navigate.push(`/caixa`)
+  }
   const rowActions = ({ row }: { row: MRT_Row<IPedido> }) => (
     <Flex>
       <Tooltip label={'Visualizar pedido'}>
@@ -473,6 +478,13 @@ export default function RegistroCaixa() {
           </Group>
         </Group>
       </Card>
+      <Button
+        leftIcon={<IconArrowBarLeft />}
+        onClick={() => retornListPedido()}
+        mt={'0.5rem'}
+      >
+        Voltar
+      </Button>
       <DrawerPedido
         openModal={opened}
         idCaixa={Number(id)}

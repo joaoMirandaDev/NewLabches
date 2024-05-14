@@ -1,3 +1,5 @@
+import IPedidoEspecialidade from './PedidoEspecialidade'
+import IPedidoMercadoria from './PedidoMercadoria'
 import IFormaPagamento from './formaPagamento'
 import ITipoPedido from './tipoPedido'
 
@@ -6,8 +8,10 @@ export default interface IPedido {
   numeroPedido?: string
   nomeCliente?: string
   mesa?: number
+  pedidoEspecialidade?: IPedidoEspecialidade[]
+  pedidoMercadoria?: IPedidoMercadoria[]
   valorTotal?: number
   pago?: number
-  tipo?: ITipoPedido
+  tipoPedido?: ITipoPedido
   formaPagamento?: IFormaPagamento
 }

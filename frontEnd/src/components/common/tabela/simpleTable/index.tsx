@@ -13,6 +13,10 @@ type SimpleTableType<T extends Record<string, any>> = {
   columns: MRT_ColumnDef<T>[]
   data: T[]
   enableRowActions?: boolean
+  renderDetailPanel?: (props: {
+    row: MRT_Row<T>
+    table: MRT_TableInstance<T>
+  }) => ReactNode
   positionActionsColumn?: 'first' | 'last'
   height?: number
   initialState?: Partial<MRT_TableState<T>>
@@ -26,6 +30,7 @@ type SimpleTableType<T extends Record<string, any>> = {
 const SimpleTable = <T extends Record<string, any>>({
   rowActions,
   columns,
+  renderDetailPanel,
   height,
   enableRowActions,
   positionActionsColumn = 'last',
@@ -38,6 +43,7 @@ const SimpleTable = <T extends Record<string, any>>({
       data,
       enableRowVirtualization: false,
       enableRowActions: enableRowActions,
+      renderDetailPanel: renderDetailPanel,
       renderRowActions: rowActions,
       positionActionsColumn: positionActionsColumn,
       enableSorting: false,
