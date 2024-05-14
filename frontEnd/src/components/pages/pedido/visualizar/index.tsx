@@ -227,7 +227,7 @@ const VisualizarPedidoById: React.FC<VisualizarPedidoById> = ({
         <Group key={obj.id} ml={'1rem'}>
           <Text fw={'bold'}>Adicional: {obj.mercadoria?.nome}</Text>
           <Text fw={'bold'}>|</Text>
-          <Text fw={'bold'}>Quantidade: {obj.quantidade}</Text>
+          <Text fw={'bold'}>Quantidade: {obj.quantidade?.toFixed(2)}</Text>
           <Text fw={'bold'}>|</Text>
           <Text fw={'bold'}>
             Preço:{' '}
