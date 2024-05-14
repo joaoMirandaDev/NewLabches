@@ -3,6 +3,7 @@ import SimpleTable from '@components/common/tabela/simpleTable'
 import { Button, Card, Flex, Group, Modal, Tabs, Text } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { IconArrowBarLeft, IconMeat, IconPizza } from '@tabler/icons'
+import { Empty } from 'antd'
 import { MRT_ColumnDef, MRT_Row } from 'mantine-react-table'
 import { useEffect, useMemo, useState } from 'react'
 import IPedidoEspecialidade from 'src/interfaces/PedidoEspecialidade'
@@ -242,9 +243,14 @@ const VisualizarPedidoById: React.FC<VisualizarPedidoById> = ({
       ))
     }
     return (
-      <Text fw={'bold'} ml={'1rem'}>
-        Sem adicionais
-      </Text>
+      <Flex direction={'column'} align={'center'} justify={'center'}>
+        <Empty
+          image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+          imageStyle={{ height: 40 }}
+          description={''}
+        />
+        <Text fw={'bold'}>Sem adicionais</Text>
+      </Flex>
     )
   }
   const renderTabs = () => {
