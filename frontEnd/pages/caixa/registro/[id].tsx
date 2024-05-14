@@ -26,7 +26,7 @@ import {
   IconEye,
   IconTrash,
 } from '@tabler/icons'
-import { IconCash } from '@tabler/icons-react'
+import { IconCash, IconEyeClosed } from '@tabler/icons-react'
 import {
   MRT_ColumnDef,
   MRT_PaginationState,
@@ -59,6 +59,7 @@ export default function RegistroCaixa() {
   const [resetPesquisa, setResetPesquisa] = useState<boolean>(false)
   const [modalPedido, setModalPedido] = useState<boolean>(false)
   const [modalDeletePedido, setModalDeletePedido] = useState<boolean>(false)
+  const [visible, setVisible] = useState<boolean>(false)
   const [sorting, setSorting] = useState<MRT_SortingState>([
     { id: 'numeroPedido', desc: true },
   ])
@@ -383,6 +384,9 @@ export default function RegistroCaixa() {
       </Tooltip>
     </Flex>
   )
+  const visibleVenda = () => {
+    setVisible(!visible)
+  }
   return (
     <>
       <Card shadow="sm" radius="md" withBorder>
@@ -414,14 +418,22 @@ export default function RegistroCaixa() {
             <Card shadow="sm" padding="lg" m={'0.5rem'} radius="md" withBorder>
               <Flex direction={'column'} p={'1rem'} align="center">
                 <Text>Total de vendas</Text>
-                <Text>
-                  {totalVendas
-                    ? totalVendas.toLocaleString('pt-BR', {
+                <Flex align={'center'} justify={'center'}>
+                  <Text>
+                    {visible &&
+                      totalVendas.toLocaleString('pt-BR', {
                         style: 'currency',
                         currency: 'BRL',
-                      })
-                    : '-'}
-                </Text>
+                      })}
+                  </Text>
+                  <ActionIcon ml={'0.2rem'} onClick={visibleVenda}>
+                    {visible == true ? (
+                      <IconEye size="1rem" />
+                    ) : (
+                      <IconEyeClosed size="1rem" />
+                    )}
+                  </ActionIcon>
+                </Flex>
               </Flex>
             </Card>
           </Flex>
