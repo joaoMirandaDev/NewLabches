@@ -1,8 +1,6 @@
 import {
   ActionIcon,
   Button,
-  Card,
-  Checkbox,
   Divider,
   Flex,
   Modal,
@@ -24,7 +22,6 @@ import { ValidateAddPedidoEspecialidade } from '../validation/schemaModalEspecia
 import SimpleTable from '@components/common/tabela/simpleTable'
 import { PRODUTO_BY_ID } from 'src/utils/Routes'
 import { MRT_ColumnDef, MRT_Row } from 'mantine-react-table'
-import Adicional from '../adicional'
 import IEspecialidade from 'src/interfaces/Especialidade'
 import IAdicional from 'src/interfaces/IAdicional'
 interface ModalPedidoEspecialidade {
@@ -41,8 +38,8 @@ const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
   dataModal,
 }) => {
   const [opened, { open, close }] = useDisclosure(false)
-  const [checkAdicional, setCheckAdicional] = useState<boolean>(false)
-  const [clearAdicional, setClearAdicional] = useState<boolean>(false)
+  // const [checkAdicional, setCheckAdicional] = useState<boolean>(false)
+  // const [clearAdicional, setClearAdicional] = useState<boolean>(false)
   const [dataIngrediente, setDataIngrediente] = useState<
     IEspecialidadeMercadoria[]
   >([])
@@ -80,7 +77,7 @@ const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
   }
   const fecharModal = () => {
     closeModal(false)
-    setCheckAdicional(false)
+    // setCheckAdicional(false)
     resetForm()
     close()
   }
@@ -88,20 +85,20 @@ const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
     if (form.isValid()) {
       dataModal(form.values)
       fecharModal()
-      setClearAdicional(true)
+      // setClearAdicional(true)
     }
   }
-  const insertAdicional = (value: IAdicional[]) => {
-    form.setFieldValue('adicionalEspecialidades', value)
-    if (value.length > 0) {
-      const valor = value.reduce((total, obj) => {
-        return total + obj.mercadoria!.valorVenda! * obj.quantidade!
-      }, 0)
-      form.setFieldValue('valor', form.values.especialidade.preco! + valor)
-    } else {
-      form.setFieldValue('valor', form.values.especialidade.preco!)
-    }
-  }
+  // const insertAdicional = (value: IAdicional[]) => {
+  //   form.setFieldValue('adicionalEspecialidades', value)
+  //   if (value.length > 0) {
+  //     const valor = value.reduce((total, obj) => {
+  //       return total + obj.mercadoria!.valorVenda! * obj.quantidade!
+  //     }, 0)
+  //     form.setFieldValue('valor', form.values.especialidade.preco! + valor)
+  //   } else {
+  //     form.setFieldValue('valor', form.values.especialidade.preco!)
+  //   }
+  // }
   const remove = (row: MRT_Row) => {
     const newData = [...dataIngrediente]
     newData.splice(row.index, 1)
@@ -176,7 +173,7 @@ const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
         columns={columns}
         data={dataIngrediente}
       />
-      <Checkbox
+      {/* <Checkbox
         mt={'0.5rem'}
         label="Inserir adicional"
         defaultChecked={false}
@@ -187,7 +184,7 @@ const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
         <Card mt={'0.5rem'} shadow="sm" padding="lg" radius="md" withBorder>
           <Adicional clear={clearAdicional} adicional={insertAdicional} />
         </Card>
-      )}
+      )} */}
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Flex align={'center'} justify={'space-around'}>
           <NumberInput

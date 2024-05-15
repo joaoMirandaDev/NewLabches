@@ -3,6 +3,7 @@ package com.example.Authentication.PedidoMercadoria.service;
 import com.example.Authentication.Mercadoria.model.Mercadoria;
 import com.example.Authentication.Mercadoria.service.MercadoriaService;
 import com.example.Authentication.Pedido.model.Pedido;
+import com.example.Authentication.PedidoEspecialidade.model.PedidoEspecialidade;
 import com.example.Authentication.PedidoMercadoria.DTO.PedidoMercadoriaDTO;
 import com.example.Authentication.PedidoMercadoria.model.PedidoMercadoria;
 import com.example.Authentication.PedidoMercadoria.repository.PedidoMercadoriaRepository;
@@ -27,5 +28,13 @@ public class PedidoMercadoriaService {
         newPedidoMercadoria.setQuantidade(pedidoMercadoria.getQuantidade());
         mercadoriaService.reduzSaldo(mercadoria, pedidoMercadoria.getQuantidade());
         pedidoMercadoriaRepository.save(newPedidoMercadoria);
+    }
+
+    public void delete(PedidoMercadoria val) {
+        mercadoriaService.aumentaSaldo(val.getMercadoria(),val.getQuantidade());
+        pedidoMercadoriaRepository.delete(val);
+    }
+
+    public void createUpdateDelte(Pedido pedido, List<PedidoMercadoriaDTO> pedidoMercadoria) {
     }
 }

@@ -7,6 +7,7 @@ export default interface IPedido {
   id?: number
   numeroPedido?: string
   nomeCliente?: string
+  observacao?: string
   mesa?: number
   pedidoEspecialidade?: IPedidoEspecialidade[]
   pedidoMercadoria?: IPedidoMercadoria[]

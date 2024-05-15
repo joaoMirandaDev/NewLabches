@@ -1,10 +1,9 @@
 import { ErrorNotification } from '@components/common'
 import SimpleTable from '@components/common/tabela/simpleTable'
-import { Button, Card, Flex, Group, Modal, Tabs, Text } from '@mantine/core'
+import { Button, Card, Flex, Modal, Tabs, Text } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { IconArrowBarLeft, IconMeat, IconPizza } from '@tabler/icons'
-import { Empty } from 'antd'
-import { MRT_ColumnDef, MRT_Row } from 'mantine-react-table'
+import { MRT_ColumnDef } from 'mantine-react-table'
 import { useEffect, useMemo, useState } from 'react'
 import IPedidoEspecialidade from 'src/interfaces/PedidoEspecialidade'
 import IPedidoMercadoria from 'src/interfaces/PedidoMercadoria'
@@ -24,6 +23,8 @@ const VisualizarPedidoById: React.FC<VisualizarPedidoById> = ({
 }) => {
   const [opened, { open, close }] = useDisclosure(false)
   const [dataPedido, setDataPedido] = useState<IPedido | null>(null)
+  const [especialidadesAndMercadorias, setEspecialidadesAndMercadorias] =
+    useState<string>('especialidades')
   const closeModal = () => {
     close()
     closed(true)
@@ -188,11 +189,22 @@ const VisualizarPedidoById: React.FC<VisualizarPedidoById> = ({
     ],
     []
   )
-  const getPedido = () => {
-    api
+  const getPedido = async () => {
+    await api
       .get(PEDIDO_BY_ID_COMPLETO + id)
       .then(response => {
         setDataPedido(response.data)
+        const especialidadeMaiorQueZero =
+          response.data.pedidoEspecialidade!.length > 0 ? true : false
+        const mercadoriaMaiorQueZero =
+          response.data.pedidoMercadoria!.length > 0 ? true : false
+        if (especialidadeMaiorQueZero && mercadoriaMaiorQueZero) {
+          setEspecialidadesAndMercadorias('especialidades')
+        } else if (!especialidadeMaiorQueZero && mercadoriaMaiorQueZero) {
+          setEspecialidadesAndMercadorias('mercadorias')
+        } else if (especialidadeMaiorQueZero && !mercadoriaMaiorQueZero) {
+          setEspecialidadesAndMercadorias('especialidades')
+        }
       })
       .catch(() => {
         ErrorNotification({ message: 'Erro ao buscar pedido' })
@@ -205,57 +217,54 @@ const VisualizarPedidoById: React.FC<VisualizarPedidoById> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openModal])
-  const tabList = () => {
-    const especialidadeMaiorQueZero =
-      dataPedido && dataPedido?.pedidoEspecialidade!.length > 0
-    const mercadoriaMaiorQueZero =
-      dataPedido && dataPedido?.pedidoMercadoria!.length > 0
 
-    if (especialidadeMaiorQueZero && mercadoriaMaiorQueZero) {
-      return 'especialidades'
-    } else if (!especialidadeMaiorQueZero && mercadoriaMaiorQueZero) {
-      return 'mercadorias'
-    } else if (especialidadeMaiorQueZero && !mercadoriaMaiorQueZero) {
-      return 'especialidades'
-    }
-  }
-  const renderDetail = ({ row }: { row: MRT_Row<IPedidoEspecialidade> }) => {
-    if (
-      row.original.adicionalEspecialidades &&
-      row.original.adicionalEspecialidades?.length > 0
-    ) {
-      return row.original.adicionalEspecialidades?.map(obj => (
-        <Group key={obj.id} ml={'1rem'}>
-          <Text fw={'bold'}>Adicional: {obj.mercadoria?.nome}</Text>
-          <Text fw={'bold'}>|</Text>
-          <Text fw={'bold'}>Quantidade: {obj.quantidade?.toFixed(2)}</Text>
-          <Text fw={'bold'}>|</Text>
-          <Text fw={'bold'}>
-            Preço:{' '}
-            {obj.mercadoria?.valorVenda
-              ? obj.mercadoria?.valorVenda.toLocaleString('pt-BR', {
-                  style: 'currency',
-                  currency: 'BRL',
-                })
-              : '-'}
-          </Text>
-        </Group>
-      ))
-    }
-    return (
-      <Flex direction={'column'} align={'center'} justify={'center'}>
-        <Empty
-          image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-          imageStyle={{ height: 40 }}
-          description={''}
-        />
-        <Text fw={'bold'}>Sem adicionais</Text>
-      </Flex>
-    )
-  }
+  // const renderDetail = ({ row }: { row: MRT_Row<IPedidoEspecialidade> }) => {
+  //   if (
+  //     row.original.adicionalEspecialidades &&
+  //     row.original.adicionalEspecialidades?.length > 0
+  //   ) {
+  //     return row.original.adicionalEspecialidades?.map(obj => (
+  //       <List
+  //         key={obj.id}
+  //         ml={'1rem'}
+  //         spacing="xs"
+  //         size="sm"
+  //         center
+  //         icon={
+  //           <ThemeIcon size={22} radius="xl">
+  //             <IconMeat style={{ width: rem(16), height: rem(16) }} />
+  //           </ThemeIcon>
+  //         }
+  //       >
+  //         <List.Item mb={'0.5rem'}>
+  //           <Text fw={'bold'}>
+  //             Adicional: {obj.mercadoria?.nome} | Quantidade:{' '}
+  //             {obj.quantidade?.toFixed(2)} | Preço:{' '}
+  //             {obj.mercadoria?.valorVenda
+  //               ? obj.mercadoria?.valorVenda.toLocaleString('pt-BR', {
+  //                   style: 'currency',
+  //                   currency: 'BRL',
+  //                 })
+  //               : '-'}
+  //           </Text>
+  //         </List.Item>
+  //       </List>
+  //     ))
+  //   }
+  //   return (
+  //     <Flex direction={'column'} align={'center'} justify={'center'}>
+  //       <Empty
+  //         image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+  //         imageStyle={{ height: 40 }}
+  //         description={''}
+  //       />
+  //       <Text fw={'bold'}>Sem adicionais</Text>
+  //     </Flex>
+  //   )
+  // }
   const renderTabs = () => {
     return (
-      <Tabs defaultValue={tabList()}>
+      <Tabs defaultValue={especialidadesAndMercadorias}>
         <Tabs.List>
           {dataPedido?.pedidoEspecialidade &&
             dataPedido?.pedidoEspecialidade.length > 0 && (
@@ -275,7 +284,7 @@ const VisualizarPedidoById: React.FC<VisualizarPedidoById> = ({
         </Tabs.List>
         <Tabs.Panel value="especialidades" pt="xs">
           <SimpleTable
-            renderDetailPanel={renderDetail}
+            // renderDetailPanel={}
             columns={columns}
             data={
               dataPedido?.pedidoEspecialidade
@@ -314,12 +323,16 @@ const VisualizarPedidoById: React.FC<VisualizarPedidoById> = ({
         <Text fw={700}>
           Status: {dataPedido?.pago == 0 ? 'Aberto' : 'Pago'}
         </Text>
+        <Text fw={700}>
+          Observação:{' '}
+          {dataPedido?.observacao == '' ? '-' : dataPedido?.observacao}
+        </Text>
       </Flex>
       <Card mt={'1rem'} shadow="sm" radius="md" withBorder>
         {renderTabs()}
       </Card>
       <Flex justify={'flex-end'}>
-        <Text fw={700} mt={'0.5rem'} color="green">
+        <Text fw={700} mt={'0.5rem'}>
           Valor do pedido:{' '}
           {dataPedido?.valorTotal
             ? dataPedido?.valorTotal.toLocaleString('pt-BR', {

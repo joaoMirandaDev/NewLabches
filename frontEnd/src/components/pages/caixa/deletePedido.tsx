@@ -78,6 +78,7 @@ const DeletePedido: React.FC<DeletePedido> = ({
     <Modal
       opened={opened}
       onClose={close}
+      centered
       withCloseButton={false}
       title="Deletar pedido"
     >

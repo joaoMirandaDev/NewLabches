@@ -147,6 +147,7 @@ public class PedidoService  {
         pedido.setNomeCliente(pedidoDTO.getNomeCliente());
         pedido.setPago(pedidoDTO.getPago());
         pedido.setValorTotal(pedidoDTO.getValorTotal());
-        pedidoEspecialidadeService.createUpdateDelete(pedido,pedido.getPedidoEspecialidades(), pedidoDTO.getPedidoEspecialidade());
+        pedidoEspecialidadeService.createUpdateDelete(pedido, pedidoDTO.getPedidoEspecialidade());
+        pedidoMercadoriaService.createUpdateDelte(pedido, pedidoDTO.getPedidoMercadoria());
     }
 }
