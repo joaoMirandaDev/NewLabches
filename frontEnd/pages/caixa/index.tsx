@@ -401,7 +401,7 @@ export default function Caixa() {
           <Text size={'sm'}> Caixa fechado </Text>
         </Group>
       </Group>
-      <Modal opened={opened} onClose={close} title="Novo caixa">
+      <Modal opened={opened} centered onClose={close} title="Abertura caixa">
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <NumberInput
             {...form.getInputProps('valorAberturaCaixa')}
