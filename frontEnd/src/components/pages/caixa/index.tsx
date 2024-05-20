@@ -10,6 +10,7 @@ import {
   Tabs,
   Card,
   Textarea,
+  Text,
 } from '@mantine/core'
 import { useEffect, useState } from 'react'
 import {
@@ -21,7 +22,11 @@ import {
 import api from 'src/utils/Api'
 import { useForm, zodResolver } from '@mantine/form'
 import { ValidateAddPedido } from './validation/schema'
-import { FIND_ALL_TIPO_PEDIDO, PEDIDO_ADD } from 'src/utils/Routes'
+import {
+  FIND_ALL_TIPO_PEDIDO,
+  PEDIDO_ADD,
+  PEDIDO_BY_ID_COMPLETO,
+} from 'src/utils/Routes'
 import ITipoPedido from 'src/interfaces/tipoPedido'
 import PedidoMercadoria from './mercadoria'
 import PedidoEspecialidade from './especialidade'
@@ -60,6 +65,7 @@ const DrawerPedido: React.FC<DrawerPedido> = ({
 
   const form = useForm<{
     id: number | null
+    numeroPedido: string | null
     nomeCliente: string
     tipoPedido: {
       id: number | null
@@ -73,6 +79,7 @@ const DrawerPedido: React.FC<DrawerPedido> = ({
   }>({
     initialValues: {
       id: null,
+      numeroPedido: '',
       valorTotal: 0.0,
       nomeCliente: '',
       observacao: '',
@@ -88,7 +95,14 @@ const DrawerPedido: React.FC<DrawerPedido> = ({
   })
   const getAllMethods = async () => {
     if (idPedido) {
-      
+      await api
+        .get(PEDIDO_BY_ID_COMPLETO + idPedido)
+        .then(response => {
+          form.setValues(response.data)
+        })
+        .catch(() => {
+          ErrorNotification({ message: 'Erro ao buscar pedido' })
+        })
     }
     await api.get(FIND_ALL_TIPO_PEDIDO).then(response => {
       const data = response.data.map((data: ITipoPedido) => ({
@@ -173,10 +187,16 @@ const DrawerPedido: React.FC<DrawerPedido> = ({
           </Tabs.Tab>
         </Tabs.List>
         <Tabs.Panel value="especialidades" pt="xs">
-          <PedidoEspecialidade listEspecialidade={listEspecialidade} />
+          <PedidoEspecialidade
+            listEspecialidade={listEspecialidade}
+            listEspecialidadeBanco={form.values.pedidoEspecialidade}
+          />
         </Tabs.Panel>
         <Tabs.Panel value="mercadorias" pt="xs">
-          <PedidoMercadoria listMercadoria={listMercadoria} />
+          <PedidoMercadoria
+            listMercadoria={listMercadoria}
+            listMercadoriaBanco={form.values.pedidoMercadoria}
+          />
         </Tabs.Panel>
       </Tabs>
     )
@@ -193,7 +213,13 @@ const DrawerPedido: React.FC<DrawerPedido> = ({
       withCloseButton={false}
       closeOnEscape={false}
       trapFocus={false}
-      title={'Cadastro de pedidos'}
+      title={
+        idPedido ? (
+          <Text fw={'bold'}>Editar pedido n°: {form.values.numeroPedido}</Text>
+        ) : (
+          <Text fw={'bold'}>Cadastrar novo pedido</Text>
+        )
+      }
     >
       <Divider />
       <form onSubmit={form.onSubmit(handleSubmit)}>

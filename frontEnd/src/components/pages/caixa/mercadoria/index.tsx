@@ -21,18 +21,26 @@ import { useDisclosure } from '@mantine/hooks'
 import IPedidoMercadoria from 'src/interfaces/PedidoMercadoria'
 
 interface PedidoMercadoria {
-  // openModal: boolean
-  // idCaixa: number
+  listMercadoriaBanco: IPedidoMercadoria[]
   listMercadoria: (value: IPedidoMercadoria[]) => void
 }
 
-const PedidoMercadoria: React.FC<PedidoMercadoria> = ({ listMercadoria }) => {
+const PedidoMercadoria: React.FC<PedidoMercadoria> = ({
+  listMercadoria,
+  listMercadoriaBanco,
+}) => {
   const [mercadoria, setMercadoria] = useState<SelectItem[]>([])
   const [idMercadoria, setIdMercadoria] = useState<number | null>(null)
   const [itemSelecionado, setItemSelecionado] =
     useState<IPedidoMercadoria | null>(null)
   const [opened, { open, close }] = useDisclosure(false)
   const [data, setData] = useState<IPedidoMercadoria[]>([])
+  useEffect(() => {
+    if (listMercadoriaBanco.length > 0) {
+      setData(listMercadoriaBanco)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listMercadoriaBanco])
   const getMethods = async () => {
     const mercadoria = await api.get(FIND_ALL_MERCADORIA)
     const dataMercadoria = mercadoria.data.map((data: IMercadoria) => ({

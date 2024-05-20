@@ -21,18 +21,24 @@ import ModalPedidoEspecialidade from './modal'
 import IPedidoEspecialidade from 'src/interfaces/PedidoEspecialidade'
 
 interface PedidoEspecialidade {
-  // openModal: boolean
-  // idCaixa: number
+  listEspecialidadeBanco: IPedidoEspecialidade[]
   listEspecialidade: (value: IPedidoEspecialidade[]) => void
 }
 
 const PedidoEspecialidade: React.FC<PedidoEspecialidade> = ({
   listEspecialidade,
+  listEspecialidadeBanco,
 }) => {
   const [especialidade, setEspecialidade] = useState<SelectItem[]>([])
   const [idEspecialidade, setIdEspecialidade] = useState<number | null>(null)
   const [opened, { open, close }] = useDisclosure(false)
   const [data, setData] = useState<IEspecialidadeMercadoria[]>([])
+  useEffect(() => {
+    if (listEspecialidadeBanco.length > 0) {
+      setData(listEspecialidadeBanco)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listEspecialidadeBanco])
   const getMethods = async () => {
     const especialidade = await api.get(FIND_ALL_ESPECIALIDADE)
     setEspecialidade(
