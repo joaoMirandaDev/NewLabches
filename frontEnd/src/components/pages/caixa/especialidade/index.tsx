@@ -40,6 +40,7 @@ const PedidoEspecialidade: React.FC<PedidoEspecialidade> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listEspecialidadeBanco])
   const getMethods = async () => {
+    setData([])
     const especialidade = await api.get(FIND_ALL_ESPECIALIDADE)
     setEspecialidade(
       especialidade.data.map((data: IMercadoria) => ({
