@@ -42,6 +42,7 @@ const PedidoMercadoria: React.FC<PedidoMercadoria> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listMercadoriaBanco])
   const getMethods = async () => {
+    setData([])
     const mercadoria = await api.get(FIND_ALL_MERCADORIA)
     const dataMercadoria = mercadoria.data.map((data: IMercadoria) => ({
       value: data.id,
