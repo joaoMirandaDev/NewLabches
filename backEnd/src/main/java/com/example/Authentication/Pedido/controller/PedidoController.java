@@ -50,10 +50,10 @@ public class PedidoController {
                 null, LocaleInteface.BR));
     }
 
-    @PutMapping(value = "/editPedido/{id}", produces = "application/json")
+    @PutMapping(value = "/editPedido", produces = "application/json")
     @Operation(summary = "Edição dos pedidos", description = "Metodo utilizado para editar os pedidos", tags = "Pedido")
-    public ResponseEntity<String> editPedido(@PathVariable Integer id, @RequestBody PedidoDTO pedidoDTO) {
-        pedidoService.editPedido(id, pedidoDTO);
+    public ResponseEntity<String> editPedido(@RequestBody PedidoDTO pedidoDTO) {
+        pedidoService.editPedido(pedidoDTO);
         return ResponseEntity.status(HttpStatus.OK).body(messageSource.getMessage("success.edit",
                 null, LocaleInteface.BR));
     }

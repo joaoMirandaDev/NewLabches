@@ -56,12 +56,8 @@ public class PedidoEspecialidadeService {
         pedidoEspecialidadeRepository.delete(val);
     }
 
+
     public void createUpdateDelete(Pedido pedido, List<PedidoEspecialidadeDTO> pedidoEspecialidadeDto) {
-        this.updateAndDelete(pedido,pedidoEspecialidadeDto);
-
-    }
-
-    private void updateAndDelete(Pedido pedido, List<PedidoEspecialidadeDTO> pedidoEspecialidadeDto) {
         for (PedidoEspecialidade banco : pedido.getPedidoEspecialidades()) {
             boolean encontrado = false;
             for (PedidoEspecialidadeDTO dto : pedidoEspecialidadeDto) {
@@ -74,22 +70,30 @@ public class PedidoEspecialidadeService {
                 this.delete(banco);
             }
         }
+        for (PedidoEspecialidadeDTO dto : pedidoEspecialidadeDto) {
+                if (dto.getId() == null) {
+                    this.create(dto,pedido);
+                }
+        }
     }
 
     @Transactional
     private void updatePedidoEspecialidade(PedidoEspecialidade banco, PedidoEspecialidadeDTO dto) {
-        banco.getEspecialidade().getEspecialidadeMercadorias().forEach(obj -> {
-            mercadoriaService.aumentaSaldo(mercadoriaService.findById(obj.getMercadoria().getId()), obj.getQuantidade());
-        });
+        for (int i = 0; i <= banco.getQuantidade(); i++) {
+            banco.getEspecialidade().getEspecialidadeMercadorias().forEach(obj -> {
+                mercadoriaService.aumentaSaldo(mercadoriaService.findById(obj.getMercadoria().getId()), obj.getQuantidade());
+            });
+        }
 
         banco.setEspecialidade(especialidadeService.findById(dto.getEspecialidade().getId()));
         banco.setQuantidade(dto.getQuantidade());
         banco.setValor(dto.getValor());
+        for (int i = 0; i <= dto.getQuantidade(); i++) {
+            banco.getEspecialidade().getEspecialidadeMercadorias().forEach(obj -> {
+                mercadoriaService.reduzSaldo(mercadoriaService.findById(obj.getMercadoria().getId()), obj.getQuantidade());
+            });
+        }
         pedidoEspecialidadeRepository.save(banco);
-
-        dto.getEspecialidade().getEspecialidadeMercadoria().forEach(obj -> {
-            mercadoriaService.reduzSaldo(mercadoriaService.findById(obj.getMercadoria().getId()), obj.getQuantidade());
-        });
     }
 
     private void deleteExisting(List<PedidoEspecialidade> pedidoEspecialidades) {

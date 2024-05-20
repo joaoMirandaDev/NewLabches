@@ -31,6 +31,7 @@ public class PedidoEspecialidadeDTO {
         this.id = pedidoEspecialidade.getId();
         this.especialidade = new EspecialidadeDTO(pedidoEspecialidade.getEspecialidade());
         this.quantidade = pedidoEspecialidade.getQuantidade();
+        this.valor = pedidoEspecialidade.getValor();
         this.adicionalEspecialidades = pedidoEspecialidade.getAdicionalEspecialidades().stream().
                 map(AdicionalEspecialidadeDTO::new).collect(Collectors.toList());
     }

@@ -139,8 +139,8 @@ public class PedidoService  {
         pedidoRepository.delete(pedido);
     }
 
-    public void editPedido(Integer id, PedidoDTO pedidoDTO) {
-        Pedido pedido = this.findById(id);
+    public void editPedido(PedidoDTO pedidoDTO) {
+        Pedido pedido = this.findById(pedidoDTO.getId());
         pedido.setFormaPagamento(formaPagamentoService.findById(pedidoDTO.getFormaPagamento().getId()));
         pedido.setMesa(pedidoDTO.getMesa());
         pedido.setObservacao(pedidoDTO.getObservacao());
@@ -149,5 +149,6 @@ public class PedidoService  {
         pedido.setValorTotal(pedidoDTO.getValorTotal());
         pedidoEspecialidadeService.createUpdateDelete(pedido, pedidoDTO.getPedidoEspecialidade());
         pedidoMercadoriaService.createUpdateDelte(pedido, pedidoDTO.getPedidoMercadoria());
+        pedidoRepository.save(pedido);
     }
 }

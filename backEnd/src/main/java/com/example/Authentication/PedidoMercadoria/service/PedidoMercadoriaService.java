@@ -35,6 +35,33 @@ public class PedidoMercadoriaService {
         pedidoMercadoriaRepository.delete(val);
     }
 
-    public void createUpdateDelte(Pedido pedido, List<PedidoMercadoriaDTO> pedidoMercadoria) {
+    private void update(PedidoMercadoria pedidoMercadoria, PedidoMercadoriaDTO dto) {
+        Mercadoria mercadoria = mercadoriaService.findById(dto.getMercadoria().getId());
+        mercadoriaService.aumentaSaldo(pedidoMercadoria.getMercadoria(), pedidoMercadoria.getQuantidade());
+        pedidoMercadoria.setQuantidade(dto.getQuantidade());
+        mercadoriaService.reduzSaldo(mercadoria, dto.getQuantidade());
+        pedidoMercadoriaRepository.save(pedidoMercadoria);
     }
+
+    public void createUpdateDelte(Pedido pedido, List<PedidoMercadoriaDTO> pedidoMercadoria) {
+        for ( PedidoMercadoria banco :  pedido.getPedidoMercadoria()) {
+            boolean encontrado = false;
+            for (PedidoMercadoriaDTO dto : pedidoMercadoria) {
+                if (dto.getId().equals(banco.getId())) {
+                    encontrado = true;
+                    this.update(banco, dto);
+                }
+                if (!encontrado) {
+                    this.delete(banco);
+                }
+            }
+        }
+            for (PedidoMercadoriaDTO dto : pedidoMercadoria) {
+                if (dto.getId() == null) {
+                    this.create(dto, pedido);
+                }
+        }
+    }
+
+
 }
