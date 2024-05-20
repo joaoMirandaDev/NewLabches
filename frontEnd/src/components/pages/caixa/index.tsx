@@ -31,6 +31,7 @@ import { ErrorNotification, SuccessNotification } from '@components/common'
 interface DrawerPedido {
   openModal: boolean
   idCaixa: number
+  idPedido: number
   closeModal: (value: boolean) => void
   refresh: (value: boolean) => void
 }
@@ -38,6 +39,7 @@ interface DrawerPedido {
 const DrawerPedido: React.FC<DrawerPedido> = ({
   openModal,
   idCaixa,
+  idPedido,
   closeModal,
   refresh,
 }) => {
@@ -45,11 +47,11 @@ const DrawerPedido: React.FC<DrawerPedido> = ({
   const [totalMercadoria, setTotalMercadoria] = useState<number>(0)
   const [tipoPedido, setTipoPedido] = useState<SelectItem[]>([])
   useEffect(() => {
-    if (openModal) {
+    if (openModal && idCaixa) {
       getAllMethods()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openModal, idCaixa])
+  }, [openModal, idCaixa, idPedido])
 
   useEffect(() => {
     form.setFieldValue('valorTotal', totalEspecialidade + totalMercadoria)
@@ -85,6 +87,9 @@ const DrawerPedido: React.FC<DrawerPedido> = ({
     validate: zodResolver(ValidateAddPedido()),
   })
   const getAllMethods = async () => {
+    if (idPedido) {
+      
+    }
     await api.get(FIND_ALL_TIPO_PEDIDO).then(response => {
       const data = response.data.map((data: ITipoPedido) => ({
         value: data.id,

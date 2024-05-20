@@ -157,6 +157,7 @@ export default function RegistroCaixa() {
     setFiltro(prevData => ({ ...prevData, search: value, pagina: 0 }))
   }
   const openModal = () => {
+    setIdPedido(null)
     open()
   }
   const columns = useMemo<MRT_ColumnDef<IPedido>[]>(
@@ -348,10 +349,27 @@ export default function RegistroCaixa() {
   const retornListPedido = () => {
     navigate.push(`/caixa`)
   }
+  const editarPedido = (value: IPedido) => {
+    open()
+    setIdPedido(value.id!)
+  }
   const rowActions = ({ row }: { row: MRT_Row<IPedido> }) => (
     <Flex>
+      <Tooltip label={'Editar pedido'}>
+        <ActionIcon
+          size="sm"
+          color="blue"
+          variant="transparent"
+          aria-label="Settings"
+          disabled={row.original.pago === 1}
+          onClick={() => editarPedido(row.original)}
+        >
+          <IconEdit style={{ cursor: 'pointer' }} />
+        </ActionIcon>
+      </Tooltip>
       <Tooltip label={'Visualizar pedido'}>
         <ActionIcon
+          color="orange"
           size="sm"
           variant="transparent"
           aria-label="Settings"
@@ -363,6 +381,7 @@ export default function RegistroCaixa() {
       <Tooltip label={'Pagamento'}>
         <ActionIcon
           size="sm"
+          color="green"
           disabled={row.original.pago === 1}
           variant="transparent"
           aria-label="Settings"
@@ -374,6 +393,7 @@ export default function RegistroCaixa() {
       <Tooltip label={'Deletar pedido'}>
         <ActionIcon
           size="sm"
+          color="red"
           variant="transparent"
           aria-label="Settings"
           disabled={row.original.pago === 1}
@@ -500,6 +520,7 @@ export default function RegistroCaixa() {
       <DrawerPedido
         openModal={opened}
         idCaixa={Number(id)}
+        idPedido={Number(idPedido)}
         refresh={refresh}
         closeModal={closeModal}
       />
