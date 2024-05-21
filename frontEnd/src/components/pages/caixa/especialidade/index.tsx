@@ -12,7 +12,7 @@ import { useEffect, useMemo, useState } from 'react'
 import IMercadoria from 'src/interfaces/mercadoria'
 import { FIND_ALL_ESPECIALIDADE } from 'src/utils/Routes'
 import api from 'src/utils/Api'
-import { IconDatabasePlus, IconTrash } from '@tabler/icons-react'
+import { IconDatabasePlus, IconEdit, IconTrash } from '@tabler/icons-react'
 import SimpleTable from '@components/common/tabela/simpleTable'
 import { MRT_ColumnDef, MRT_Row } from 'mantine-react-table'
 import IEspecialidadeMercadoria from 'src/interfaces/especialidadeCompra'
@@ -31,8 +31,10 @@ const PedidoEspecialidade: React.FC<PedidoEspecialidade> = ({
 }) => {
   const [especialidade, setEspecialidade] = useState<SelectItem[]>([])
   const [idEspecialidade, setIdEspecialidade] = useState<number | null>(null)
+  const [pedidoEspecilidade, setPedidoEspecialidade] =
+    useState<IPedidoEspecialidade | null>(null)
   const [opened, { open, close }] = useDisclosure(false)
-  const [data, setData] = useState<IEspecialidadeMercadoria[]>([])
+  const [data, setData] = useState<IPedidoEspecialidade[]>([])
   useEffect(() => {
     if (listEspecialidadeBanco.length > 0) {
       setData(listEspecialidadeBanco)
@@ -101,19 +103,49 @@ const PedidoEspecialidade: React.FC<PedidoEspecialidade> = ({
     ],
     []
   )
-  const objetoModal = (event: IEspecialidadeMercadoria) => {
-    const newData = [...data, event]
-    setData(newData)
+  const objetoModal = (event: IPedidoEspecialidade) => {
+    console.log(event)
+    if (pedidoEspecilidade) {
+      const index = data.findIndex(
+        val => val.especialidade?.id == event.especialidade?.id
+      )
+      if (index !== -1) {
+        const newData = [...data]
+        newData[index].quantidade = event.quantidade
+        setData(newData)
+      }
+    } else {
+      const newData = [...data, event]
+      setData(newData)
+    }
+    setPedidoEspecialidade(null)
   }
 
   const handleChangeMercadoria = () => {
     open()
   }
-  const rowActions = ({ row }: { row: MRT_Row<IEspecialidadeMercadoria> }) => (
+  const editar = (row: IPedidoEspecialidade) => {
+    setIdEspecialidade(row.especialidade!.id!)
+    setPedidoEspecialidade(row)
+    open()
+  }
+  const rowActions = ({ row }: { row: MRT_Row<IPedidoEspecialidade> }) => (
     <Flex>
-      <Tooltip label={'Remover'}>
+      <Tooltip label={'Editar especialidade'}>
         <ActionIcon
           size="sm"
+          color="blue"
+          variant="transparent"
+          aria-label="Settings"
+          onClick={() => editar(row.original)}
+        >
+          <IconEdit style={{ cursor: 'pointer' }} />
+        </ActionIcon>
+      </Tooltip>
+      <Tooltip label={'Remover especialidade'}>
+        <ActionIcon
+          size="sm"
+          color="red"
           variant="transparent"
           aria-label="Settings"
           onClick={() => remove(row)}
@@ -121,16 +153,6 @@ const PedidoEspecialidade: React.FC<PedidoEspecialidade> = ({
           <IconTrash style={{ cursor: 'pointer' }} />
         </ActionIcon>
       </Tooltip>
-      {/* <Tooltip label={'Editar'}>
-        <ActionIcon
-          size="sm"
-          variant="transparent"
-          aria-label="Settings"
-          onClick={() => editar()}
-        >
-          <IconEdit style={{ cursor: 'pointer' }} />
-        </ActionIcon>
-      </Tooltip> */}
     </Flex>
   )
 

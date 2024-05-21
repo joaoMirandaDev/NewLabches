@@ -23,6 +23,7 @@ import api from 'src/utils/Api'
 import { useForm, zodResolver } from '@mantine/form'
 import { ValidateAddPedido } from './validation/schema'
 import {
+  EDITPEDIDO_BY_ID,
   FIND_ALL_TIPO_PEDIDO,
   PEDIDO_ADD,
   PEDIDO_BY_ID_COMPLETO,
@@ -132,19 +133,35 @@ const DrawerPedido: React.FC<DrawerPedido> = ({
 
   const handleSubmit = async () => {
     if (form.values.valorTotal > 0) {
-      await api
-        .post(PEDIDO_ADD + `${idCaixa}`, form.values)
-        .then(() => {
-          SuccessNotification({
-            message: 'Pedido registrado com sucesso',
+      if (idPedido) {
+        await api
+          .put(EDITPEDIDO_BY_ID, form.values)
+          .then(() => {
+            SuccessNotification({
+              message: 'Pedido alterado com sucesso',
+            })
+            closeModal(true)
+            resetForm()
+            refresh(true)
           })
-          closeModal(true)
-          resetForm()
-          refresh(true)
-        })
-        .catch(() => {
-          ErrorNotification({ message: 'Erro ao salvar pedido' })
-        })
+          .catch(() => {
+            ErrorNotification({ message: 'Erro ao salvar pedido' })
+          })
+      } else {
+        await api
+          .post(PEDIDO_ADD + `${idCaixa}`, form.values)
+          .then(() => {
+            SuccessNotification({
+              message: 'Pedido registrado com sucesso',
+            })
+            closeModal(true)
+            resetForm()
+            refresh(true)
+          })
+          .catch(() => {
+            ErrorNotification({ message: 'Erro ao salvar pedido' })
+          })
+      }
     }
   }
 

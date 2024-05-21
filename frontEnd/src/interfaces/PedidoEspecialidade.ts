@@ -1,4 +1,3 @@
-import IAdicional from './IAdicional'
 import IMercadoria from './mercadoria'
 
 interface IMercadoriaPedido {
@@ -16,5 +15,4 @@ export default interface IPedidoEspecialidade {
   quantidade?: number
   valor?: number
   especialidade?: IEspecialidade
-  adicionalEspecialidades?: IAdicional[]
 }

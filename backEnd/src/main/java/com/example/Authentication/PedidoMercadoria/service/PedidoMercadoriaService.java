@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -37,29 +38,44 @@ public class PedidoMercadoriaService {
 
     private void update(PedidoMercadoria pedidoMercadoria, PedidoMercadoriaDTO dto) {
         Mercadoria mercadoria = mercadoriaService.findById(dto.getMercadoria().getId());
-        mercadoriaService.aumentaSaldo(pedidoMercadoria.getMercadoria(), pedidoMercadoria.getQuantidade());
+        for (int i = 0; i <= pedidoMercadoria.getQuantidade(); i++) {
+            mercadoriaService.aumentaSaldo(pedidoMercadoria.getMercadoria(), pedidoMercadoria.getQuantidade());
+        }
         pedidoMercadoria.setQuantidade(dto.getQuantidade());
-        mercadoriaService.reduzSaldo(mercadoria, dto.getQuantidade());
+        for (int i = 0; i <= dto.getQuantidade(); i++) {
+            mercadoriaService.reduzSaldo(mercadoria, dto.getQuantidade());
+        }
         pedidoMercadoriaRepository.save(pedidoMercadoria);
     }
 
-    public void createUpdateDelte(Pedido pedido, List<PedidoMercadoriaDTO> pedidoMercadoria) {
-        for ( PedidoMercadoria banco :  pedido.getPedidoMercadoria()) {
-            boolean encontrado = false;
-            for (PedidoMercadoriaDTO dto : pedidoMercadoria) {
-                if (dto.getId().equals(banco.getId())) {
-                    encontrado = true;
-                    this.update(banco, dto);
+    public void createUpdateDelete(Pedido pedido, List<PedidoMercadoriaDTO> pedidoMercadoria) {
+        // Verifica se a lista que vem do front e vazia, se for vazia e
+        // tiver dados no banco ele deleta os dados do banco
+        if (!pedido.getPedidoMercadoria().isEmpty() && pedidoMercadoria.isEmpty()) {
+            pedido.getPedidoMercadoria().forEach(val -> this.delete(val));
+        }
+        // Verifica se a lista que vem do front não e vazia, se nao for vazia e não tiver
+        // dados no banco ele cria os dados do banco
+        if (!pedidoMercadoria.isEmpty() && pedido.getPedidoMercadoria().isEmpty()) {
+            pedidoMercadoria.forEach(val -> this.create(val, pedido));
+        }
+        if (!pedido.getPedidoMercadoria().isEmpty() && !pedidoMercadoria.isEmpty()) {
+            for ( PedidoMercadoria banco :  pedido.getPedidoMercadoria()) {
+                boolean encontrado = false;
+                for (PedidoMercadoriaDTO dto : pedidoMercadoria) {
+                    if (Objects.isNull(dto.getId())) {
+                        this.create(dto, pedido);
+                    } else {
+                        if (dto.getId().equals(banco.getId())) {
+                            encontrado = true;
+                            this.update(banco, dto);
+                        }
+                    }
                 }
                 if (!encontrado) {
                     this.delete(banco);
                 }
             }
-        }
-            for (PedidoMercadoriaDTO dto : pedidoMercadoria) {
-                if (dto.getId() == null) {
-                    this.create(dto, pedido);
-                }
         }
     }
 

@@ -5,16 +5,15 @@ import { useEffect } from 'react'
 import { IconCircleXFilled, IconDatabasePlus } from '@tabler/icons-react'
 import { useForm, zodResolver } from '@mantine/form'
 import api from 'src/utils/Api'
-import IEspecialidadeMercadoria from 'src/interfaces/especialidadeCompra'
 import { ValidateAddPedidoEspecialidade } from '../validation/schemaModalEspecialidade'
 import { PRODUTO_BY_ID } from 'src/utils/Routes'
 import IEspecialidade from 'src/interfaces/Especialidade'
-import IAdicional from 'src/interfaces/IAdicional'
+import IPedidoEspecialidade from 'src/interfaces/PedidoEspecialidade'
 interface ModalPedidoEspecialidade {
   openModal: boolean
   closeModal: (value: boolean) => void
   idEspecialidade: number | null
-  dataModal: (value: IEspecialidadeMercadoria) => void
+  dataModal: (value: IPedidoEspecialidade) => void
 }
 
 const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
@@ -24,20 +23,15 @@ const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
   dataModal,
 }) => {
   const [opened, { open, close }] = useDisclosure(false)
-  // const [checkAdicional, setCheckAdicional] = useState<boolean>(false)
-  // const [clearAdicional, setClearAdicional] = useState<boolean>(false)
-
   const form = useForm<{
     especialidade: IEspecialidade
     quantidade: number
     valor: number
-    adicionalEspecialidades: IAdicional[]
   }>({
     initialValues: {
       especialidade: {},
       quantidade: 0,
       valor: 0,
-      adicionalEspecialidades: [],
     },
     validate: zodResolver(ValidateAddPedidoEspecialidade()),
   })
@@ -71,17 +65,6 @@ const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
       // setClearAdicional(true)
     }
   }
-  // const insertAdicional = (value: IAdicional[]) => {
-  //   form.setFieldValue('adicionalEspecialidades', value)
-  //   if (value.length > 0) {
-  //     const valor = value.reduce((total, obj) => {
-  //       return total + obj.mercadoria!.valorVenda! * obj.quantidade!
-  //     }, 0)
-  //     form.setFieldValue('valor', form.values.especialidade.preco! + valor)
-  //   } else {
-  //     form.setFieldValue('valor', form.values.especialidade.preco!)
-  //   }
-  // }
 
   return (
     <Modal
@@ -100,18 +83,6 @@ const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
     >
       <Divider />
 
-      {/* <Checkbox
-        mt={'0.5rem'}
-        label="Inserir adicional"
-        defaultChecked={false}
-        onChange={event => setCheckAdicional(event.target.checked)}
-        color="green"
-      />
-      {checkAdicional && (
-        <Card mt={'0.5rem'} shadow="sm" padding="lg" radius="md" withBorder>
-          <Adicional clear={clearAdicional} adicional={insertAdicional} />
-        </Card>
-      )} */}
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <NumberInput
           {...form.getInputProps('quantidade')}

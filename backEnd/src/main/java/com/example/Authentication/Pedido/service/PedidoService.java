@@ -18,6 +18,7 @@ import com.example.Authentication.Pedido.repository.PedidoRepository;
 import com.example.Authentication.PedidoEspecialidade.DTO.PedidoEspecialidadeDTO;
 import com.example.Authentication.PedidoEspecialidade.model.PedidoEspecialidade;
 import com.example.Authentication.PedidoEspecialidade.service.PedidoEspecialidadeService;
+import com.example.Authentication.PedidoMercadoria.DTO.PedidoMercadoriaDTO;
 import com.example.Authentication.PedidoMercadoria.service.PedidoMercadoriaService;
 import com.example.Authentication.TipoPedido.service.TipoPedidoService;
 import com.example.Authentication.Utils.Interfaces.LocaleInteface;
@@ -75,6 +76,23 @@ public class PedidoService  {
         return 0.0;
     }
 
+    private Double calcularValorTotalPedido(PedidoDTO pedidoDTO) {
+        Double total = 0.0;
+            if (!pedidoDTO.getPedidoMercadoria().isEmpty() && Objects.nonNull(pedidoDTO.getPedidoMercadoria())) {
+                for (PedidoMercadoriaDTO val : pedidoDTO.getPedidoMercadoria()) {
+                    Double valorMercadoria = (val.getMercadoria().getValorVenda() * val.getQuantidade());
+                    total += valorMercadoria;
+                }
+            }
+            if (!pedidoDTO.getPedidoEspecialidade().isEmpty() && Objects.nonNull(pedidoDTO.getPedidoEspecialidade())) {
+                for (PedidoEspecialidadeDTO val : pedidoDTO.getPedidoEspecialidade()) {
+                    Double valorEspecialidade = (val.getEspecialidade().getPreco() * val.getQuantidade());
+                    total += valorEspecialidade;
+                }
+            }
+        return total;
+    }
+
     @Transactional
     public void addPedido(PedidoDTO pedidoDTO, Integer id) {
         Pedido pedido = new Pedido();
@@ -84,7 +102,7 @@ public class PedidoService  {
         pedido.setObservacao(pedidoDTO.getObservacao());
         pedido.setTipoPedido(tipoPedidoService.findById(pedidoDTO.getTipoPedido().getId()));
         pedido.setMesa(pedidoDTO.getMesa());
-        pedido.setValorTotal(pedidoDTO.getValorTotal());
+        pedido.setValorTotal(this.calcularValorTotalPedido(pedidoDTO));
         pedidoRepository.save(pedido);
         if (Objects.nonNull(pedidoDTO.getPedidoMercadoria()) && !pedidoDTO.getPedidoMercadoria().isEmpty()) {
             pedidoDTO.getPedidoMercadoria().forEach(obj -> {
@@ -141,14 +159,14 @@ public class PedidoService  {
 
     public void editPedido(PedidoDTO pedidoDTO) {
         Pedido pedido = this.findById(pedidoDTO.getId());
-        pedido.setFormaPagamento(formaPagamentoService.findById(pedidoDTO.getFormaPagamento().getId()));
         pedido.setMesa(pedidoDTO.getMesa());
+        pedido.setTipoPedido(tipoPedidoService.findById(pedidoDTO.getTipoPedido().getId()));
+        pedido.setValorTotal(calcularValorTotalPedido(pedidoDTO));
         pedido.setObservacao(pedidoDTO.getObservacao());
         pedido.setNomeCliente(pedidoDTO.getNomeCliente());
         pedido.setPago(pedidoDTO.getPago());
-        pedido.setValorTotal(pedidoDTO.getValorTotal());
-        pedidoEspecialidadeService.createUpdateDelete(pedido, pedidoDTO.getPedidoEspecialidade());
-        pedidoMercadoriaService.createUpdateDelte(pedido, pedidoDTO.getPedidoMercadoria());
         pedidoRepository.save(pedido);
+        pedidoMercadoriaService.createUpdateDelete(pedido, pedidoDTO.getPedidoMercadoria());
+        pedidoEspecialidadeService.createUpdateDelete(pedido, pedidoDTO.getPedidoEspecialidade());
     }
 }

@@ -58,10 +58,15 @@ public class PedidoEspecialidadeService {
 
 
     public void createUpdateDelete(Pedido pedido, List<PedidoEspecialidadeDTO> pedidoEspecialidadeDto) {
+        for (PedidoEspecialidadeDTO dto : pedidoEspecialidadeDto) {
+            if (dto.getId() == null) {
+                this.create(dto,pedido);
+            }
+        }
         for (PedidoEspecialidade banco : pedido.getPedidoEspecialidades()) {
             boolean encontrado = false;
             for (PedidoEspecialidadeDTO dto : pedidoEspecialidadeDto) {
-                if (dto.getId().equals(banco.getId())) {
+                if (dto.getId() != null && dto.getId().equals(banco.getId())) {
                     encontrado = true;
                     updatePedidoEspecialidade(banco, dto);
                 }
@@ -69,11 +74,6 @@ public class PedidoEspecialidadeService {
             if (!encontrado) {
                 this.delete(banco);
             }
-        }
-        for (PedidoEspecialidadeDTO dto : pedidoEspecialidadeDto) {
-                if (dto.getId() == null) {
-                    this.create(dto,pedido);
-                }
         }
     }
 
@@ -94,10 +94,6 @@ public class PedidoEspecialidadeService {
             });
         }
         pedidoEspecialidadeRepository.save(banco);
-    }
-
-    private void deleteExisting(List<PedidoEspecialidade> pedidoEspecialidades) {
-        pedidoEspecialidades.forEach(this::delete);
     }
 
 }

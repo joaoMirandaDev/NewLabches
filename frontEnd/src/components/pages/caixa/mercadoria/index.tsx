@@ -108,11 +108,14 @@ const PedidoMercadoria: React.FC<PedidoMercadoria> = ({
       val => val.mercadoria?.nome === event.mercadoria?.nome
     )
     if (index !== -1) {
-      data[index] = event
+      const newData = [...data]
+      data[index].quantidade = event.quantidade
+      setData(newData)
+      listMercadoria(newData)
     } else {
-      data.push(event)
+      const newData = [...data, event]
+      setData(newData)
     }
-    setData([...data])
     setItemSelecionado(null)
   }
   const handleChange = (key: string, event: IEspecialidadeMercadoria) => {
@@ -124,21 +127,12 @@ const PedidoMercadoria: React.FC<PedidoMercadoria> = ({
       open()
     })
   }
-  const rowActions = ({ row }: { row: MRT_Row<IEspecialidadeMercadoria> }) => (
+  const rowActions = ({ row }: { row: MRT_Row<IPedidoMercadoria> }) => (
     <Flex>
-      <Tooltip label={'Remover'}>
-        <ActionIcon
-          size="sm"
-          variant="transparent"
-          aria-label="Settings"
-          onClick={() => remove(row)}
-        >
-          <IconTrash style={{ cursor: 'pointer' }} />
-        </ActionIcon>
-      </Tooltip>
       <Tooltip label={'Editar'}>
         <ActionIcon
           size="sm"
+          color="blue"
           variant="transparent"
           aria-label="Settings"
           onClick={() => editar(row)}
@@ -146,13 +140,26 @@ const PedidoMercadoria: React.FC<PedidoMercadoria> = ({
           <IconEdit style={{ cursor: 'pointer' }} />
         </ActionIcon>
       </Tooltip>
+      <Tooltip label={'Remover'}>
+        <ActionIcon
+          size="sm"
+          color="red"
+          variant="transparent"
+          aria-label="Settings"
+          onClick={() => remove(row)}
+        >
+          <IconTrash style={{ cursor: 'pointer' }} />
+        </ActionIcon>
+      </Tooltip>
     </Flex>
   )
 
   const remove = (row: MRT_Row) => {
-    const newData = [...data]
+    console.log(row)
+    const newData = data
     newData.splice(row.index, 1)
     setData(newData)
+    listMercadoria(newData)
   }
 
   const editar = (row: MRT_Row) => {
