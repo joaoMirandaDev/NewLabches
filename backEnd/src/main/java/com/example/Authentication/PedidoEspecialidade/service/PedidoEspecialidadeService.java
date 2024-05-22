@@ -37,11 +37,6 @@ public class PedidoEspecialidadeService {
         pedidoEspecialidade.setQuantidade(val.getQuantidade());
         pedidoEspecialidade.setValor(val.getValor());
         pedidoEspecialidadeRepository.save(pedidoEspecialidade);
-        if (Objects.nonNull(val.getAdicionalEspecialidades()) && !val.getAdicionalEspecialidades().isEmpty()) {
-            val.getAdicionalEspecialidades().forEach(obj -> {
-                adicionalEspecialidadeService.create(pedidoEspecialidade, obj);
-            });
-        }
         for (int i = 0; i <= val.getQuantidade(); i++) {
             val.getEspecialidade().getEspecialidadeMercadoria().forEach(obj -> {
                 mercadoriaService.reduzSaldo(mercadoriaService.findById(obj.getMercadoria().getId()), obj.getQuantidade());
@@ -60,19 +55,19 @@ public class PedidoEspecialidadeService {
     public void createUpdateDelete(Pedido pedido, List<PedidoEspecialidadeDTO> pedidoEspecialidadeDto) {
         for (PedidoEspecialidadeDTO dto : pedidoEspecialidadeDto) {
             if (dto.getId() == null) {
-                this.create(dto,pedido);
+                this.create(dto, pedido);
             }
         }
         for (PedidoEspecialidade banco : pedido.getPedidoEspecialidades()) {
             boolean encontrado = false;
             for (PedidoEspecialidadeDTO dto : pedidoEspecialidadeDto) {
-                if (Objects.nonNull(dto.getId()) && dto.getId().equals(banco.getId())) {
+                if (banco.getEspecialidade().getId().equals(dto.getEspecialidade().getId())) {
                     encontrado = true;
                     updatePedidoEspecialidade(banco, dto);
                 }
-            }
-            if (!encontrado) {
-                this.delete(banco);
+                if (!encontrado) {
+                    this.delete(banco);
+                }
             }
         }
     }

@@ -24,11 +24,13 @@ const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
 }) => {
   const [opened, { open, close }] = useDisclosure(false)
   const form = useForm<{
+    id: number | null
     especialidade: IEspecialidade
     quantidade: number
     valor: number
   }>({
     initialValues: {
+      id: null,
       especialidade: {},
       quantidade: 0,
       valor: 0,

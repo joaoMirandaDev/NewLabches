@@ -161,10 +161,10 @@ public class PedidoService  {
         Pedido pedido = this.findById(pedidoDTO.getId());
         pedido.setMesa(pedidoDTO.getMesa());
         pedido.setTipoPedido(tipoPedidoService.findById(pedidoDTO.getTipoPedido().getId()));
-        pedido.setValorTotal(calcularValorTotalPedido(pedidoDTO));
         pedido.setObservacao(pedidoDTO.getObservacao());
         pedido.setNomeCliente(pedidoDTO.getNomeCliente());
         pedido.setPago(pedidoDTO.getPago());
+        pedido.setValorTotal(calcularValorTotalPedido(pedidoDTO));
         pedidoRepository.save(pedido);
         pedidoMercadoriaService.createUpdateDelete(pedido, pedidoDTO.getPedidoMercadoria());
         pedidoEspecialidadeService.createUpdateDelete(pedido, pedidoDTO.getPedidoEspecialidade());
