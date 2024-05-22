@@ -66,7 +66,7 @@ public class PedidoEspecialidadeService {
         for (PedidoEspecialidade banco : pedido.getPedidoEspecialidades()) {
             boolean encontrado = false;
             for (PedidoEspecialidadeDTO dto : pedidoEspecialidadeDto) {
-                if (dto.getId() != null && dto.getId().equals(banco.getId())) {
+                if (Objects.nonNull(dto.getId()) && dto.getId().equals(banco.getId())) {
                     encontrado = true;
                     updatePedidoEspecialidade(banco, dto);
                 }
@@ -84,8 +84,6 @@ public class PedidoEspecialidadeService {
                 mercadoriaService.aumentaSaldo(mercadoriaService.findById(obj.getMercadoria().getId()), obj.getQuantidade());
             });
         }
-
-        banco.setEspecialidade(especialidadeService.findById(dto.getEspecialidade().getId()));
         banco.setQuantidade(dto.getQuantidade());
         banco.setValor(dto.getValor());
         for (int i = 0; i <= dto.getQuantidade(); i++) {
@@ -95,5 +93,4 @@ public class PedidoEspecialidadeService {
         }
         pedidoEspecialidadeRepository.save(banco);
     }
-
 }
