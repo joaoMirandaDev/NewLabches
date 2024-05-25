@@ -111,7 +111,6 @@ const PedidoMercadoria: React.FC<PedidoMercadoria> = ({
       const newData = [...data]
       data[index].quantidade = event.quantidade
       setData(newData)
-      listMercadoria(newData)
     } else {
       const newData = [...data, event]
       setData(newData)
@@ -159,7 +158,6 @@ const PedidoMercadoria: React.FC<PedidoMercadoria> = ({
     const newData = data
     newData.splice(row.index, 1)
     setData(newData)
-    listMercadoria(newData)
   }
 
   const editar = (row: MRT_Row) => {
@@ -172,9 +170,13 @@ const PedidoMercadoria: React.FC<PedidoMercadoria> = ({
   }, [])
 
   useEffect(() => {
-    listMercadoria(data)
+    sendObjectModal()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
+
+  const sendObjectModal = () => {
+    listMercadoria(data)
+  }
 
   return (
     <>

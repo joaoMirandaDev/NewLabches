@@ -14,6 +14,7 @@ import com.example.Authentication.PedidoEspecialidade.repository.PedidoEspeciali
 import com.example.Authentication.Utils.Interfaces.LocaleInteface;
 import com.example.Authentication.Utils.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
@@ -53,21 +54,28 @@ public class PedidoEspecialidadeService {
 
 
     public void createUpdateDelete(Pedido pedido, List<PedidoEspecialidadeDTO> pedidoEspecialidadeDto) {
-        for (PedidoEspecialidadeDTO dto : pedidoEspecialidadeDto) {
-            if (dto.getId() == null) {
-                this.create(dto, pedido);
-            }
-        }
         for (PedidoEspecialidade banco : pedido.getPedidoEspecialidades()) {
             boolean encontrado = false;
             for (PedidoEspecialidadeDTO dto : pedidoEspecialidadeDto) {
-                if (banco.getEspecialidade().getId().equals(dto.getEspecialidade().getId())) {
-                    encontrado = true;
-                    updatePedidoEspecialidade(banco, dto);
+                if (dto.getId() != null) {
+                    if (banco.getId().equals(dto.getId())) {
+                        encontrado = true;
+                        updatePedidoEspecialidade(banco, dto);
+                    }
                 }
-                if (!encontrado) {
-                    this.delete(banco);
-                }
+            }
+            if (!encontrado) {
+                this.delete(banco);
+            }
+        }
+
+        if (pedidoEspecialidadeDto.isEmpty() && !pedido.getPedidoEspecialidades().isEmpty()) {
+            pedido.getPedidoEspecialidades().forEach(val -> this.delete(val));
+        }
+
+        for (PedidoEspecialidadeDTO especialidadeDTO  : pedidoEspecialidadeDto) {
+            if (Objects.isNull(especialidadeDTO.getId())) {
+                this.create(especialidadeDTO, pedido);
             }
         }
     }

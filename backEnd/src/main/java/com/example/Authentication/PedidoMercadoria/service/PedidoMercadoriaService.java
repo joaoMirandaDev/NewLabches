@@ -49,16 +49,6 @@ public class PedidoMercadoriaService {
     }
 
     public void createUpdateDelete(Pedido pedido, List<PedidoMercadoriaDTO> pedidoMercadoria) {
-        // Verifica se a lista que vem do front e vazia, se for vazia e
-        // tiver dados no banco ele deleta os dados do banco
-        if (!pedido.getPedidoMercadoria().isEmpty() && pedidoMercadoria.isEmpty()) {
-            pedido.getPedidoMercadoria().forEach(val -> this.delete(val));
-        }
-        // Verifica se a lista que vem do front não e vazia, se nao for vazia e não tiver
-        // dados no banco ele cria os dados do banco
-        if (!pedidoMercadoria.isEmpty() && pedido.getPedidoMercadoria().isEmpty()) {
-            pedidoMercadoria.forEach(val -> this.create(val, pedido));
-        }
         if (!pedido.getPedidoMercadoria().isEmpty() && !pedidoMercadoria.isEmpty()) {
             for ( PedidoMercadoria banco :  pedido.getPedidoMercadoria()) {
                 boolean encontrado = false;
@@ -75,6 +65,18 @@ public class PedidoMercadoriaService {
                 if (!encontrado) {
                     this.delete(banco);
                 }
+            }
+        }
+        // Verifica se a lista que vem do front e vazia, se for vazia e
+        // tiver dados no banco ele deleta os dados do banco
+        if (!pedido.getPedidoMercadoria().isEmpty() && pedidoMercadoria.isEmpty()) {
+            pedido.getPedidoMercadoria().forEach(val -> this.delete(val));
+        }
+        // Verifica se a lista que vem do front não e vazia, se nao for vazia e não tiver
+        // dados no banco ele cria os dados do banco
+        for (PedidoMercadoriaDTO dto : pedidoMercadoria) {
+            if (Objects.isNull(dto.getId())) {
+                this.create(dto, pedido);
             }
         }
     }

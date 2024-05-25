@@ -166,6 +166,7 @@ const DrawerPedido: React.FC<DrawerPedido> = ({
   }
 
   const listEspecialidade = (value: IPedidoEspecialidade[]) => {
+    console.log(value, 'caixa')
     const especialidade = value.reduce((total, obj) => {
       if (obj) {
         return total + obj.valor! * obj.quantidade!

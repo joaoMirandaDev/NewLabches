@@ -31,8 +31,6 @@ const PedidoEspecialidade: React.FC<PedidoEspecialidade> = ({
 }) => {
   const [especialidade, setEspecialidade] = useState<SelectItem[]>([])
   const [idEspecialidade, setIdEspecialidade] = useState<number | null>(null)
-  const [pedidoEspecilidade, setPedidoEspecialidade] =
-    useState<IPedidoEspecialidade | null>(null)
   const [opened, { open, close }] = useDisclosure(false)
   const [data, setData] = useState<IPedidoEspecialidade[]>([])
   useEffect(() => {
@@ -41,6 +39,10 @@ const PedidoEspecialidade: React.FC<PedidoEspecialidade> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listEspecialidadeBanco])
+  useEffect(() => {
+    getMethods()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   const getMethods = async () => {
     setData([])
     const especialidade = await api.get(FIND_ALL_ESPECIALIDADE)
@@ -51,6 +53,7 @@ const PedidoEspecialidade: React.FC<PedidoEspecialidade> = ({
       }))
     )
   }
+
   const columns = useMemo<MRT_ColumnDef<IEspecialidadeMercadoria>[]>(
     () => [
       {
@@ -103,22 +106,27 @@ const PedidoEspecialidade: React.FC<PedidoEspecialidade> = ({
     ],
     []
   )
+
   const objetoModal = (event: IPedidoEspecialidade) => {
-    console.log(event)
-    if (pedidoEspecilidade) {
-      const index = data.findIndex(
-        val => val.especialidade?.id == event.especialidade?.id
-      )
-      if (index !== -1) {
-        const newData = [...data]
-        newData[index].quantidade = event.quantidade
-        setData(newData)
-      }
-    } else {
-      const newData = [...data, event]
-      setData(newData)
-    }
-    setPedidoEspecialidade(null)
+    listEspecialidade([...data, event])
+
+    // console.log(event)
+    // if (data.length > 0) {
+    //   const index = data.findIndex(
+    //     val => val.especialidade?.id === event.especialidade?.id
+    //   )
+    //   if (
+    //     index != -1 &&
+    //     data[index].especialidade!.id === event.especialidade?.id
+    //   ) {
+    //     data[index] = event
+    //   } else {
+    //     setData([...data, event])
+    //   }
+    // } else {
+    //   setData([...data, event])
+    // }
+    // controlList()
   }
 
   const handleChangeMercadoria = () => {
@@ -126,9 +134,9 @@ const PedidoEspecialidade: React.FC<PedidoEspecialidade> = ({
   }
   const editar = (row: IPedidoEspecialidade) => {
     setIdEspecialidade(row.especialidade!.id!)
-    setPedidoEspecialidade(row)
     open()
   }
+
   const rowActions = ({ row }: { row: MRT_Row<IPedidoEspecialidade> }) => (
     <Flex>
       <Tooltip label={'Editar especialidade'}>
@@ -155,22 +163,12 @@ const PedidoEspecialidade: React.FC<PedidoEspecialidade> = ({
       </Tooltip>
     </Flex>
   )
-
   const remove = (row: MRT_Row) => {
     const newData = [...data]
     newData.splice(row.index, 1)
     setData(newData)
+    listEspecialidade(newData)
   }
-
-  useEffect(() => {
-    getMethods()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  useEffect(() => {
-    listEspecialidade(data)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data])
 
   return (
     <>
