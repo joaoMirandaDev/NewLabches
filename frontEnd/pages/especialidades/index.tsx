@@ -206,6 +206,7 @@ export default function FornecedorList() {
           size="sm"
           disabled={validatePermissionRole()}
           variant="transparent"
+          color="orange"
           aria-label="Settings"
           onClick={() => visualizar(row.original.id!)}
         >

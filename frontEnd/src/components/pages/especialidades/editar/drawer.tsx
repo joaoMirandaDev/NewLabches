@@ -31,7 +31,7 @@ import { DrowerCadastroProdutos } from '../validation/schema'
 import SimpleTable from '@components/common/tabela/simpleTable'
 import IEspecialidadeMercadoria from 'src/interfaces/especialidadeCompra'
 import { MRT_ColumnDef, MRT_Row } from 'mantine-react-table'
-import ModalInsertMercadoria from '../modal/modal'
+import ModalInsertMercadoria from '@components/pages/mercadoria/modal'
 import { useDisclosure } from '@mantine/hooks'
 import IProduto from 'src/interfaces/produto'
 import IMercadoria from 'src/interfaces/mercadoria'
@@ -431,6 +431,7 @@ const DrawerProduto: React.FC<DrawerProduto> = ({
         {renderButtons()}
       </form>
       <ModalInsertMercadoria
+        idMercadoria={null}
         closeModal={close}
         dataModal={objetoModal}
         openModal={opened}

@@ -189,6 +189,7 @@ export default function FornecedorList() {
         <ActionIcon
           size="sm"
           disabled={validatePermissionRole()}
+          color="orange"
           variant="transparent"
           aria-label="Settings"
           onClick={() => openDrawerVisualizar(row.original.id!)}

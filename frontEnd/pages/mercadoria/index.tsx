@@ -255,6 +255,7 @@ export default function FornecedorList() {
         <ActionIcon
           size="sm"
           disabled={validatePermissionRole()}
+          color="orange"
           variant="transparent"
           aria-label="Settings"
           onClick={() => visualizar(row.original.id!)}
@@ -266,6 +267,7 @@ export default function FornecedorList() {
         <ActionIcon
           size="sm"
           disabled={validatePermissionRole()}
+          color="cyan"
           variant="transparent"
           aria-label="Settings"
           onClick={() => getHisotico(row.original.id!)}

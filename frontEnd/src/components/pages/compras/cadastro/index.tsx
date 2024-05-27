@@ -166,6 +166,7 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
       <Tooltip label={'Remover'}>
         <ActionIcon
           size="sm"
+          color="red"
           variant="transparent"
           aria-label="Settings"
           onClick={() => removeMercadoria(row)}
@@ -178,6 +179,7 @@ const DrawerCadastroCompras: React.FC<DrawerCadastroCompras> = ({
           size="sm"
           variant="transparent"
           aria-label="Settings"
+          color="blue"
           onClick={() => editarMercadoria(row)}
         >
           <IconEdit style={{ cursor: 'pointer' }} />

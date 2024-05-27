@@ -26,7 +26,7 @@ import { useForm, zodResolver } from '@mantine/form'
 import { DrowerCadastroProdutos } from '../validation/schema'
 import { ErrorNotification, SuccessNotification } from '@components/common'
 import SimpleTable from '@components/common/tabela/simpleTable'
-import ModalInsertMercadoria from '../modal/modal'
+import ModalInsertMercadoria from '@components/pages/mercadoria/modal'
 import IEspecialidadeMercadoria from 'src/interfaces/especialidadeCompra'
 import { useDisclosure } from '@mantine/hooks'
 import { MRT_ColumnDef, MRT_Row } from 'mantine-react-table'
@@ -363,6 +363,7 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
         {renderButtons()}
       </form>
       <ModalInsertMercadoria
+        idMercadoria={null}
         closeModal={close}
         dataModal={objetoModal}
         openModal={opened}

@@ -115,6 +115,7 @@ const Adicional: React.FC<AdiocionalEspecialidade> = ({ adicional, clear }) => {
       <Tooltip label={'Remover'}>
         <ActionIcon
           size="sm"
+          color="red"
           variant="transparent"
           aria-label="Settings"
           onClick={() => remove(row)}
@@ -126,6 +127,7 @@ const Adicional: React.FC<AdiocionalEspecialidade> = ({ adicional, clear }) => {
         <ActionIcon
           size="sm"
           variant="transparent"
+          color="blue"
           aria-label="Settings"
           onClick={() => editar(row)}
         >

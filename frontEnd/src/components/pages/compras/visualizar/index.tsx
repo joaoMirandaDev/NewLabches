@@ -179,6 +179,7 @@ const DrawerVisualizarCompra: React.FC<DrawerVisualizarCompra> = ({
         <ActionIcon
           disabled={!onEdit}
           size="sm"
+          color="red"
           variant="transparent"
           aria-label="Settings"
           onClick={() => removeMercadoria(row)}
@@ -190,6 +191,7 @@ const DrawerVisualizarCompra: React.FC<DrawerVisualizarCompra> = ({
         <ActionIcon
           disabled={!onEdit}
           size="sm"
+          color="blue"
           variant="transparent"
           aria-label="Settings"
           onClick={() => editarMercadoria(row)}

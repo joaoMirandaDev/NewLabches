@@ -321,6 +321,7 @@ export default function Caixa() {
       <Tooltip label="Acessar o caixa">
         <ActionIcon
           size="sm"
+          color="blue"
           variant="transparent"
           aria-label="Settings"
           onClick={() => openCaixaExistente(row.original.id!)}
@@ -330,6 +331,7 @@ export default function Caixa() {
       </Tooltip>
       <Tooltip label="Fechar caixa">
         <ActionIcon
+          color="orange"
           size="sm"
           variant="transparent"
           aria-label="Settings"

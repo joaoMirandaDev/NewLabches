@@ -179,6 +179,7 @@ export default function ColaboradorList() {
         <ActionIcon
           size="sm"
           disabled={validatePermissionRole()}
+          color="orange"
           variant="transparent"
           aria-label="Settings"
           onClick={() => visualizar(row.original.id!)}
@@ -190,6 +191,7 @@ export default function ColaboradorList() {
         <ActionIcon
           disabled={validatePermissionRole()}
           size="sm"
+          color="blue"
           variant="transparent"
           aria-label="Settings"
           onClick={() => editar(row.original.id!)}
@@ -201,6 +203,7 @@ export default function ColaboradorList() {
         <ActionIcon
           disabled={validatePermissionRole()}
           size="sm"
+          color="red"
           variant="transparent"
           aria-label="Settings"
           onClick={() => deleteColaboradorById(row.original.id!)}

@@ -180,6 +180,7 @@ export default function FornecedorList() {
           size="sm"
           disabled={validatePermissionRole()}
           variant="transparent"
+          color="orange"
           aria-label="Settings"
           onClick={() => visualizar(row.original.id!)}
         >
@@ -192,6 +193,7 @@ export default function FornecedorList() {
           variant="transparent"
           disabled={validatePermissionRole()}
           aria-label="Settings"
+          color="blue"
           onClick={() => editar(row.original.id!)}
         >
           <IconEdit />
@@ -201,6 +203,7 @@ export default function FornecedorList() {
         <ActionIcon
           size="sm"
           variant="transparent"
+          color="red"
           disabled={validatePermissionRole()}
           aria-label="Settings"
           onClick={() => deletefornecedorById(row.original.id!)}
