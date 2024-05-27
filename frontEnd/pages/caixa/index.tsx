@@ -41,7 +41,7 @@ import {
 } from '@tabler/icons-react'
 import { useDisclosure } from '@mantine/hooks'
 import { useForm, zodResolver } from '@mantine/form'
-import { validaAberturaCaixa } from './validation/schema'
+import { validaAberturaCaixa } from '../../src/components/pages/caixa/validation/schemaOpenCaixa'
 import { useRouter } from 'next/router'
 import { ErrorNotification, SuccessNotification } from '@components/common'
 
