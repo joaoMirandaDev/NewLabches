@@ -13,12 +13,14 @@ interface ModalPedidoEspecialidade {
   openModal: boolean
   closeModal: (value: boolean) => void
   idEspecialidade: number | null
+  especialidadeEdit: IPedidoEspecialidade | null
   dataModal: (value: IPedidoEspecialidade) => void
 }
 
 const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
   openModal,
   idEspecialidade,
+  especialidadeEdit,
   closeModal,
   dataModal,
 }) => {
@@ -38,19 +40,35 @@ const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
     validate: zodResolver(ValidateAddPedidoEspecialidade()),
   })
   useEffect(() => {
+    resetForm()
+    if (especialidadeEdit) {
+      form.setValues(especialidadeEdit)
+    }
     if (openModal) {
+      console.log('entoru')
       open()
-      api.get(PRODUTO_BY_ID + `${idEspecialidade}`).then(response => {
-        form.setFieldValue('especialidade', response.data)
-        form.setFieldValue('valor', response.data.preco)
-      })
+      api
+        .get(
+          PRODUTO_BY_ID +
+            `${
+              especialidadeEdit
+                ? especialidadeEdit.especialidade?.id
+                : idEspecialidade
+            }`
+        )
+        .then(response => {
+          form.setFieldValue('especialidade', response.data)
+          form.setFieldValue('valor', response.data.preco)
+        })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, openModal])
+  }, [open, openModal, especialidadeEdit])
   const resetForm = () => {
     const dados = {
+      id: null,
+      especialidade: {},
       quantidade: 0,
-      mercadoria: null,
+      valor: 0,
     }
     form.setValues(dados)
   }
@@ -66,6 +84,7 @@ const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
       fecharModal()
       // setClearAdicional(true)
     }
+    resetForm()
   }
 
   return (

@@ -4,12 +4,13 @@ import { useDisclosure } from '@mantine/hooks'
 import { useEffect } from 'react'
 import { IconCircleXFilled, IconDatabasePlus } from '@tabler/icons-react'
 import { useForm, zodResolver } from '@mantine/form'
-import { ModalCadastoMercadoria } from '../validation/schemaModal'
 import IMercadoria from 'src/interfaces/mercadoria'
 import IPedidoMercadoria from 'src/interfaces/PedidoMercadoria'
+import { ModalCadastoMercadoria } from '@components/pages/especialidades/validation/schemaModal'
 interface ModalInsertMercadoria {
   openModal: boolean
   data: IPedidoMercadoria | null
+  idMercadoria: number | null
   closeModal: (value: boolean) => void
   dataModal: (value: IPedidoMercadoria) => void
 }
@@ -22,10 +23,12 @@ const ModalInsertMercadoria: React.FC<ModalInsertMercadoria> = ({
 }) => {
   const [opened, { open, close }] = useDisclosure(false)
   const form = useForm<{
+    id: number | null
     quantidade: number
     mercadoria: IMercadoria | null
   }>({
     initialValues: {
+      id: null,
       quantidade: 0,
       mercadoria: null,
     },
@@ -33,13 +36,15 @@ const ModalInsertMercadoria: React.FC<ModalInsertMercadoria> = ({
   })
   useEffect(() => {
     if (openModal && data) {
-      open()
       form.setValues(data)
+      open()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, openModal])
+  }, [openModal])
+
   const resetForm = () => {
     const dados = {
+      id: null,
       quantidade: 0,
       mercadoria: null,
     }
@@ -72,7 +77,11 @@ const ModalInsertMercadoria: React.FC<ModalInsertMercadoria> = ({
       radius={'md'}
       closeOnEscape={false}
       trapFocus={true}
-      title={data?.mercadoria?.nome}
+      title={
+        data?.mercadoria?.nome
+          ? data?.mercadoria?.nome
+          : form.values.mercadoria?.nome
+      }
     >
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Divider />

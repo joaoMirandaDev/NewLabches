@@ -53,9 +53,7 @@ public class PedidoMercadoriaService {
             for ( PedidoMercadoria banco :  pedido.getPedidoMercadoria()) {
                 boolean encontrado = false;
                 for (PedidoMercadoriaDTO dto : pedidoMercadoria) {
-                    if (Objects.isNull(dto.getId())) {
-                        this.create(dto, pedido);
-                    } else {
+                    if (dto.getId() != null) {
                         if (dto.getId().equals(banco.getId())) {
                             encontrado = true;
                             this.update(banco, dto);

@@ -7,5 +7,4 @@ export default interface IEspecialidade {
   dataCadastro?: string
   ativo?: number
   preco?: number
-  especialidadeMercadoria?: IEspecialidade[]
 }

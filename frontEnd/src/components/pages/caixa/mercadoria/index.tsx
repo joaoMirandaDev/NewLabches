@@ -16,7 +16,7 @@ import { IconDatabasePlus, IconEdit, IconTrash } from '@tabler/icons-react'
 import SimpleTable from '@components/common/tabela/simpleTable'
 import { MRT_ColumnDef, MRT_Row } from 'mantine-react-table'
 import IEspecialidadeMercadoria from 'src/interfaces/especialidadeCompra'
-import ModalInsertMercadoria from '@components/pages/especialidades/modal/modal'
+import ModalInsertMercadoria from '@components/pages/mercadoria/modal'
 import { useDisclosure } from '@mantine/hooks'
 import IPedidoMercadoria from 'src/interfaces/PedidoMercadoria'
 
@@ -212,6 +212,7 @@ const PedidoMercadoria: React.FC<PedidoMercadoria> = ({
       />
       <ModalInsertMercadoria
         closeModal={close}
+        idMercadoria={idMercadoria}
         dataModal={objetoModal}
         openModal={opened}
         data={itemSelecionado}
