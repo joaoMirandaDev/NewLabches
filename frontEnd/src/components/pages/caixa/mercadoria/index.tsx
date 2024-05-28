@@ -154,7 +154,6 @@ const PedidoMercadoria: React.FC<PedidoMercadoria> = ({
   )
 
   const remove = (row: MRT_Row) => {
-    console.log(row)
     const newData = data
     newData.splice(row.index, 1)
     setData(newData)

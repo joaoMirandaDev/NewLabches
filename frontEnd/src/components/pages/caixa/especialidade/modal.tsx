@@ -45,7 +45,6 @@ const ModalPedidoEspecialidade: React.FC<ModalPedidoEspecialidade> = ({
       form.setValues(especialidadeEdit)
     }
     if (openModal) {
-      console.log('entoru')
       open()
       api
         .get(
