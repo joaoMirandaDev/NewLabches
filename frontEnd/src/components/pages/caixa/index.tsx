@@ -67,6 +67,7 @@ const DrawerPedido: React.FC<DrawerPedido> = ({
   const [idEspecialidade, setIdEspecialidade] = useState<number | null>(null)
   const [idMercadoria, setIdMercadoria] = useState<number | null>(null)
   const [modalEspecialidade, setmodalEspecialidade] = useState<boolean>(false)
+  const [warning, setWarning] = useState<boolean>(false)
   const [modalMercadoria, setmodalMercadoria] = useState<boolean>(false)
   const [especialidade, setEspecialidade] = useState<SelectItem[]>([])
   const [mercadoria, setMercadoria] = useState<SelectItem[]>([])
@@ -207,6 +208,11 @@ const DrawerPedido: React.FC<DrawerPedido> = ({
             ErrorNotification({ message: 'Erro ao salvar pedido' })
           })
       }
+    } else {
+      setWarning(true)
+      setTimeout(() => {
+        setWarning(false)
+      }, 3500)
     }
   }
 
@@ -626,7 +632,12 @@ const DrawerPedido: React.FC<DrawerPedido> = ({
         {renderTabs()}
       </Card>
       <form onSubmit={form.onSubmit(handleSubmit)}>
-        <Flex mt={20} justify={'space-between'}>
+        {warning && (
+          <Text m={'0.5rem'} color="red" fw={'bold'}>
+            Insira pelo menos 1 mercadoria ou especilidade.
+          </Text>
+        )}
+        <Flex mt={'1rem'} justify={'space-between'}>
           <Button
             leftIcon={<IconCircleXFilled />}
             color="red"
