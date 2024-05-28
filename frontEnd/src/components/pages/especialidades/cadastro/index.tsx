@@ -254,6 +254,7 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
         <ActionIcon
           size="sm"
           variant="transparent"
+          color="red"
           aria-label="Settings"
           onClick={() => remove(row)}
         >
@@ -264,6 +265,7 @@ const DrawerCadastroProduto: React.FC<DrawerCadastroProduto> = ({
         <ActionIcon
           size="sm"
           variant="transparent"
+          color="blue"
           aria-label="Settings"
           onClick={() => editar(row)}
         >

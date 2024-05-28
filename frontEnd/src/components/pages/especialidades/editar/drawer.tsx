@@ -232,6 +232,7 @@ const DrawerProduto: React.FC<DrawerProduto> = ({
         <ActionIcon
           disabled={!onEdit}
           size="sm"
+          color="red"
           variant="transparent"
           aria-label="Settings"
           onClick={() => remove(row)}
@@ -244,6 +245,7 @@ const DrawerProduto: React.FC<DrawerProduto> = ({
           size="sm"
           disabled={!onEdit}
           variant="transparent"
+          color="blue"
           aria-label="Settings"
           onClick={() => editar(row)}
         >
