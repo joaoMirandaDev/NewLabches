@@ -165,6 +165,7 @@ export default function RegistroCaixa() {
       {
         accessorKey: 'numeroPedido',
         header: 'Número pedido',
+        filterVariant: 'autocomplete',
         enableSorting: true,
         enableColumnFilter: true,
         size: 15,
@@ -184,13 +185,12 @@ export default function RegistroCaixa() {
               gap: '16px',
             }}
           >
-            {row.original.pago == 0 && (
+            {row.original.pago == 0 ? (
               <>
                 <IconAlertTriangle size={16} color="red" />
                 <span>{renderedCellValue}</span>
               </>
-            )}
-            {row.original.pago == 1 && (
+            ) : (
               <>
                 <IconCircleCheck size={16} color="green" />
                 <span>{renderedCellValue}</span>
@@ -315,16 +315,7 @@ export default function RegistroCaixa() {
               gap: '16px',
             }}
           >
-            {row.original.pago == 0 && (
-              <>
-                <span>Aberto</span>
-              </>
-            )}
-            {row.original.pago == 1 && (
-              <>
-                <span>Pago</span>
-              </>
-            )}
+            {row.original.pago == 0 ? 'Aberto' : 'Pago'}
           </Box>
         ),
       },
