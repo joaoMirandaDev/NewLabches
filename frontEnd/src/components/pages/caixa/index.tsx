@@ -119,22 +119,34 @@ const DrawerPedido: React.FC<DrawerPedido> = ({
         .catch(() => {
           ErrorNotification({ message: 'Erro ao buscar pedido' })
         })
-      const especialidade = await api.get(FIND_ALL_ESPECIALIDADE)
-      setEspecialidade(
-        especialidade.data.map((data: IMercadoria) => ({
-          value: data.id,
-          label: data.nome,
-        }))
-      )
-      const mercadoria = await api.get(FIND_ALL_MERCADORIA)
-      setMercadoria(
-        mercadoria.data.map((data: IMercadoria) => ({
-          value: data.id,
-          label: data.nome,
-          group: data.tipo.nome,
-        }))
-      )
     }
+    await api
+      .get(FIND_ALL_ESPECIALIDADE)
+      .then(response => {
+        setEspecialidade(
+          response.data.map((data: IMercadoria) => ({
+            value: data.id,
+            label: data.nome,
+          }))
+        )
+      })
+      .catch(() => {
+        ErrorNotification({ message: 'Erro ao buscar especialidades' })
+      })
+    await api
+      .get(FIND_ALL_MERCADORIA)
+      .then(response => {
+        setMercadoria(
+          response.data.map((data: IMercadoria) => ({
+            value: data.id,
+            label: data.nome,
+            group: data.tipo.nome,
+          }))
+        )
+      })
+      .catch(() => {
+        ErrorNotification({ message: 'Erro ao buscar mercadorias' })
+      })
     await api.get(FIND_ALL_TIPO_PEDIDO).then(response => {
       const data = response.data.map((data: ITipoPedido) => ({
         value: data.id,
@@ -162,7 +174,10 @@ const DrawerPedido: React.FC<DrawerPedido> = ({
   }
 
   const handleSubmit = async () => {
-    if (form.values.valorTotal > 0) {
+    if (
+      form.values.pedidoEspecialidade.length > 0 ||
+      form.values.pedidoMercadoria.length > 0
+    ) {
       if (idPedido) {
         await api
           .put(EDITPEDIDO_BY_ID, form.values)
@@ -228,7 +243,6 @@ const DrawerPedido: React.FC<DrawerPedido> = ({
   }
 
   const handleChangeMercadoria = async () => {
-    console.log('clicou')
     await api.get(MERCADORIA_BY_ID + idMercadoria).then(response => {
       setItemSelecionado({ ...itemSelecionado, ['mercadoria']: response.data })
       setmodalMercadoria(true)
@@ -409,7 +423,6 @@ const DrawerPedido: React.FC<DrawerPedido> = ({
   }
 
   const closeModalMercadoria = (val: boolean) => {
-    console.log(val)
     setmodalMercadoria(val)
     setItemSelecionado(null)
   }
@@ -469,6 +482,7 @@ const DrawerPedido: React.FC<DrawerPedido> = ({
               onChange={value => setIdEspecialidade(Number(value))}
               data={especialidade}
               withinPortal
+              clearable
               searchable
               w={'100%'}
               withAsterisk

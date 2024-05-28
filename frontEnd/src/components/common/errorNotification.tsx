@@ -14,7 +14,7 @@ export const ErrorNotification = ({
     message,
     icon,
     style: {
-      zIndex: 200000000,
+      zIndex: 30000,
     },
     loading,
     autoClose,
