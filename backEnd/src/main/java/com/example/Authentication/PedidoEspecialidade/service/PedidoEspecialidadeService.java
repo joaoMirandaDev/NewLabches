@@ -3,12 +3,15 @@ package com.example.Authentication.PedidoEspecialidade.service;
 import com.example.Authentication.AdicionalEspecialidade.DTO.AdicionalEspecialidadeDTO;
 import com.example.Authentication.AdicionalEspecialidade.model.AdicionalEspecialidade;
 import com.example.Authentication.AdicionalEspecialidade.service.AdicionalEspecialidadeService;
+import com.example.Authentication.Especialidade.DTO.EspecialidadeDTO;
+import com.example.Authentication.Especialidade.DTO.EspecialidadeSelectDTO;
 import com.example.Authentication.Especialidade.model.Especialidade;
 import com.example.Authentication.Especialidade.service.EspecialidadeService;
 import com.example.Authentication.Mercadoria.repository.MercadoriaRepository;
 import com.example.Authentication.Mercadoria.service.MercadoriaService;
 import com.example.Authentication.Pedido.model.Pedido;
 import com.example.Authentication.PedidoEspecialidade.DTO.PedidoEspecialidadeDTO;
+import com.example.Authentication.PedidoEspecialidade.DTO.PedidoEspecialidadeTopItensDTO;
 import com.example.Authentication.PedidoEspecialidade.model.PedidoEspecialidade;
 import com.example.Authentication.PedidoEspecialidade.repository.PedidoEspecialidadeRepository;
 import com.example.Authentication.Utils.Interfaces.LocaleInteface;
@@ -19,17 +22,38 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class PedidoEspecialidadeService {
     private final PedidoEspecialidadeRepository pedidoEspecialidadeRepository;
     private final MercadoriaService mercadoriaService;
-    private final MessageSource messageSource;
     private final EspecialidadeService especialidadeService;
-    private final AdicionalEspecialidadeService adicionalEspecialidadeService;
+
+    public List<PedidoEspecialidadeTopItensDTO> getTopPedidoEspecialidade() {
+        List<Object[]> objects = pedidoEspecialidadeRepository.getListPedidoEspecialidade();
+        return objects.stream().map(this::convertToPedidoEspecialidadeTopItensDTO).collect(Collectors.toList());
+    }
+
+    private PedidoEspecialidadeTopItensDTO convertToPedidoEspecialidadeTopItensDTO(Object[] objArray) {
+        PedidoEspecialidadeTopItensDTO pedidoEspecialidadeTopItensDTO = new PedidoEspecialidadeTopItensDTO();
+
+        Integer especialidadeId = (Integer) objArray[0];
+        BigDecimal quantidade = (BigDecimal) objArray[1];
+
+        Especialidade especialidade = especialidadeService.findById(especialidadeId);
+        EspecialidadeSelectDTO especialidadeDTO = new EspecialidadeSelectDTO(especialidade);
+
+        pedidoEspecialidadeTopItensDTO.setEspecialidadeDTO(especialidadeDTO);
+        pedidoEspecialidadeTopItensDTO.setQuantidade(quantidade.intValue());
+
+        return pedidoEspecialidadeTopItensDTO;
+    }
 
     public void create(PedidoEspecialidadeDTO val, Pedido pedido) {
         PedidoEspecialidade pedidoEspecialidade = new PedidoEspecialidade();

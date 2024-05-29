@@ -230,6 +230,13 @@
       "edit": "#{{id}} Editar | X-LANCHES",
       "create": "Novo colaborador | X-LANCHES",
       "clone": "#{{id}} Clone Category | X-LANCHES"
+    },
+    "caixa": {
+      "list": "Listagem Caixa | X-LANCHES",
+      "show": "#{{id}} Registro Caixa | X-LANCHES"
+    },
+    "dashBoard": {
+      "list": "DashBoard | X-LANCHES"
     }
   }
 }

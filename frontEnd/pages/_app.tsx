@@ -36,6 +36,7 @@ import {
   IconAffiliate,
   IconBusinessplan,
   IconCash,
+  IconLayoutDashboard,
   IconMeat,
   IconPizza,
   IconUsers,
@@ -73,7 +74,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
         })
         return {
           authenticated: true,
-          redirectTo: '/compras',
+          redirectTo: '/caixa',
           success: true,
         }
       }
@@ -243,9 +244,18 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
                 i18nProvider={i18nProvider}
                 resources={[
                   {
+                    name: 'dashBoard',
+                    list: '/dashBoard',
+                    meta: {
+                      canDelete: false,
+                      label: 'DashBoard',
+                      icon: <IconLayoutDashboard />,
+                    },
+                  },
+                  {
                     name: 'caixa',
                     list: '/caixa',
-                    edit: '/caixa/registro/:id',
+                    show: '/caixa/registro/:id',
                     meta: {
                       canDelete: false,
                       label: 'Caixa',
