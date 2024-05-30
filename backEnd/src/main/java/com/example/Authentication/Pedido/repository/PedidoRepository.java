@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Date;
 import java.util.List;
 
 public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
@@ -21,4 +22,18 @@ public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
 
 
     List<Pedido> findByCaixaId(Integer id);
+
+    @Query(nativeQuery = true, value = "SELECT COUNT(*) FROM pedido")
+    Integer getQuantidadePedidos();
+
+    @Query(nativeQuery = true, value = "SELECT COUNT(*)  FROM pedido p inner join caixa c " +
+            "on p.id_caixa  = c.id WHERE c.data_abertura BETWEEN :dataInicial AND :dataFinal")
+    Integer getTotalPedidosByPeriodo(Date dataInicial, Date dataFinal);
+
+    @Query(nativeQuery = true, value = "SELECT SUM(p.valor_total)  FROM pedido p")
+    Double getTotalVendas();
+
+    @Query(nativeQuery = true, value = "SELECT SUM(p.valor_total)  FROM pedido p inner join caixa c " +
+            "on p.id_caixa  = c.id WHERE c.data_abertura BETWEEN :dataInicial AND :dataFinal")
+    Double getTotalVendasByPeriodo(Date dataInicial, Date dataFinal);
 }

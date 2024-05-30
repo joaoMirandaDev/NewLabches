@@ -16,6 +16,8 @@ import com.example.Authentication.PedidoEspecialidade.model.PedidoEspecialidade;
 import com.example.Authentication.PedidoEspecialidade.repository.PedidoEspecialidadeRepository;
 import com.example.Authentication.Utils.Interfaces.LocaleInteface;
 import com.example.Authentication.Utils.exceptions.NotFoundException;
+import com.example.Authentication.Utils.filtro.Filtro;
+import com.example.Authentication.Utils.filtro.FiltroDate;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.MessageSource;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -35,8 +38,16 @@ public class PedidoEspecialidadeService {
     private final MercadoriaService mercadoriaService;
     private final EspecialidadeService especialidadeService;
 
-    public List<PedidoEspecialidadeTopItensDTO> getTopPedidoEspecialidade() {
-        List<Object[]> objects = pedidoEspecialidadeRepository.getListPedidoEspecialidade();
+    public List<PedidoEspecialidadeTopItensDTO> getTopPedidoEspecialidade(FiltroDate filtroDate) {
+        List<Object[]> objects = new ArrayList<>();
+        if (Objects.isNull(filtroDate.getDataInicial()) && Objects.isNull(filtroDate.getDataFinal())) {
+            objects = pedidoEspecialidadeRepository.getListPedidoEspecialidade();
+        } else {
+            filtroDate.setDataInicial(Objects.isNull(filtroDate.getDataInicial()) ? new Date() : filtroDate.getDataInicial());
+            filtroDate.setDataFinal(Objects.isNull(filtroDate.getDataFinal()) ? new Date() : filtroDate.getDataFinal());
+            objects = pedidoEspecialidadeRepository.getListPedidoEspecialidadeByPeriodo(filtroDate.getDataInicial(), filtroDate.getDataFinal());
+        }
+
         return objects.stream().map(this::convertToPedidoEspecialidadeTopItensDTO).collect(Collectors.toList());
     }
 
@@ -49,7 +60,7 @@ public class PedidoEspecialidadeService {
         Especialidade especialidade = especialidadeService.findById(especialidadeId);
         EspecialidadeSelectDTO especialidadeDTO = new EspecialidadeSelectDTO(especialidade);
 
-        pedidoEspecialidadeTopItensDTO.setEspecialidadeDTO(especialidadeDTO);
+        pedidoEspecialidadeTopItensDTO.setEspecialidade(especialidadeDTO);
         pedidoEspecialidadeTopItensDTO.setQuantidade(quantidade.intValue());
 
         return pedidoEspecialidadeTopItensDTO;

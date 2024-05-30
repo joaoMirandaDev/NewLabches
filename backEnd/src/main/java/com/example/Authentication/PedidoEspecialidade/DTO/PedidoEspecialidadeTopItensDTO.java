@@ -14,7 +14,7 @@ import lombok.Setter;
 @Setter
 public class PedidoEspecialidadeTopItensDTO {
 
-    private EspecialidadeSelectDTO especialidadeDTO;
+    private EspecialidadeSelectDTO especialidade;
     private Integer quantidade;
 
 }

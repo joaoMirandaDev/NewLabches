@@ -4,7 +4,7 @@ import React from 'react'
 export default function Home() {
   return (
     <React.StrictMode>
-      <NavigateToResource resource="/caixa" />
+      <NavigateToResource resource="/dashBoard" />
     </React.StrictMode>
   )
 }

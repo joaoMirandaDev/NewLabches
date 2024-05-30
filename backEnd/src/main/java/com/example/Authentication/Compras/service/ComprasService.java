@@ -13,6 +13,7 @@ import com.example.Authentication.MercadoriasCompras.service.ItensComprasService
 import com.example.Authentication.Utils.Interfaces.LocaleInteface;
 import com.example.Authentication.Utils.exceptions.NotFoundException;
 import com.example.Authentication.Utils.filtro.Filtro;
+import com.example.Authentication.Utils.filtro.FiltroDate;
 import com.example.Authentication.Utils.pagination.Pagination;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -115,6 +116,26 @@ public class ComprasService implements Pagination {
         Compras compras = comprasRepository.findById(id).orElseThrow(() -> new NotFoundException(
                 messageSource.getMessage("error.isEmpty", null, LocaleInteface.BR)));
         return new ComprasDto(compras);
+    }
+
+    public Double getValorTotalDeCompras(FiltroDate filtroDate) {
+        if (Objects.isNull(filtroDate.getDataInicial()) && Objects.isNull(filtroDate.getDataFinal())) {
+            Double valor = comprasRepository.getTotalCompras();
+            if (valor == null) {
+                valor = 0.0;
+                return valor;
+            }
+            return valor;
+        } else {
+            filtroDate.setDataInicial(Objects.isNull(filtroDate.getDataInicial()) ? new Date() : filtroDate.getDataInicial());
+            filtroDate.setDataFinal(Objects.isNull(filtroDate.getDataFinal()) ? new Date() : filtroDate.getDataFinal());
+            Double valor = comprasRepository.getTotalComprasByPeriodo(filtroDate.getDataInicial(), filtroDate.getDataFinal());
+            if (valor == null) {
+                valor = 0.0;
+                return valor;
+            }
+            return valor;
+        }
     }
 
 }

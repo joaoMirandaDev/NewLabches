@@ -74,7 +74,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
         })
         return {
           authenticated: true,
-          redirectTo: '/caixa',
+          redirectTo: '/dashBoard',
           success: true,
         }
       }

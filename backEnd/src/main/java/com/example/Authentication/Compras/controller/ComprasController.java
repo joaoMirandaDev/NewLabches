@@ -5,6 +5,7 @@ import com.example.Authentication.Utils.filtro.Filtro;
 import com.example.Authentication.Compras.DTO.ComprasDto;
 import com.example.Authentication.Compras.model.Compras;
 import com.example.Authentication.Compras.service.ComprasService;
+import com.example.Authentication.Utils.filtro.FiltroDate;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +42,13 @@ public class ComprasController {
     @Operation(summary = "Paginação compras", description = "Metodo utilizado para paginar compras", tags = "Compras")
     public Page<ComprasPageDto> findAllByPage(@RequestBody Filtro filtro) {
        return comprasService.findAllByPage(filtro);
+    }
+
+    @PostMapping(value = "/getValorCompras", produces = "application/json")
+    @Operation(summary = "Valor total de comras", description = "Metodo utilizado para buscar valor total das compras",
+            tags = "Compras")
+    public Double GetValorTotalDeCompras(@RequestBody FiltroDate filtro) {
+        return comprasService.getValorTotalDeCompras(filtro);
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")

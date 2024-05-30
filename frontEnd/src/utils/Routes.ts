@@ -10,6 +10,7 @@ export const COMPRAS_BY_ID: string = 'api/compras'
 export const COMPRAS_ADD: string = 'api/compras/addCompra'
 export const COMPRAS_EDIT_BY_ID: string = 'api/compras/edit'
 export const COMPRAS_DELETE_BY_ID: string = '/api/compras/deleteById/'
+export const COMPRAS_GET_VALOR_TOTAL: string = '/api/compras/getValorCompras'
 
 /* Rotas categoria */
 export const FIND_ALL_CATEGORIA: string = 'api/categoria/findAll'
@@ -51,6 +52,13 @@ export const PEDIDO_BY_ID_COMPLETO: string = '/api/pedido/findById/'
 export const PEDIDO_PAYMENT: string = '/api/pedido/payment/'
 export const PEDIDO_ADD: string = '/api/pedido/addPedido/'
 export const GET_VALOR_TOTAL_BY_CAIXA: string = '/api/pedido/getValorTotal/'
+export const GET_VALOR_TOTAL_VENDAS: string = '/api/pedido/getValorTotalVendas'
+export const GET_VALOR_TOTAL_PEDIDOS: string =
+  '/api/pedido/getQuantidadePedidos'
+
+/* Rotas pedido especialidade */
+export const GET_TOP_PEDIDOS_ESPECIALIDADE: string =
+  '/api/pedidoEspecialidade/getTopPedidosEspecialidade'
 
 /* Rotas unidade medida */
 export const FIND_ALL_UNIDADE_MEDIDA: string = 'api/unidadeMedida/findAll'

@@ -24,6 +24,7 @@ import com.example.Authentication.TipoPedido.service.TipoPedidoService;
 import com.example.Authentication.Utils.Interfaces.LocaleInteface;
 import com.example.Authentication.Utils.exceptions.NotFoundException;
 import com.example.Authentication.Utils.filtro.Filtro;
+import com.example.Authentication.Utils.filtro.FiltroDate;
 import com.example.Authentication.Utils.pagination.Pagination;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -31,11 +32,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -168,5 +167,31 @@ public class PedidoService  {
         pedidoRepository.save(pedido);
         pedidoMercadoriaService.createUpdateDelete(pedido, pedidoDTO.getPedidoMercadoria());
         pedidoEspecialidadeService.createUpdateDelete(pedido, pedidoDTO.getPedidoEspecialidade());
+    }
+
+    public Integer getQuantidadePedidos(FiltroDate filtro) {
+        Integer valor = 0;
+        if (Objects.isNull(filtro.getDataInicial()) && Objects.isNull(filtro.getDataFinal())) {
+            valor = pedidoRepository.getQuantidadePedidos();
+            return valor == null ? 0 : valor;
+        } else {
+            filtro.setDataInicial(Objects.isNull(filtro.getDataInicial()) ? new Date() : filtro.getDataInicial());
+            filtro.setDataFinal(Objects.isNull(filtro.getDataFinal()) ? new Date() : filtro.getDataFinal());
+            valor = pedidoRepository.getTotalPedidosByPeriodo(filtro.getDataInicial(), filtro.getDataFinal());
+           return valor == null ? 0 : valor;
+        }
+    }
+
+    public Double getValorTotalVendas(FiltroDate filtroDate) {
+        Double valor = 0.0;
+        if (Objects.isNull(filtroDate.getDataInicial()) && Objects.isNull(filtroDate.getDataFinal())) {
+            valor = pedidoRepository.getTotalVendas();
+            return valor == null ? 0.0 : valor;
+        } else {
+            filtroDate.setDataInicial(Objects.isNull(filtroDate.getDataInicial()) ? new Date() : filtroDate.getDataInicial());
+            filtroDate.setDataFinal(Objects.isNull(filtroDate.getDataFinal()) ? new Date() : filtroDate.getDataFinal());
+            valor = pedidoRepository.getTotalVendasByPeriodo(filtroDate.getDataInicial(), filtroDate.getDataFinal());
+            return valor == null ? 0.0 : valor;
+        }
     }
 }

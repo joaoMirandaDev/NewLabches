@@ -8,6 +8,7 @@ import com.example.Authentication.Pedido.model.Pedido;
 import com.example.Authentication.Pedido.service.PedidoService;
 import com.example.Authentication.Utils.Interfaces.LocaleInteface;
 import com.example.Authentication.Utils.filtro.Filtro;
+import com.example.Authentication.Utils.filtro.FiltroDate;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -82,5 +83,17 @@ public class PedidoController {
     @Operation(summary = "FindById", description = "Metodo utilizado para buscar o pedido por ID", tags = "Pedido")
     public PedidoCompletoDTO findById(@PathVariable Integer id) {
         return pedidoService.findDtoByCompleto(id);
+    }
+
+    @PostMapping(value = "/getQuantidadePedidos", produces = "application/json")
+    @Operation(summary = "Total de pedidos realizados", description = "Metodo utilizado para buscar o total de pedidos realizados", tags = "Pedido")
+    public Integer getQuantidadePedidos(@RequestBody FiltroDate filtro) {
+        return pedidoService.getQuantidadePedidos(filtro);
+    }
+
+    @PostMapping(value = "/getValorTotalVendas", produces = "application/json")
+    @Operation(summary = "Total de vendas", description = "Metodo utilizado para buscar o total de vendas realizadas", tags = "Pedido")
+    public Double getValorTotalVendas(@RequestBody FiltroDate filtro) {
+        return pedidoService.getValorTotalVendas(filtro);
     }
 }
