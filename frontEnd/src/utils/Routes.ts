@@ -3,6 +3,8 @@ export const CAIXA_PAGE: string = '/api/caixa/list'
 export const CAIXA_OPEN: string = '/api/caixa/openCaixa'
 export const CAIXA_CLOSE: string = '/api/caixa/close/'
 export const CAIXA_BY_ID: string = '/api/caixa/findById/'
+export const CAIXA_GET_VALUES_BY_DASHBOARD: string =
+  '/api/caixa/getValuesCaixaByDashBoard'
 
 /* Rotas compras */
 export const COMPRAS_PAGE: string = '/api/compras/list'
@@ -52,6 +54,8 @@ export const PEDIDO_BY_ID_COMPLETO: string = '/api/pedido/findById/'
 export const PEDIDO_PAYMENT: string = '/api/pedido/payment/'
 export const PEDIDO_ADD: string = '/api/pedido/addPedido/'
 export const GET_VALOR_TOTAL_BY_CAIXA: string = '/api/pedido/getValorTotal/'
+export const GET_VALOR_TOTAL_BY_FORMA_PAGAMENTO: string =
+  '/api/pedido/getValorTotalVendasByFormaPagamento'
 export const GET_VALOR_TOTAL_VENDAS: string = '/api/pedido/getValorTotalVendas'
 export const GET_VALOR_TOTAL_PEDIDOS: string =
   '/api/pedido/getQuantidadePedidos'

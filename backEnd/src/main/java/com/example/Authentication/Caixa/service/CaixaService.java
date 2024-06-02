@@ -1,6 +1,7 @@
 package com.example.Authentication.Caixa.service;
 
 import com.example.Authentication.Caixa.DTO.CaixaDTO;
+import com.example.Authentication.Caixa.DTO.CaixaDashBoardDTO;
 import com.example.Authentication.Caixa.DTO.CaixaOpenDTO;
 import com.example.Authentication.Caixa.model.Caixa;
 import com.example.Authentication.Caixa.repository.CaixaRepository;
@@ -8,6 +9,7 @@ import com.example.Authentication.Pedido.service.PedidoService;
 import com.example.Authentication.Utils.Interfaces.LocaleInteface;
 import com.example.Authentication.Utils.exceptions.NotFoundException;
 import com.example.Authentication.Utils.filtro.Filtro;
+import com.example.Authentication.Utils.filtro.FiltroDate;
 import com.example.Authentication.Utils.pagination.Pagination;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +19,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -79,5 +81,18 @@ public class CaixaService {
         caixa.setValorFechamentoCaixa(pedidoService.getValorTotalByCaixa(id));
         caixa.setCaixaAberto(1);
         caixaRepository.save(caixa);
+    }
+
+    public List<CaixaDashBoardDTO> getValuesCaixaByDashBoard(FiltroDate filtroDate) throws ParseException {
+        String data = "2000-01-01";
+        SimpleDateFormat parser = new SimpleDateFormat("dd-MM-yyyy");
+        Date date = parser.parse(data);
+        filtroDate.setDataInicial(Objects.isNull(filtroDate.getDataInicial()) ? date : filtroDate.getDataInicial());
+        filtroDate.setDataFinal(Objects.isNull(filtroDate.getDataFinal()) ? new Date() : filtroDate.getDataFinal());
+        List<Caixa> list = caixaRepository.getValuesFechamentoAndDateCaixaByDashBoard(filtroDate.getDataInicial(), filtroDate.getDataFinal());
+        if (Objects.nonNull(list) && !list.isEmpty()) {
+            return list.stream().map(CaixaDashBoardDTO::new).collect(Collectors.toList());
+        }
+        return List.of();
     }
 }

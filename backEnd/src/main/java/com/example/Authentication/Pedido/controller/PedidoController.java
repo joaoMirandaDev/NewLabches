@@ -3,6 +3,7 @@ package com.example.Authentication.Pedido.controller;
 import com.example.Authentication.FormaPagamento.DTO.FormaPagamentoDTO;
 import com.example.Authentication.Pedido.DTO.PedidoCompletoDTO;
 import com.example.Authentication.Pedido.DTO.PedidoDTO;
+import com.example.Authentication.Pedido.DTO.PedidoGraficoDTO;
 import com.example.Authentication.Pedido.DTO.PedidoListagemDTO;
 import com.example.Authentication.Pedido.model.Pedido;
 import com.example.Authentication.Pedido.service.PedidoService;
@@ -18,6 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -87,13 +90,19 @@ public class PedidoController {
 
     @PostMapping(value = "/getQuantidadePedidos", produces = "application/json")
     @Operation(summary = "Total de pedidos realizados", description = "Metodo utilizado para buscar o total de pedidos realizados", tags = "Pedido")
-    public Integer getQuantidadePedidos(@RequestBody FiltroDate filtro) {
+    public Integer getQuantidadePedidos(@RequestBody FiltroDate filtro) throws ParseException {
         return pedidoService.getQuantidadePedidos(filtro);
+    }
+
+    @PostMapping(value = "/getValorTotalVendasByFormaPagamento", produces = "application/json")
+    @Operation(summary = "Total de pedidos realizados", description = "Metodo utilizado para buscar o total de pedidos realizados", tags = "Pedido")
+    public List<PedidoGraficoDTO> getValorTotalVendasByFormaPagamento(@RequestBody FiltroDate filtro) throws ParseException {
+        return pedidoService.getValorTotalVendasByFormaPagamento(filtro);
     }
 
     @PostMapping(value = "/getValorTotalVendas", produces = "application/json")
     @Operation(summary = "Total de vendas", description = "Metodo utilizado para buscar o total de vendas realizadas", tags = "Pedido")
-    public Double getValorTotalVendas(@RequestBody FiltroDate filtro) {
+    public Double getValorTotalVendas(@RequestBody FiltroDate filtro) throws ParseException {
         return pedidoService.getValorTotalVendas(filtro);
     }
 }

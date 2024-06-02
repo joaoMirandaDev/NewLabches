@@ -21,6 +21,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -118,7 +120,7 @@ public class ComprasService implements Pagination {
         return new ComprasDto(compras);
     }
 
-    public Double getValorTotalDeCompras(FiltroDate filtroDate) {
+    public Double getValorTotalDeCompras(FiltroDate filtroDate) throws ParseException {
         if (Objects.isNull(filtroDate.getDataInicial()) && Objects.isNull(filtroDate.getDataFinal())) {
             Double valor = comprasRepository.getTotalCompras();
             if (valor == null) {
@@ -127,7 +129,10 @@ public class ComprasService implements Pagination {
             }
             return valor;
         } else {
-            filtroDate.setDataInicial(Objects.isNull(filtroDate.getDataInicial()) ? new Date() : filtroDate.getDataInicial());
+            String data = "2000-01-01";
+            SimpleDateFormat parser = new SimpleDateFormat("dd-MM-yyyy");
+            Date date = parser.parse(data);
+            filtroDate.setDataInicial(Objects.isNull(filtroDate.getDataInicial()) ? date : filtroDate.getDataInicial());
             filtroDate.setDataFinal(Objects.isNull(filtroDate.getDataFinal()) ? new Date() : filtroDate.getDataFinal());
             Double valor = comprasRepository.getTotalComprasByPeriodo(filtroDate.getDataInicial(), filtroDate.getDataFinal());
             if (valor == null) {

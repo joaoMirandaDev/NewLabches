@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/compras")
@@ -47,7 +49,7 @@ public class ComprasController {
     @PostMapping(value = "/getValorCompras", produces = "application/json")
     @Operation(summary = "Valor total de comras", description = "Metodo utilizado para buscar valor total das compras",
             tags = "Compras")
-    public Double GetValorTotalDeCompras(@RequestBody FiltroDate filtro) {
+    public Double GetValorTotalDeCompras(@RequestBody FiltroDate filtro) throws ParseException {
         return comprasService.getValorTotalDeCompras(filtro);
     }
 

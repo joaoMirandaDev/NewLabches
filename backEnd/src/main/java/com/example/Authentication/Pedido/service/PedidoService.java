@@ -6,16 +6,20 @@ import com.example.Authentication.Caixa.service.CaixaService;
 import com.example.Authentication.Categoria.model.Categoria;
 import com.example.Authentication.Compras.DTO.ComprasDto;
 import com.example.Authentication.Compras.service.ComprasService;
+import com.example.Authentication.Especialidade.DTO.EspecialidadeSelectDTO;
+import com.example.Authentication.Especialidade.model.Especialidade;
 import com.example.Authentication.FormaPagamento.DTO.FormaPagamentoDTO;
 import com.example.Authentication.FormaPagamento.model.FormaPagamento;
 import com.example.Authentication.FormaPagamento.service.FormaPagamentoService;
 import com.example.Authentication.Mercadoria.service.MercadoriaService;
 import com.example.Authentication.Pedido.DTO.PedidoCompletoDTO;
 import com.example.Authentication.Pedido.DTO.PedidoDTO;
+import com.example.Authentication.Pedido.DTO.PedidoGraficoDTO;
 import com.example.Authentication.Pedido.DTO.PedidoListagemDTO;
 import com.example.Authentication.Pedido.model.Pedido;
 import com.example.Authentication.Pedido.repository.PedidoRepository;
 import com.example.Authentication.PedidoEspecialidade.DTO.PedidoEspecialidadeDTO;
+import com.example.Authentication.PedidoEspecialidade.DTO.PedidoEspecialidadeTopItensDTO;
 import com.example.Authentication.PedidoEspecialidade.model.PedidoEspecialidade;
 import com.example.Authentication.PedidoEspecialidade.service.PedidoEspecialidadeService;
 import com.example.Authentication.PedidoMercadoria.DTO.PedidoMercadoriaDTO;
@@ -34,7 +38,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -169,29 +177,67 @@ public class PedidoService  {
         pedidoEspecialidadeService.createUpdateDelete(pedido, pedidoDTO.getPedidoEspecialidade());
     }
 
-    public Integer getQuantidadePedidos(FiltroDate filtro) {
+    public Integer getQuantidadePedidos(FiltroDate filtro) throws ParseException {
         Integer valor = 0;
         if (Objects.isNull(filtro.getDataInicial()) && Objects.isNull(filtro.getDataFinal())) {
             valor = pedidoRepository.getQuantidadePedidos();
             return valor == null ? 0 : valor;
         } else {
-            filtro.setDataInicial(Objects.isNull(filtro.getDataInicial()) ? new Date() : filtro.getDataInicial());
+            String data = "2000-01-01";
+            SimpleDateFormat parser = new SimpleDateFormat("dd-MM-yyyy");
+            Date date = parser.parse(data);
+            filtro.setDataInicial(Objects.isNull(filtro.getDataInicial()) ? date : filtro.getDataInicial());
             filtro.setDataFinal(Objects.isNull(filtro.getDataFinal()) ? new Date() : filtro.getDataFinal());
             valor = pedidoRepository.getTotalPedidosByPeriodo(filtro.getDataInicial(), filtro.getDataFinal());
            return valor == null ? 0 : valor;
         }
     }
 
-    public Double getValorTotalVendas(FiltroDate filtroDate) {
+    public Double getValorTotalVendas(FiltroDate filtroDate) throws ParseException {
         Double valor = 0.0;
         if (Objects.isNull(filtroDate.getDataInicial()) && Objects.isNull(filtroDate.getDataFinal())) {
             valor = pedidoRepository.getTotalVendas();
             return valor == null ? 0.0 : valor;
         } else {
-            filtroDate.setDataInicial(Objects.isNull(filtroDate.getDataInicial()) ? new Date() : filtroDate.getDataInicial());
+            String data = "2000-01-01";
+            SimpleDateFormat parser = new SimpleDateFormat("dd-MM-yyyy");
+            Date date = parser.parse(data);
+            filtroDate.setDataInicial(Objects.isNull(filtroDate.getDataInicial()) ? date : filtroDate.getDataInicial());
             filtroDate.setDataFinal(Objects.isNull(filtroDate.getDataFinal()) ? new Date() : filtroDate.getDataFinal());
             valor = pedidoRepository.getTotalVendasByPeriodo(filtroDate.getDataInicial(), filtroDate.getDataFinal());
             return valor == null ? 0.0 : valor;
         }
     }
+
+    public List<PedidoGraficoDTO> getValorTotalVendasByFormaPagamento(FiltroDate filtroDate) throws ParseException {
+        List<Object[]> objects = List.of();
+        if (Objects.isNull(filtroDate.getDataInicial()) && Objects.isNull(filtroDate.getDataFinal())) {
+            objects = pedidoRepository.getValorTotalVendasByFormaPagamento();
+        }
+        else {
+            String data = "2000-01-01";
+            SimpleDateFormat parser = new SimpleDateFormat("dd-MM-yyyy");
+            Date date = parser.parse(data);
+            filtroDate.setDataInicial(Objects.isNull(filtroDate.getDataInicial()) ? date : filtroDate.getDataInicial());
+            filtroDate.setDataFinal(Objects.isNull(filtroDate.getDataFinal()) ? new Date() : filtroDate.getDataFinal());
+            objects = pedidoRepository.getValorTotalVendasByFormaPagamentoByPeriodo(filtroDate.getDataInicial(), filtroDate.getDataFinal());
+
+        }
+        return objects.stream().map(this::convertToValorTotalVendasByFormaPagamento).collect(Collectors.toList());
+    }
+    private PedidoGraficoDTO convertToValorTotalVendasByFormaPagamento(Object[] objArray) {
+        PedidoGraficoDTO pedidoGraficoDTO = new PedidoGraficoDTO();
+
+        Integer id = (Integer) objArray[0];
+        Double valor = (Double) objArray[1];
+
+        FormaPagamento formaPagamento = Objects.isNull(id) ? null : formaPagamentoService.findById(id);
+        FormaPagamentoDTO formaPagamentoDTO = Objects.isNull(formaPagamento) ? null : new FormaPagamentoDTO(formaPagamento);
+
+        pedidoGraficoDTO.setFormaPagamentoDTO(formaPagamentoDTO);
+        pedidoGraficoDTO.setValor(valor.doubleValue());
+
+        return pedidoGraficoDTO;
+    }
+    
 }

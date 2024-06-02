@@ -25,6 +25,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -38,12 +40,15 @@ public class PedidoEspecialidadeService {
     private final MercadoriaService mercadoriaService;
     private final EspecialidadeService especialidadeService;
 
-    public List<PedidoEspecialidadeTopItensDTO> getTopPedidoEspecialidade(FiltroDate filtroDate) {
-        List<Object[]> objects = new ArrayList<>();
+    public List<PedidoEspecialidadeTopItensDTO> getTopPedidoEspecialidade(FiltroDate filtroDate) throws ParseException {
+        List<Object[]> objects;
         if (Objects.isNull(filtroDate.getDataInicial()) && Objects.isNull(filtroDate.getDataFinal())) {
             objects = pedidoEspecialidadeRepository.getListPedidoEspecialidade();
         } else {
-            filtroDate.setDataInicial(Objects.isNull(filtroDate.getDataInicial()) ? new Date() : filtroDate.getDataInicial());
+            String data = "2000-01-01";
+            SimpleDateFormat parser = new SimpleDateFormat("dd-MM-yyyy");
+            Date date = parser.parse(data);
+            filtroDate.setDataInicial(Objects.isNull(filtroDate.getDataInicial()) ? date : filtroDate.getDataInicial());
             filtroDate.setDataFinal(Objects.isNull(filtroDate.getDataFinal()) ? new Date() : filtroDate.getDataFinal());
             objects = pedidoEspecialidadeRepository.getListPedidoEspecialidadeByPeriodo(filtroDate.getDataInicial(), filtroDate.getDataFinal());
         }
