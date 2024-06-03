@@ -23,8 +23,7 @@ public interface CaixaRepository extends JpaRepository<Caixa, Integer> {
     @Query(nativeQuery = true, value = "SELECT * " +
             "FROM caixa c " +
             "WHERE c.data_abertura BETWEEN :dataInicial AND :dataFinal " +
-            "ORDER BY c.data_abertura DESC " +
-            "LIMIT 7")
+            "ORDER BY c.data_abertura DESC")
     List<Caixa> getValuesFechamentoAndDateCaixaByDashBoard(Date dataInicial, Date dataFinal);
 
     @Query(nativeQuery = true, value = "SELECT " +
