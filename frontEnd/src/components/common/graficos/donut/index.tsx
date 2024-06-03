@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Card, Flex, Text } from '@mantine/core'
+import { Card, Text } from '@mantine/core'
 import { ApexOptions } from 'apexcharts'
 import React, { useEffect, useState } from 'react'
 import Chart from 'react-apexcharts'
@@ -84,15 +84,15 @@ const DonutChart: React.FC<DonutChart> = ({ especialidade, title }) => {
       radius="md"
       withBorder
     >
-      <Flex direction={'column'} align={'center'}>
-        <Text fw={'bold'}>{title}</Text>
-        <Chart
-          options={options}
-          series={series}
-          type="polarArea"
-          style={{ width: '80%' }}
-        />
-      </Flex>
+      <Text fw={'bold'} align="center">
+        {title}
+      </Text>
+      <Chart
+        height={'100%'}
+        options={options}
+        series={series}
+        type="polarArea"
+      />
     </Card>
   )
 }
