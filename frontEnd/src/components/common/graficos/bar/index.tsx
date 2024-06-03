@@ -1,36 +1,29 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card, Text } from '@mantine/core'
 import Chart from 'react-apexcharts'
 import { ApexOptions } from 'apexcharts'
 import { useEffect, useState } from 'react'
 
-interface IGetValuesCaixaByDashBoard {
-  id?: number
-  dataAbertura?: Date
-  valorFechamentoCaixa?: number | null
-  numeroCaixa?: string
-}
-
 interface BarChart {
-  object: IGetValuesCaixaByDashBoard[]
+  names: any[]
+  value: any[]
   title: string
 }
 
-const BarChart: React.FC<BarChart> = ({ object, title }) => {
+const BarChart: React.FC<BarChart> = ({ names, value, title }) => {
   const [values, setValues] = useState<number[]>([])
   const [name, setNames] = useState<string[]>([])
   useEffect(() => {
-    const newValues = object.map(obj =>
-      obj.valorFechamentoCaixa !== null ? obj.valorFechamentoCaixa! : 0
-    )
-    const newNames = object.map(obj =>
-      obj.dataAbertura! == null ? '-' : obj.dataAbertura!.toString()
+    const newValues = value.map(obj => (obj !== null ? obj : 0))
+    const newNames = names.map(obj =>
+      obj == null || obj == undefined ? '-' : obj.toString()
     )
 
     setNames(newNames.reverse())
     setValues(newValues.reverse())
     window.dispatchEvent(new Event('resize'))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [object])
+  }, [names, value])
   const options: ApexOptions = {
     xaxis: {
       categories: name,
@@ -76,7 +69,7 @@ const BarChart: React.FC<BarChart> = ({ object, title }) => {
     },
     plotOptions: {
       bar: {
-        borderRadius: 0,
+        borderRadius: 5,
         distributed: false,
         horizontal: false,
         barHeight: '100%',
@@ -120,7 +113,7 @@ const BarChart: React.FC<BarChart> = ({ object, title }) => {
       <Text align="center" fw={'bold'}>
         {title}
       </Text>
-      <Chart options={options} series={series} type="bar" height={'200px'} />
+      <Chart options={options} series={series} type="bar" height={'300px'} />
     </Card>
   )
 }

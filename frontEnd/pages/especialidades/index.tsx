@@ -226,7 +226,9 @@ export default function FornecedorList() {
         onDataFilter={filterCliente}
       />
       <Flex justify={'space-between'} align={'center'} m={10}>
-        <Text fz={'1.5rem'}>Listagem Especialidades</Text>
+        <Text fz={'1.5rem'} fw={'bold'}>
+          Listagem Especialidades
+        </Text>
         <Button
           leftIcon={<IconMeat size={16} />}
           disabled={validatePermissionRole()}

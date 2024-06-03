@@ -2,6 +2,7 @@ package com.example.Authentication.Caixa.controller;
 
 import com.example.Authentication.Caixa.DTO.CaixaDTO;
 import com.example.Authentication.Caixa.DTO.CaixaDashBoardDTO;
+import com.example.Authentication.Caixa.DTO.CaixaDashBoardGroupByMonthDTO;
 import com.example.Authentication.Caixa.DTO.CaixaOpenDTO;
 import com.example.Authentication.Caixa.service.CaixaService;
 import com.example.Authentication.Utils.Interfaces.LocaleInteface;
@@ -45,6 +46,12 @@ public class CaixaController {
     @Operation(summary = "Busca os dados do caixa", description = "Metodo utilizado por padrao a buscar os dados dos ultimos 7 dias para o dashBoard", tags = "Caixa")
     public ResponseEntity<List<CaixaDashBoardDTO>> getValuesCaixaByDashBoard(@RequestBody FiltroDate filtroDate) throws ParseException {
         return ResponseEntity.ok(caixaService.getValuesCaixaByDashBoard(filtroDate));
+    }
+
+    @GetMapping(value = "/getValuesCaixaByGroupByMes", produces = "application/json")
+    @Operation(summary = "Busca os dados do caixa", description = "Metodo utilizado por padrao a buscar os dados dos ultimos 2 meses para o dashBoard", tags = "Caixa")
+    public ResponseEntity<List<CaixaDashBoardGroupByMonthDTO>> getValuesCaixaByGroupByMes() throws ParseException {
+        return ResponseEntity.ok(caixaService.getValuesCaixaByGroupByMes());
     }
 
     @GetMapping(value = "/findById/{id}", produces = "application/json")

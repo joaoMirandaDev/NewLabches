@@ -3,6 +3,8 @@ export const CAIXA_PAGE: string = '/api/caixa/list'
 export const CAIXA_OPEN: string = '/api/caixa/openCaixa'
 export const CAIXA_CLOSE: string = '/api/caixa/close/'
 export const CAIXA_BY_ID: string = '/api/caixa/findById/'
+export const CAIXA_GET_VALUES_BY_DASHBOARD_MONTH: string =
+  '/api/caixa/getValuesCaixaByGroupByMes'
 export const CAIXA_GET_VALUES_BY_DASHBOARD: string =
   '/api/caixa/getValuesCaixaByDashBoard'
 

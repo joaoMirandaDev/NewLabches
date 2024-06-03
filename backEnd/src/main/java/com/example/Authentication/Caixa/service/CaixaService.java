@@ -2,15 +2,20 @@ package com.example.Authentication.Caixa.service;
 
 import com.example.Authentication.Caixa.DTO.CaixaDTO;
 import com.example.Authentication.Caixa.DTO.CaixaDashBoardDTO;
+import com.example.Authentication.Caixa.DTO.CaixaDashBoardGroupByMonthDTO;
 import com.example.Authentication.Caixa.DTO.CaixaOpenDTO;
 import com.example.Authentication.Caixa.model.Caixa;
 import com.example.Authentication.Caixa.repository.CaixaRepository;
+import com.example.Authentication.FormaPagamento.DTO.FormaPagamentoDTO;
+import com.example.Authentication.FormaPagamento.model.FormaPagamento;
+import com.example.Authentication.Pedido.DTO.PedidoGraficoDTO;
 import com.example.Authentication.Pedido.service.PedidoService;
 import com.example.Authentication.Utils.Interfaces.LocaleInteface;
 import com.example.Authentication.Utils.exceptions.NotFoundException;
 import com.example.Authentication.Utils.filtro.Filtro;
 import com.example.Authentication.Utils.filtro.FiltroDate;
 import com.example.Authentication.Utils.pagination.Pagination;
+import com.example.Authentication.Utils.service.MesesConvertService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -30,6 +35,7 @@ public class CaixaService {
 
     private final CaixaRepository caixaRepository;
     private final MessageSource messageSource;
+    private final MesesConvertService mesesConvertService;
     @Autowired
     private PedidoService pedidoService;
     private static final Map<String, String> CAMPO_ORDENACAO = new HashMap<>();
@@ -94,5 +100,25 @@ public class CaixaService {
             return list.stream().map(CaixaDashBoardDTO::new).collect(Collectors.toList());
         }
         return List.of();
+    }
+
+    public List<CaixaDashBoardGroupByMonthDTO> getValuesCaixaByGroupByMes() {
+        List<Object[]> val = caixaRepository.getValuesCaixaByGroupByMes();
+        return val.stream().map(this::convertValuesCaixaByGroupByMes).collect(Collectors.toList());
+    }
+
+    private CaixaDashBoardGroupByMonthDTO convertValuesCaixaByGroupByMes(Object[] objArray) {
+        CaixaDashBoardGroupByMonthDTO dto = new CaixaDashBoardGroupByMonthDTO();
+
+        String mes = (String) objArray[0];
+        String ano = (String) objArray[1];
+        Double valor = (Double) objArray[2];
+
+        String newMes = mesesConvertService.monthConververter(mes);
+
+        dto.setData(newMes + "/" + ano);
+        dto.setValorTotal(valor);
+
+        return dto;
     }
 }

@@ -1,4 +1,5 @@
 import { ErrorNotification } from '@components/common'
+import 'dayjs/locale/pt-br'
 import BarChart from '@components/common/graficos/bar'
 import DonutChart from '@components/common/graficos/donut'
 import PiramideChart from '@components/common/graficos/piramide'
@@ -11,6 +12,7 @@ import IFormaPagamento from 'src/interfaces/formaPagamento'
 import api from 'src/utils/Api'
 import {
   CAIXA_GET_VALUES_BY_DASHBOARD,
+  CAIXA_GET_VALUES_BY_DASHBOARD_MONTH,
   COMPRAS_GET_VALOR_TOTAL,
   GET_TOP_PEDIDOS_ESPECIALIDADE,
   GET_VALOR_TOTAL_BY_FORMA_PAGAMENTO,
@@ -27,10 +29,17 @@ interface IGetValuesCaixaByDashBoard {
   valorFechamentoCaixa?: number | null
   numeroCaixa?: string
 }
+interface IGetValuesCaixaByMonth {
+  data?: string
+  valorTotal?: number
+}
 export default function DashBoard() {
   const [totalVendas, setTotalVendas] = useState<number>(0)
   const [getValuesCaixa, setValuesCaixa] = useState<
     IGetValuesCaixaByDashBoard[]
+  >([])
+  const [getValuesCaixaByMonth, setValuesCaixaByMonth] = useState<
+    IGetValuesCaixaByMonth[]
   >([])
   const [totalPedidos, setTotalPedidos] = useState<number>(0)
   const [valorTotalFormaPagamento, setValorTotalFormaPagamento] = useState<
@@ -46,7 +55,6 @@ export default function DashBoard() {
   })
   useEffect(() => {
     getAllMethods()
-    console.log(getValuesCaixa)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   useEffect(() => {
@@ -62,6 +70,7 @@ export default function DashBoard() {
         totalPedidos,
         totalCompras,
         getValuesCaixa,
+        getValuesCaixaByMonth,
       ] = await Promise.all([
         api.post(GET_VALOR_TOTAL_BY_FORMA_PAGAMENTO, data),
         api.post(GET_TOP_PEDIDOS_ESPECIALIDADE, data),
@@ -69,6 +78,7 @@ export default function DashBoard() {
         api.post(GET_VALOR_TOTAL_PEDIDOS, data),
         api.post(COMPRAS_GET_VALOR_TOTAL, data),
         api.post(CAIXA_GET_VALUES_BY_DASHBOARD, data),
+        api.get(CAIXA_GET_VALUES_BY_DASHBOARD_MONTH),
       ])
 
       setValorTotalFormaPagamento(valorTotalFormaPagamento.data)
@@ -77,7 +87,7 @@ export default function DashBoard() {
       setTotalPedidos(totalPedidos.data)
       setTotalCompras(totalCompras.data)
       setValuesCaixa(getValuesCaixa.data)
-      console.log(getValuesCaixa.data)
+      setValuesCaixaByMonth(getValuesCaixaByMonth.data)
     } catch (error) {
       ErrorNotification({
         message: 'Erro ao buscar dados',
@@ -95,7 +105,7 @@ export default function DashBoard() {
   const DatesAndCard = () => {
     return (
       <>
-        <Flex mb={'1rem'} justify={'flex-start'}>
+        <Flex mb={'0.5rem'} justify={'flex-start'}>
           <DatesProvider
             settings={{
               locale: 'pt-br',
@@ -104,7 +114,6 @@ export default function DashBoard() {
             <DatePickerInput
               value={data.dataInicial}
               withAsterisk={false}
-              w={'20%'}
               required
               clearable
               mr={'0.5rem'}
@@ -113,18 +122,11 @@ export default function DashBoard() {
               placeholder="Escolha uma data inicial"
               maxDate={new Date()}
             />
-          </DatesProvider>
-          <DatesProvider
-            settings={{
-              locale: 'pt-br',
-            }}
-          >
             <DatePickerInput
               value={data.dataFinal}
               onChange={val => handleChange(val, 'dataFinal')}
               withAsterisk={false}
               clearable
-              w={'20%'}
               required
               mr={'0.5rem'}
               label="Data final"
@@ -174,18 +176,18 @@ export default function DashBoard() {
 
   return (
     <>
-      <Text fz={'1.5rem'} mb={'0.5rem'}>
+      <Text fz={'1.5rem'} fw={'bold'} mb={'0.5rem'}>
         DashBoard
       </Text>
-      <Card shadow="sm" padding="lg" radius="md" withBorder>
+      <Card shadow="sm" padding="md" radius="md" withBorder>
         {DatesAndCard()}
         <Grid
+          gutter="xs"
           mt={'0.5rem'}
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(3, 1fr)',
-            gridAutoColumns: '100px',
-            gridTemplateRows: 'repeat(2, 1fr)',
+            gridTemplateRows: 'repeat(2, 360px)',
           }}
         >
           <Flex
@@ -196,7 +198,11 @@ export default function DashBoard() {
               gridRowEnd: 2,
             }}
           >
-            <BarChart title="Caixa" object={getValuesCaixa} />
+            <BarChart
+              title="Caixa"
+              value={getValuesCaixa.map(c => c.valorFechamentoCaixa!)}
+              names={getValuesCaixa.map(val => val.dataAbertura!)}
+            />
           </Flex>
           <Flex
             style={{
@@ -211,10 +217,33 @@ export default function DashBoard() {
               especialidade={especialidadesMaisVendidas}
             />
           </Flex>
-          <DonutChart
-            title="Faturamento por forma de pagamento"
-            especialidade={valorTotalFormaPagamento}
-          />
+          <Flex
+            style={{
+              gridColumnStart: 1,
+              gridColumnEnd: 2,
+              gridRowStart: 2,
+              gridRowEnd: 3,
+            }}
+          >
+            <DonutChart
+              title="Faturamento por forma de pagamento"
+              especialidade={valorTotalFormaPagamento}
+            />
+          </Flex>
+          <Flex
+            style={{
+              gridColumnStart: 2,
+              gridColumnEnd: 3,
+              gridRowStart: 2,
+              gridRowEnd: 3,
+            }}
+          >
+            <BarChart
+              title="Faturamento 2 últimos meses"
+              value={getValuesCaixaByMonth.map(c => c.valorTotal!)}
+              names={getValuesCaixaByMonth.map(val => val.data!)}
+            />
+          </Flex>
         </Grid>
       </Card>
     </>

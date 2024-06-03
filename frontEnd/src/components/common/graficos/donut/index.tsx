@@ -62,10 +62,9 @@ const DonutChart: React.FC<DonutChart> = ({ especialidade, title }) => {
 
     responsive: [
       {
-        breakpoint: 480,
         options: {
           chart: {
-            width: 500,
+            width: '100%',
           },
           legend: {
             enabled: true,
@@ -77,14 +76,21 @@ const DonutChart: React.FC<DonutChart> = ({ especialidade, title }) => {
   }
   const series = values
   return (
-    <Card shadow="sm" padding="lg" m={'0.5rem'} radius="md" withBorder>
+    <Card
+      w={'100%'}
+      shadow="sm"
+      padding="lg"
+      m={'0.5rem'}
+      radius="md"
+      withBorder
+    >
       <Flex direction={'column'} align={'center'}>
         <Text fw={'bold'}>{title}</Text>
         <Chart
           options={options}
           series={series}
           type="polarArea"
-          width="100%"
+          style={{ width: '80%' }}
         />
       </Flex>
     </Card>

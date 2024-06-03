@@ -45,10 +45,10 @@ const PiramideChart: React.FC<PiramideChart> = ({ especialidade, title }) => {
     },
     plotOptions: {
       bar: {
-        borderRadius: 0,
+        borderRadius: 5,
         distributed: true,
         horizontal: true,
-        barHeight: '80%',
+        barHeight: '100%',
         isFunnel: true,
       },
     },
@@ -75,7 +75,7 @@ const PiramideChart: React.FC<PiramideChart> = ({ especialidade, title }) => {
     <Card
       shadow="sm"
       padding="lg"
-      style={{ width: '100%', height: '100%' }}
+      style={{ width: '100%' }}
       m={'0.5rem'}
       radius="md"
       withBorder
@@ -86,7 +86,7 @@ const PiramideChart: React.FC<PiramideChart> = ({ especialidade, title }) => {
           options={options}
           series={series}
           type="bar"
-          height={'500px'}
+          height={'650px'}
           width="100%"
         />
       </Flex>

@@ -224,7 +224,9 @@ export default function ColaboradorList() {
         onDataFilter={filterCliente}
       />
       <Flex justify={'space-between'} align={'center'} m={10}>
-        <Text fz={'1.5rem'}>Listagem de colaboradores</Text>
+        <Text fz={'1.5rem'} fw={'bold'}>
+          Listagem de colaboradores
+        </Text>
         <Button
           disabled={validatePermissionRole()}
           leftIcon={<IconUserPlus size={16} />}
